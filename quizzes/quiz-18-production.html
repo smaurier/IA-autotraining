@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Quiz — Production &amp; Couts</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #1a1a2e; color: #e0e0e0; min-height: 100vh; padding: 2rem 1rem; }
+    .container { max-width: 800px; margin: 0 auto; }
+    h1 { text-align: center; margin-bottom: 0.5rem; font-size: 1.8rem; color: #ffffff; }
+    .subtitle { text-align: center; color: #8892b0; margin-bottom: 2rem; font-size: 1rem; }
+    .progress-bar-container { background: #0d1117; border-radius: 10px; height: 14px; margin-bottom: 2rem; overflow: hidden; }
+    .progress-bar { background: linear-gradient(90deg, #0d6efd, #4dabf7); height: 100%; width: 0%; border-radius: 10px; transition: width 0.4s ease; }
+    .progress-text { text-align: center; color: #8892b0; margin-bottom: 1rem; font-size: 0.9rem; }
+    .card { background: #16213e; border-radius: 12px; padding: 2rem; margin-bottom: 1.5rem; box-shadow: 0 4px 20px rgba(0,0,0,0.3); }
+    .question-label { font-size: 0.85rem; color: #4dabf7; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 0.5rem; }
+    .question-text { font-size: 1.15rem; margin-bottom: 1.2rem; line-height: 1.5; color: #ffffff; }
+    pre { background: #0d1117; border: 1px solid #30363d; border-radius: 8px; padding: 1rem; margin-bottom: 1.2rem; overflow-x: auto; font-size: 0.95rem; }
+    code { font-family: 'Consolas', 'Fira Code', 'Courier New', monospace; color: #c9d1d9; }
+    .options { list-style: none; }
+    .options li { margin-bottom: 0.5rem; }
+    .options label { display: flex; align-items: center; gap: 0.75rem; padding: 0.8rem 1rem; background: #0d1117; border: 2px solid #30363d; border-radius: 8px; cursor: pointer; transition: border-color 0.2s, background 0.2s; font-size: 1rem; }
+    .options label:hover { border-color: #4dabf7; background: #1c2a4a; }
+    .options input[type="radio"] { accent-color: #0d6efd; width: 18px; height: 18px; flex-shrink: 0; }
+    .btn { display: inline-block; padding: 0.7rem 2rem; border: none; border-radius: 8px; font-size: 1rem; font-weight: 600; cursor: pointer; transition: background 0.2s, transform 0.1s; }
+    .btn-primary { background: #0d6efd; color: #fff; }
+    .btn-primary:hover { background: #3b82f6; }
+    .btn-primary:disabled { background: #374151; cursor: not-allowed; }
+    .btn-restart { background: #238636; color: #fff; margin-top: 1rem; padding: 0.7rem 2rem; border: none; border-radius: 8px; font-size: 1rem; font-weight: 600; cursor: pointer; }
+    .btn-restart:hover { background: #2ea043; }
+    .feedback { margin-top: 1rem; padding: 1rem 1.2rem; border-radius: 8px; font-size: 0.95rem; line-height: 1.5; display: none; }
+    .feedback.correct { background: #0f5132; border: 1px solid #198754; color: #d1fae5; display: block; }
+    .feedback.wrong { background: #842029; border: 1px solid #dc3545; color: #fdd; display: block; }
+    .score-card { text-align: center; padding: 3rem 2rem; }
+    .score-card .score { font-size: 3rem; font-weight: 700; color: #4dabf7; margin-bottom: 0.5rem; }
+    .score-card .score-label { font-size: 1.2rem; color: #8892b0; margin-bottom: 1.5rem; }
+    .hidden { display: none; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Quiz — Production &amp; Couts</h1>
+    <p class="subtitle">Couts des LLMs, semantic cache, rate limiting, fallback models et monitoring</p>
+    <div class="progress-bar-container"><div class="progress-bar" id="progressBar"></div></div>
+    <p class="progress-text" id="progressText">Question 1 / 5</p>
+    <div id="quizContainer"></div>
+    <div id="scoreContainer" class="card score-card hidden"></div>
+  </div>
+  <script>
+    const questions = [
+      {
+        label: "Question 1 — Semantic Cache",
+        text: "Comment fonctionne un semantic cache pour reduire les couts d'appels LLM ?",
+        code: null,
+        options: [
+          "Il met en cache les reponses en utilisant la question exacte comme cle",
+          "Il compare l'embedding de la nouvelle question aux questions deja posees et retourne la reponse en cache si la similarite depasse un seuil (ex: 0.92)",
+          "Il compresse les reponses pour reduire le stockage",
+          "Il pregenere des reponses pour toutes les questions possibles"
+        ],
+        answer: 1,
+        explanation: "Le semantic cache compare le SENS des questions, pas les mots exacts. L'embedding de la nouvelle question est compare aux embeddings des questions en cache via la similarite cosinus. Si le score depasse le seuil (typiquement 0.92-0.95), la reponse en cache est retournee sans appeler le LLM. Cela peut generer jusqu'a 60-70% d'economies."
+      },
+      {
+        label: "Question 2 — Token Bucket",
+        text: "Quel est le principe du rate limiting par token bucket dans un contexte LLM ?",
+        code: null,
+        options: [
+          "On compte le nombre de tokens dans chaque reponse et on facture l'utilisateur",
+          "Un seau se remplit de tokens a un debit fixe ; chaque requete consomme des tokens du seau, si le seau est vide la requete est refusee ou mise en attente",
+          "On limite le nombre de tokens que le LLM peut generer par reponse",
+          "On attribue un nombre fixe de tokens par jour a chaque utilisateur"
+        ],
+        answer: 1,
+        explanation: "Le token bucket est un algorithme de rate limiting. Le seau a une capacite maximale et se remplit a un debit constant (ex: 2 tokens/seconde). Chaque requete consomme N tokens. Si le seau est vide, la requete est refusee (HTTP 429) ou mise en attente. Cela permet des rafales tout en maintenant un debit moyen controle."
+      },
+      {
+        label: "Question 3 — Fallback Models",
+        text: "Quelle strategie de fallback est recommandee pour la resilience d'un service LLM en production ?",
+        code: null,
+        options: [
+          "Utiliser uniquement le modele le moins cher pour minimiser les couts",
+          "Une cascade de modeles : premium (Claude Sonnet) → economique (GPT-4o-mini) → local (Ollama) avec timeout et retries",
+          "Dupliquer chaque requete vers tous les providers simultanement",
+          "Basculer manuellement quand un provider tombe en panne"
+        ],
+        answer: 1,
+        explanation: "La cascade de modeles tente d'abord le modele premium, puis bascule automatiquement sur un modele plus economique en cas de timeout ou d'erreur, et enfin sur un modele local en dernier recours. Chaque niveau a ses propres timeouts et retries. Cela garantit la disponibilite tout en privilegiant la qualite quand elle est accessible."
+      },
+      {
+        label: "Question 4 — Self-hosted vs Cloud",
+        text: "Dans quel cas est-il preferable d'heberger un LLM localement plutot que d'utiliser une API cloud ?",
+        code: null,
+        options: [
+          "Quand on a besoin de la meilleure qualite possible (equivalent Claude Opus)",
+          "Quand les donnees sont sensibles/reglementees et ne doivent pas quitter l'infrastructure",
+          "Quand on a un budget inferieur a 100$/mois",
+          "Quand on n'a pas d'expertise en infrastructure"
+        ],
+        answer: 1,
+        explanation: "Le self-hosting est preferable quand les donnees sont sensibles ou reglementees (sante, finance, defense). Les donnees ne quittent jamais l'infrastructure. Cependant, cela necessite une expertise infra (GPU, DevOps), un investissement initial ($5K-$50K pour les GPU) et la qualite des modeles locaux (8B, 70B) reste inferieure aux modeles cloud premium."
+      },
+      {
+        label: "Question 5 — Optimisation des couts",
+        text: "Quelle technique de prompt optimization peut reduire les couts de ~67% sans affecter la qualite de reponse ?",
+        code: null,
+        options: [
+          "Augmenter la temperature pour des reponses plus courtes",
+          "Utiliser le modele le plus cher disponible",
+          "Supprimer les redondances du prompt, utiliser des mots-cles au lieu de phrases completes et garder le system prompt minimal",
+          "Envoyer les requetes en batch de nuit quand les prix sont plus bas"
+        ],
+        answer: 2,
+        explanation: "L'optimisation du prompt consiste a : supprimer les 'tu dois' repetes, utiliser des abreviations (TS pour TypeScript), remplacer les phrases completes par des mots-cles, garder le system prompt minimal. Un prompt de 850 tokens peut etre reduit a 280 tokens (~67% de moins) avec la meme qualite de reponse, car le LLM comprend les mots-cles aussi bien que les phrases longues."
+      }
+    ];
+    let currentQuestion = 0, score = 0, answered = false;
+    function renderQuestion() {
+      const q = questions[currentQuestion]; const total = questions.length;
+      document.getElementById('progressBar').style.width = ((currentQuestion / total) * 100) + '%';
+      document.getElementById('progressText').textContent = 'Question ' + (currentQuestion + 1) + ' / ' + total;
+      let html = '<div class="card"><p class="question-label">' + q.label + '</p><p class="question-text">' + q.text + '</p>';
+      if (q.code) html += '<pre><code>' + q.code + '</code></pre>';
+      html += '<ul class="options">';
+      q.options.forEach(function(opt, i) { html += '<li><label><input type="radio" name="q" value="' + i + '"> ' + opt + '</label></li>'; });
+      html += '</ul><button class="btn btn-primary" id="validateBtn" onclick="validate()" disabled>Valider</button><div class="feedback" id="feedback"></div></div>';
+      document.getElementById('quizContainer').innerHTML = html;
+      document.querySelectorAll('input[name="q"]').forEach(function(r) { r.addEventListener('change', function() { document.getElementById('validateBtn').disabled = false; }); });
+      answered = false;
+    }
+    function validate() {
+      if (answered) { currentQuestion++; if (currentQuestion < questions.length) renderQuestion(); else showScore(); return; }
+      answered = true;
+      var selected = document.querySelector('input[name="q"]:checked'); if (!selected) return;
+      var val = parseInt(selected.value); var q = questions[currentQuestion];
+      var fb = document.getElementById('feedback'); var btn = document.getElementById('validateBtn');
+      document.querySelectorAll('input[name="q"]').forEach(function(r) { r.disabled = true; });
+      if (val === q.answer) { score++; fb.className = 'feedback correct'; fb.innerHTML = '<strong>Correct !</strong> ' + q.explanation; }
+      else { fb.className = 'feedback wrong'; fb.innerHTML = '<strong>Incorrect.</strong> ' + q.explanation; }
+      btn.textContent = currentQuestion < questions.length - 1 ? 'Suivant' : 'Voir le score';
+    }
+    function showScore() {
+      document.getElementById('quizContainer').classList.add('hidden');
+      document.getElementById('progressBar').style.width = '100%';
+      document.getElementById('progressText').textContent = 'Termine !';
+      var sc = document.getElementById('scoreContainer'); sc.classList.remove('hidden');
+      var pct = Math.round((score / questions.length) * 100);
+      var msg = pct === 100 ? 'Parfait !' : pct >= 60 ? 'Bien joue !' : 'Continuez a reviser !';
+      sc.innerHTML = '<div class="score">' + score + ' / ' + questions.length + '</div><div class="score-label">' + msg + ' (' + pct + '%)</div><button class="btn-restart" onclick="restart()">Recommencer</button>';
+    }
+    function restart() { currentQuestion = 0; score = 0; answered = false; document.getElementById('scoreContainer').classList.add('hidden'); document.getElementById('quizContainer').classList.remove('hidden'); renderQuestion(); }
+    renderQuestion();
+  </script>
+</body>
+</html>
