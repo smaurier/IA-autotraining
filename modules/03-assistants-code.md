@@ -1,9 +1,11 @@
 # Module 03 — Copilot & Assistants Code
 
-> **Objectif** : Maitriser les assistants IA de programmation pour maximiser la productivite au quotidien. Comprendre les forces et limites de chaque outil, developper des workflows efficaces.
+> **Objectif** : Maitriser les assistants IA de programmation pour maximiser la productivite. Comprendre forces et limites de chaque outil, developper des workflows efficaces.
 > **Difficulte** : ⭐⭐ (intermediaire)
 > **Prerequis** : Module 01 (Prompting Fondamental)
 > **Duree estimee** : 3 heures
+
+> **Ce module est 100% pratique** — pas de theorie IA ici. Vous apprenez a utiliser Copilot, Claude Code et Cursor comme un pro. C'est le dernier module "outil" avant de plonger dans les APIs (Module 04).
 
 ---
 

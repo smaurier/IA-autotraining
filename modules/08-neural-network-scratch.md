@@ -1,8 +1,36 @@
 # Module 08 — Reseaux de Neurones from Scratch
 
-## Objectif du module
+> **Objectif** : Construire un reseau de neurones complet en TypeScript pur. Comprendre le perceptron, le forward/backward pass, et resoudre le probleme XOR.
+> **Difficulte** : ⭐⭐⭐⭐ (avance — le module le plus technique du cours)
+> **Prerequis** : Module 07 (Maths Essentielles — obligatoire)
+> **Duree estimee** : 4-5 heures
 
-Construire un reseau de neurones complet **en TypeScript pur**, sans aucun framework (pas de TensorFlow, pas de PyTorch, pas de brain.js). L'objectif est de comprendre chaque piece du puzzle : du perceptron simple au MLP qui apprend le XOR.
+---
+
+## Avant de commencer
+
+Ce module est **le plus ambitieux** du cours. Vous allez coder un reseau de neurones from scratch, sans aucun framework (pas de TensorFlow, pas de PyTorch, pas de brain.js).
+
+### Parcours selon votre objectif
+
+```
+🟢 Parcours "Comprendre l'essentiel" (2h)
+   Sections 1-2 : Perceptron + Forward Pass
+   → Vous comprenez comment un neurone fonctionne et comment les signaux se propagent.
+   → Suffisant pour aborder le module 09 (Transformers) et le reste du cours.
+
+🟡 Parcours "Complet" (4h)
+   Sections 1-7 : Perceptron → XOR
+   → Vous comprenez le cycle complet : forward, loss, backward, training.
+   → Vous pouvez expliquer comment un modele "apprend".
+
+🔴 Parcours "Expert" (5h+)
+   Toutes les sections + exercices avances
+   → Vous pouvez implementer et debugger un reseau de neurones.
+   → Preparation ideale si vous visez le fine-tuning ou le ML engineering.
+```
+
+> **Important** : il est normal de ne pas tout comprendre du premier coup. La backpropagation (section 4) est le concept le plus difficile de tout le cours. Relisez-la une semaine plus tard et elle sera beaucoup plus claire.
 
 > Si vous pouvez le coder from scratch, vous le comprenez vraiment.
 

@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Quiz — Fine-tuning</title>
+  <title>Quiz — Entrainement & Fine-Tuning</title>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #1a1a2e; color: #e0e0e0; min-height: 100vh; padding: 2rem 1rem; }
@@ -40,8 +40,8 @@
 </head>
 <body>
   <div class="container">
-    <h1>Quiz — Fine-tuning</h1>
-    <p class="subtitle">LoRA, RLHF, SFT, DPO, datasets et evaluation</p>
+    <h1>Quiz — Entrainement & Fine-Tuning</h1>
+    <p class="subtitle">Pre-entrainement, SFT, RLHF, DPO, LoRA, QLoRA et evaluation</p>
     <div class="progress-bar-container"><div class="progress-bar" id="progressBar"></div></div>
     <p class="progress-text" id="progressText">Question 1 / 5</p>
     <div id="quizContainer"></div>
@@ -51,68 +51,68 @@
     const questions = [
       {
         label: "Question 1 — LoRA",
-        text: "Comment LoRA (Low-Rank Adaptation) reduit-il le cout du fine-tuning ?",
-        code: "W' = W + A * B\n(A: d x r, B: r x d, r << d)",
-        options: [
-          "En supprimant les couches les moins importantes du modele",
-          "En gelant les poids originaux et en n'entrainant que des matrices de faible rang ajoutees aux couches existantes",
-          "En reduisant la taille du dataset d'entrainement",
-          "En utilisant une precision plus faible (FP8) pour tous les poids"
-        ],
-        answer: 1,
-        explanation: "LoRA gele les poids pre-entraines W et ajoute des matrices de decomposition A et B de rang r (tres petit, ex: 8 ou 16). Seuls A et B sont entraines, reduisant le nombre de parametres entrainables de 99%+ tout en maintenant des performances proches du full fine-tuning."
-      },
-      {
-        label: "Question 2 — RLHF",
-        text: "Quelles sont les etapes principales du RLHF (Reinforcement Learning from Human Feedback) ?",
+        text: "Comment LoRA (Low-Rank Adaptation) reduit-il drastiquement le cout du fine-tuning ?",
         code: null,
         options: [
-          "Pre-entrainement -> Deploiement -> Correction manuelle",
-          "SFT (Supervised Fine-Tuning) -> Entrainement d'un modele de recompense sur les preferences humaines -> Optimisation PPO avec ce modele de recompense",
-          "Collecte de donnees -> Tokenisation -> Entrainement standard",
-          "Fine-tuning -> Evaluation automatique -> Re-fine-tuning en boucle"
+          "Il reduit la taille du dataset d'entrainement necessaire",
+          "Il gele les poids originaux du modele et ajoute de petites matrices entrainables (A et B) a cote, ne modifiant que ~1% des parametres",
+          "Il utilise un modele plus petit comme point de depart",
+          "Il compresse le modele apres l'entrainement"
         ],
         answer: 1,
-        explanation: "RLHF comporte 3 etapes : (1) SFT sur des demonstrations d'experts, (2) entrainement d'un reward model sur des comparaisons de reponses classees par des humains, (3) optimisation du modele via PPO pour maximiser le score du reward model."
+        explanation: "LoRA gele la matrice originale W et ajoute deux petites matrices A (d x r) et B (r x d) ou r est le rang (souvent 16). Au lieu de modifier 16M de parametres, on n'en entraine que ~131K (0.8%). Le resultat est quasi identique au full fine-tuning avec beaucoup moins de VRAM."
       },
       {
-        label: "Question 3 — SFT",
-        text: "Quel est le format typique des donnees pour le Supervised Fine-Tuning (SFT) ?",
+        label: "Question 2 — SFT vs pre-entrainement",
+        text: "Quelle est la difference entre le pre-entrainement et le SFT (Supervised Fine-Tuning) ?",
         code: null,
         options: [
-          "Des textes bruts sans annotation",
-          "Des paires instruction/reponse (ou des conversations multi-tours) avec la reponse attendue",
-          "Des images avec des labels de classification",
-          "Des embeddings pre-calcules"
+          "Le pre-entrainement utilise plus de GPU que le SFT, mais les deux font la meme chose",
+          "Le pre-entrainement apprend a completer du texte sur des trillions de tokens. Le SFT apprend au modele a repondre a des instructions au format conversation",
+          "Le SFT est fait avant le pre-entrainement",
+          "Le pre-entrainement ne concerne que les modeles open source"
         ],
         answer: 1,
-        explanation: "Le SFT utilise des paires {instruction, reponse} (ou des conversations) ou le modele apprend a produire la reponse de reference pour chaque instruction. C'est l'etape qui transforme un modele de base en modele assistant suiveur d'instructions."
+        explanation: "Apres le pre-entrainement, le modele sait completer du texte mais ne sait pas repondre a des instructions. Le SFT utilise des milliers d'exemples Q/A pour lui apprendre le format conversation. Sans SFT, si vous demandez 'Explique les closures', il complete le texte au lieu de repondre."
       },
       {
-        label: "Question 4 — DPO",
-        text: "Quel avantage DPO (Direct Preference Optimization) a-t-il par rapport a RLHF ?",
+        label: "Question 3 — DPO vs RLHF",
+        text: "Quel est l'avantage principal de DPO (Direct Preference Optimization) par rapport au RLHF ?",
         code: null,
         options: [
-          "DPO produit des modeles plus performants dans tous les cas",
-          "DPO elimine le besoin d'un modele de recompense separe et de l'algorithme PPO, en optimisant directement sur les paires de preferences",
-          "DPO ne necessite aucune donnee humaine",
-          "DPO est uniquement compatible avec les modeles de moins d'un milliard de parametres"
+          "DPO produit de meilleurs resultats que RLHF dans tous les cas",
+          "DPO n'a pas besoin de reward model separe, ce qui le rend plus simple et plus stable a entrainer",
+          "DPO ne necessite pas de donnees de preferences humaines",
+          "DPO est plus rapide car il n'utilise pas de GPU"
         ],
         answer: 1,
-        explanation: "DPO simplifie le pipeline RLHF en derivant une loss qui optimise directement le modele a partir de paires (reponse preferee, reponse rejetee), sans entrainer un reward model ni utiliser PPO. C'est plus simple, plus stable et souvent aussi efficace."
+        explanation: "RLHF necessite 3 composants (LLM, reward model, PPO) et est notoirement instable. DPO optimise directement le LLM a partir des paires de preferences (chosen/rejected) sans reward model intermediaire. Il est devenu le standard de l'industrie en 2025."
       },
       {
-        label: "Question 5 — Evaluation",
-        text: "Pourquoi les benchmarks automatiques (MMLU, HumanEval, etc.) ne suffisent-ils pas pour evaluer un LLM fine-tune ?",
+        label: "Question 4 — Quand fine-tuner",
+        text: "Dans quel ordre devrait-on essayer les approches pour personnaliser un LLM ?",
         code: null,
         options: [
-          "Parce que les benchmarks sont trop faciles",
-          "Parce qu'ils mesurent des capacites generiques mais pas l'adequation aux besoins specifiques du cas d'usage (ton, format, domaine metier)",
-          "Parce qu'ils sont payes et trop couteux",
-          "Parce qu'ils ne fonctionnent qu'en anglais"
+          "Fine-tuning d'abord, puis RAG, puis prompting",
+          "RAG d'abord, puis fine-tuning, puis prompting",
+          "Prompting d'abord, puis RAG si besoin de donnees externes, puis fine-tuning en dernier recours",
+          "Les trois approches sont equivalentes, le choix depend du budget"
+        ],
+        answer: 2,
+        explanation: "On commence toujours par le prompting (cout zero, minutes). Si on a besoin de donnees specifiques, on passe au RAG (heures). Le fine-tuning est le dernier recours (jours, plus couteux) mais le plus puissant pour le style et le comportement. On peut aussi les combiner."
+      },
+      {
+        label: "Question 5 — QLoRA et ressources",
+        text: "Qu'est-ce que QLoRA apporte par rapport a LoRA standard ?",
+        code: null,
+        options: [
+          "QLoRA produit des modeles de meilleure qualite",
+          "QLoRA combine LoRA avec une quantization 4-bit du modele de base, permettant le fine-tuning d'un modele 8B sur un GPU 6-8 Go",
+          "QLoRA utilise un algorithme d'entrainement completement different",
+          "QLoRA ne fonctionne qu'avec les modeles GPT"
         ],
         answer: 1,
-        explanation: "Les benchmarks generiques mesurent des capacites larges (raisonnement, code, connaissances) mais ne capturent pas la qualite specifique au cas d'usage : style, respect des contraintes metier, format de sortie. Il faut combiner benchmarks + evaluation humaine + metriques metier specifiques."
+        explanation: "QLoRA = modele de base quantifie en 4-bit (lecture seule) + matrices LoRA en FP16 (entrainables). Cela reduit la VRAM necessaire de ~18 Go (LoRA FP16) a ~6 Go pour un modele 8B, rendant le fine-tuning possible sur un GPU grand public comme une RTX 4060."
       }
     ];
     let currentQuestion = 0, score = 0, answered = false;

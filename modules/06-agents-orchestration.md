@@ -264,3 +264,15 @@ Dans le Lab 06, vous allez :
 ```bash
 npm run lab:06
 ```
+
+---
+
+## Et ensuite ?
+
+Felicitations — vous avez termine la **Partie 1 : Utiliser l'IA**. Vous savez prompter, utiliser les assistants code, appeler les APIs, creer des serveurs MCP, et orchestrer des agents.
+
+La **Partie 2 : Comprendre l'IA** commence avec le Module 07 (Maths Essentielles). Ne vous inquietez pas du mot "maths" — il s'agit uniquement de 5 concepts concrets (vecteurs, matrices, fonctions d'activation, gradient, loss) qui eclairent tout ce que vous avez utilise dans la Partie 1.
+
+> Par exemple, quand vous avez utilise la `temperature` dans vos prompts, vous avez manipule le parametre d'une fonction **softmax**. Quand le RAG "cherche" des documents similaires, il calcule une **similarite cosinus** entre des vecteurs. Le Module 07 vous donnera l'intuition derriere ces mecanismes.
+
+Si vous preferez rester sur le cote pratique, vous pouvez sauter directement aux Modules 13-15 (RAG) — les maths ne sont pas un prerequis strict pour construire un RAG fonctionnel.

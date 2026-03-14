@@ -1,5 +1,34 @@
 # Module 07 — Maths Essentielles pour l'IA
 
+> **Objectif** : Maitriser les briques mathematiques indispensables pour comprendre les modules 08 (reseaux de neurones) et 09 (transformers). Aucun prerequis au-dela du niveau lycee.
+> **Difficulte** : ⭐⭐ (intermediaire)
+> **Prerequis** : Module 01-06 (Utiliser l'IA) — aucune base math specifique
+> **Duree estimee** : 3 heures
+
+---
+
+## Pourquoi ce module maintenant ?
+
+Dans les modules 01-06, vous avez **utilise** l'IA comme un outil : prompting, API, MCP, agents. Vous savez piloter la voiture.
+
+A partir de maintenant, on ouvre le capot pour **comprendre le moteur**. Et le moteur de l'IA, c'est des maths — mais uniquement 5 concepts :
+
+```
+Ce que vous savez deja                 Ce que ces maths vont debloquer
+─────────────────────────              ─────────────────────────────────
+Embeddings (Module 12)           ←──   Vecteurs, produit scalaire, cosine
+Similarite dans le RAG (13-15)   ←──   Distance euclidienne, cosine similarity
+Softmax / temperature (Module 01)←──   Fonctions d'activation, softmax
+"Le modele apprend" (concept)    ←──   Gradient descent, backpropagation
+"Loss" dans les logs d'entrainement←── Cross-entropy loss
+```
+
+Chaque concept est lie a quelque chose que vous avez deja utilise. Pas de maths abstraites — uniquement ce qui sert dans les modules suivants.
+
+> **Si vous etes presse** : les sections 1 (Vecteurs) et 3 (Fonctions d'activation / Softmax) sont les plus importantes. Les sections 4-5 (Derivees, Cross-entropy) sont necessaires uniquement si vous comptez faire le module 08 (neural network from scratch).
+
+---
+
 ## Objectif du module
 
 Ce module couvre **uniquement** les maths necessaires pour comprendre les reseaux de neurones et les transformers. Pas de theorie abstraite, pas de demonstrations formelles — juste ce dont vous avez besoin en tant que developpeur JavaScript pour lire du code d'IA et comprendre ce qui se passe sous le capot.

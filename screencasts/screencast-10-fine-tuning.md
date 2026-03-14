@@ -1,7 +1,7 @@
 # Screencast 10 — Fine-tuning : LoRA et Ollama Modelfile
 
 ## Informations
-- **Duree estimee** : 10-12 min
+- **Duree estimee** : 18-22 min
 - **Module** : `modules/10-fine-tuning.md`
 - **Lab associe** : `labs/lab-10-fine-tuning/`
 - **Prerequis** : Screencast 08, 11

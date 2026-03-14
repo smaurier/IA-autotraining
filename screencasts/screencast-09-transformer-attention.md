@@ -1,7 +1,7 @@
 # Screencast 09 — Le Transformer et le mecanisme d'attention
 
 ## Informations
-- **Duree estimee** : 15-18 min
+- **Duree estimee** : 20-25 min
 - **Module** : `modules/09-transformer-attention.md`
 - **Lab associe** : `labs/lab-09-transformer-attention/`
 - **Prerequis** : Screencast 07, 08

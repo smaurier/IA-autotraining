@@ -1,5 +1,31 @@
 # Module 15 — Chatbot RAG Full-Stack
 
+> **Objectif** : Construire une **vraie application** de chatbot RAG deployable, avec NestJS, pgvector et streaming.
+> **Difficulte** : ⭐⭐⭐⭐ (avance — projet integrant tout le cours)
+> **Prerequis** : Module 13 (RAG Fondamental — obligatoire), Module 14 (recommande), cours NestJS (recommande)
+> **Duree estimee** : 5 heures
+
+---
+
+## La difference avec les Modules 13-14
+
+Les modules 13 et 14 vous ont appris les **techniques** du RAG. Ce module les assemble dans une **application reelle** :
+
+```
+Module 13-14 (techniques)              Module 15 (application)
+─────────────────────────              ─────────────────────────
+Scripts TypeScript standalone    →     API NestJS structuree
+Array en memoire                 →     PostgreSQL + pgvector
+Appels synchrones                →     Streaming SSE temps reel
+Texte brut en console            →     Citations avec sources
+Pas de persistance               →     Docker Compose complet
+Un seul echange                  →     Conversation multi-tours avec historique
+```
+
+> Ce module est un **projet d'integration**. Si vous maitrisez les modules 13-14, vous pouvez le suivre comme un TP guide. Si vous ne les avez pas faits, lisez au moins le Module 13 avant.
+
+---
+
 ## Objectifs du module
 
 - Construire un chatbot RAG complet avec NestJS, pgvector et Ollama/Claude

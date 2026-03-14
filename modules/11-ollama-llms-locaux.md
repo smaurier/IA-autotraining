@@ -1016,6 +1016,51 @@ ask();
 
 ---
 
+## 11. Ollama + RAG : avant-gout du Module 13
+
+Ollama n'est pas qu'un chatbot local — c'est aussi un **moteur d'embedding gratuit**. Voici un mini-RAG en 30 lignes qui montre la puissance de la combinaison :
+
+```typescript
+// Mini-RAG local avec Ollama — preview de ce que vous construirez en Module 13-15
+const ollama = new OllamaClient();
+
+// 1. Vos documents (en vrai : chargés depuis des fichiers)
+const docs = [
+  "NestJS utilise des décorateurs TypeScript pour définir les modules, contrôleurs et services.",
+  "Un Guard dans NestJS implémente CanActivate pour protéger les routes avec JWT.",
+  "Les Pipes NestJS valident et transforment les données entrantes avec class-validator.",
+];
+
+// 2. Embedder chaque document (gratuit, local, privé)
+const docVectors = await Promise.all(
+  docs.map(async (doc) => ({
+    text: doc,
+    vector: await ollama.embed("nomic-embed-text", doc),
+  })),
+);
+
+// 3. Embedder la question
+const question = "Comment sécuriser une route NestJS ?";
+const questionVec = await ollama.embed("nomic-embed-text", question);
+
+// 4. Trouver le document le plus pertinent (cosine similarity)
+const best = docVectors
+  .map((d) => ({ text: d.text, score: cosine(questionVec, d.vector) }))
+  .sort((a, b) => b.score - a.score)[0];
+
+// 5. Générer la réponse avec le contexte
+const answer = await ollama.chat("mistral", [
+  { role: "system", content: `Réponds en te basant sur ce contexte :\n${best.text}` },
+  { role: "user", content: question },
+]);
+console.log(answer);
+// → "Pour sécuriser une route NestJS, vous pouvez utiliser un Guard qui implémente CanActivate..."
+```
+
+> C'est un aperçu simplifié. Dans les modules 13-15, vous construirez un pipeline RAG complet avec chunking, vector store persistant, hybrid search, et streaming.
+
+---
+
 ## Exercices pratiques
 
 1. **Installation** : Installez Ollama, téléchargez 3 modèles de tailles différentes, comparez les temps de réponse
@@ -1023,3 +1068,4 @@ ask();
 3. **Modelfile** : Créez 3 Modelfiles spécialisés (reviewer de code, générateur de tests, rédacteur de docs)
 4. **Benchmark** : Comparez 3 modèles sur 10 prompts identiques, mesurez la qualité (scoring subjectif 1-5) et la vitesse
 5. **Quantization** : Téléchargez le même modèle en Q4, Q5, Q8 et F16, comparez la qualité sur 5 questions précises
+6. **Mini-RAG** : Adaptez l'exemple ci-dessus avec 5-10 paragraphes de votre propre documentation, testez 3 questions

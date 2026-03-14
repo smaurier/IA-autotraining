@@ -1,5 +1,33 @@
 # Module 13 — RAG Fondamental
 
+> **Objectif** : Comprendre et implementer un pipeline RAG complet de A a Z.
+> **Difficulte** : ⭐⭐⭐ (avance)
+> **Prerequis** : Module 12 (Embeddings), Module 11 (Ollama)
+> **Duree estimee** : 4 heures
+
+---
+
+## Ou en etes-vous dans le parcours RAG ?
+
+```
+Module 13 (vous etes ici)        Module 14                    Module 15
+RAG FONDAMENTAL                  RAG AVANCE                   CHATBOT RAG
+─────────────────                ─────────────────            ─────────────────
+✅ Chunking (4 strategies)       Hybrid search (BM25+vec)     Conversation multi-tours
+✅ Embeddings + vector store     Reranking (cross-encoder)    Streaming SSE
+✅ Similarity search (cosine)    HyDE + multi-query           Pipeline d'ingestion
+✅ Prompt augmente               Parent-child chunking        pgvector + NestJS
+✅ Pipeline complet minimal      GraphRAG                     Citations + sources
+✅ Metriques de base             RAGAS evaluation             Docker Compose
+
+Objectif : faire marcher           Objectif : faire marcher       Objectif : construire
+un RAG de bout en bout             BIEN (qualite production)      une vraie application
+```
+
+> Chaque module RAG a un objectif distinct. Si vous ne devez en faire qu'un, faites celui-ci — il contient tout le necessaire pour comprendre et utiliser le RAG.
+
+---
+
 ## Objectifs du module
 
 - Comprendre ce qu'est le RAG (Retrieval-Augmented Generation) et pourquoi c'est indispensable

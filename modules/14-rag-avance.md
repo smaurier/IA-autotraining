@@ -1,5 +1,29 @@
 # Module 14 — RAG Avancé
 
+> **Objectif** : Passer d'un RAG qui "marche" a un RAG qui marche **bien**. Techniques de qualite production.
+> **Difficulte** : ⭐⭐⭐⭐ (avance)
+> **Prerequis** : Module 13 (RAG Fondamental — obligatoire)
+> **Duree estimee** : 4 heures
+
+---
+
+## Ce que ce module ajoute par rapport au Module 13
+
+```
+Module 13 (RAG basique)              Module 14 (RAG avancé)
+─────────────────────────            ─────────────────────────────
+Recherche vectorielle seule    →     Hybrid search (vectoriel + BM25)
+Un seul reformulage            →     HyDE + multi-query expansion
+Tous les résultats gardés      →     Reranking avec cross-encoder
+Chunks indépendants            →     Parent-child chunking (contexte)
+Métriques manuelles            →     Framework RAGAS automatisé
+"Ca marche"                    →     "Ca marche bien en production"
+```
+
+> **Conseil** : si votre RAG du Module 13 donne deja de bons resultats sur vos donnees, vous n'avez pas besoin de toutes les techniques de ce module. Ajoutez-les une par une en mesurant l'impact avec RAGAS.
+
+---
+
 ## Objectifs du module
 
 - Maîtriser les techniques avancées qui transforment un RAG basique en un système de qualité production
