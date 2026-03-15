@@ -3,7 +3,7 @@
 ## Objectifs
 
 - Comprendre les fichiers de configuration des assistants code (Claude, Cursor, etc.)
-- Parser et generer des fichiers CLAUDE.md
+- Parser et générer des fichiers CLAUDE.md
 - Construire des regles Cursor
 - Analyser des prompts de code review
 - Mesurer le gain de productivite avec un assistant IA
@@ -12,7 +12,7 @@
 
 ### 1. `parseClaudeMd(content: string): { sections: { title: string, content: string }[] }`
 
-Parse un fichier CLAUDE.md au format "## Title\ncontent". Chaque section commence par `## ` et contient tout le texte jusqu'a la section suivante.
+Parse un fichier CLAUDE.md au format "## Title\ncontent". Chaque section commence par `## ` et contient tout le texte jusqu'à la section suivante.
 
 ### 2. `generateClaudeMd(config: { project: string, conventions: string[], commands: { name: string, cmd: string }[] }): string`
 
@@ -23,13 +23,13 @@ Genere un fichier CLAUDE.md structure avec :
 
 ### 3. `buildCursorRules(rules: string[]): string`
 
-Assemble des regles Cursor en les joignant avec des retours a la ligne.
+Assemble des regles Cursor en les joignant avec des retours à la ligne.
 
 ### 4. `analyzeCodeReviewPrompt(diff: string, focus: string): string`
 
 Construit un prompt structure de code review contenant :
 - Le diff dans un bloc code
-- Le focus d'analyse demande
+- Le focus d'analyse demandé
 
 ### 5. `estimateProductivityGain(tasksWithAi: number, tasksWithout: number, avgTimeWithAi: number, avgTimeWithout: number): { speedup: number, timeSaved: number }`
 

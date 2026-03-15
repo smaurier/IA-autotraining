@@ -11,11 +11,11 @@
 
 ### 1. `dotProduct(a: number[], b: number[]): number`
 
-Calcule le produit scalaire de deux vecteurs de meme dimension.
+Calcule le produit scalaire de deux vecteurs de même dimension.
 
 ### 2. `vectorAdd(a: number[], b: number[]): number[]`
 
-Additionne deux vecteurs element par element.
+Additionne deux vecteurs élément par élément.
 
 ### 3. `vectorNorm(v: number[]): number`
 
@@ -35,7 +35,7 @@ Fonction ReLU : `max(0, x)`.
 
 ### 7. `softmax(v: number[]): number[]`
 
-Fonction softmax : `e^v[i] / sum(e^v[j])` pour chaque element. Les valeurs de sortie somment a 1.
+Fonction softmax : `e^v[i] / sum(e^v[j])` pour chaque élément. Les valeurs de sortie somment a 1.
 
 ### 8. `crossEntropyLoss(predicted: number[], actual: number[]): number`
 

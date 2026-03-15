@@ -2,14 +2,14 @@
 
 > **Objectif** : Construire une **vraie application** de chatbot RAG deployable, avec NestJS, pgvector et streaming.
 > **Difficulte** : ⭐⭐⭐⭐ (avance — projet integrant tout le cours)
-> **Prerequis** : Module 13 (RAG Fondamental — obligatoire), Module 14 (recommande), cours NestJS (recommande)
+> **Prérequis** : Module 13 (RAG Fondamental — obligatoire), Module 14 (recommande), cours NestJS (recommande)
 > **Duree estimee** : 5 heures
 
 ---
 
-## La difference avec les Modules 13-14
+## La différence avec les Modules 13-14
 
-Les modules 13 et 14 vous ont appris les **techniques** du RAG. Ce module les assemble dans une **application reelle** :
+Les modules 13 et 14 vous ont appris les **techniques** du RAG. Ce module les assemble dans une **application réelle** :
 
 ```
 Module 13-14 (techniques)              Module 15 (application)
@@ -22,7 +22,7 @@ Pas de persistance               →     Docker Compose complet
 Un seul echange                  →     Conversation multi-tours avec historique
 ```
 
-> Ce module est un **projet d'integration**. Si vous maitrisez les modules 13-14, vous pouvez le suivre comme un TP guide. Si vous ne les avez pas faits, lisez au moins le Module 13 avant.
+> Ce module est un **projet d'intégration**. Si vous maitrisez les modules 13-14, vous pouvez le suivre comme un TP guide. Si vous ne les avez pas faits, lisez au moins le Module 13 avant.
 
 ---
 
@@ -1602,3 +1602,13 @@ CMD ["node", "dist/main"]
 3. **Historique** : Persistez les conversations en base de données et ajoutez un endpoint GET /conversations
 4. **Citations** : Enrichissez le système de citations pour inclure le numéro de page/section
 5. **Frontend** : Créez une interface de chat minimaliste en HTML/JS qui consomme le flux SSE
+
+---
+
+<!-- parcours-recommande -->
+
+::: tip Parcours recommandé
+1. **Screencast** : [screencast 15 chatbot rag](../screencasts/screencast-15-chatbot-rag.md)
+2. **Lab** : [lab-15-chatbot-rag](../labs/lab-15-chatbot-rag/README)
+3. **Quiz** : [quiz 15 chatbot rag](../quizzes/quiz-15-chatbot-rag.html)
+:::

@@ -4,7 +4,7 @@
 - **Duree estimee** : 10-12 min
 - **Module** : `modules/01-prompting-fondamental.md`
 - **Lab associe** : `labs/lab-01-prompting-fondamental/`
-- **Prerequis** : Screencast 00
+- **Prérequis** : Screencast 00
 
 ## Setup
 - [ ] Navigateur ouvert sur claude.ai
@@ -15,7 +15,7 @@
 ## Script
 
 ### [00:00-02:30] Pourquoi le prompting est fondamental
-> Le prompting, c'est l'interface entre vous et le modele. Un bon prompt peut transformer un resultat mediocre en reponse experte. On va voir trois techniques essentielles : zero-shot, few-shot et chain-of-thought.
+> Le prompting, c'est l'interface entre vous et le modèle. Un bon prompt peut transformer un résultat mediocre en réponse experte. On va voir trois techniques essentielles : zero-shot, few-shot et chain-of-thought.
 **Action** : Montrer un exemple de mauvais prompt vs bon prompt dans claude.ai
 ```
 Mauvais prompt:
@@ -29,8 +29,8 @@ Texte : Les resultats du trimestre depassent les attentes."
 ```
 
 ### [02:30-05:00] Zero-shot prompting
-> Le zero-shot, c'est quand on demande quelque chose au modele sans lui donner d'exemple. Ca marche bien pour des taches simples et bien definies.
-**Action** : Executer plusieurs prompts zero-shot et comparer les resultats
+> Le zero-shot, c'est quand on demandé quelque chose au modèle sans lui donner d'exemple. Ça marche bien pour des taches simples et bien definies.
+**Action** : Exécuter plusieurs prompts zero-shot et comparer les résultats
 ```typescript
 // zero-shot.ts
 const prompts = [
@@ -60,8 +60,8 @@ for (const prompt of prompts) {
 ```
 
 ### [05:00-08:00] Few-shot prompting
-> Le few-shot, c'est donner des exemples au modele avant de poser la vraie question. C'est extremement puissant pour les taches ou le format de sortie compte.
-**Action** : Montrer la difference de qualite avec et sans exemples
+> Le few-shot, c'est donner des exemples au modèle avant de poser la vraie question. C'est extremement puissant pour les taches ou le format de sortie compte.
+**Action** : Montrer la différence de qualite avec et sans exemples
 ```typescript
 // few-shot.ts
 const fewShotPrompt = `Tu convertis des descriptions en objets JSON.
@@ -85,8 +85,8 @@ console.log(response.content[0].text);
 ```
 
 ### [08:00-10:30] Chain-of-thought (CoT)
-> Le chain-of-thought, c'est demander au modele de raisonner etape par etape. C'est la technique la plus puissante pour les problemes complexes — mathematiques, logique, analyse.
-**Action** : Comparer une reponse directe vs une reponse avec CoT
+> Le chain-of-thought, c'est demander au modèle de raisonner étape par étape. C'est la technique la plus puissante pour les problèmes complexes — mathematiques, logique, analyse.
+**Action** : Comparer une réponse directe vs une réponse avec CoT
 ```typescript
 // chain-of-thought.ts
 const sansCoT = `Un magasin vend 3 types de pizzas.
@@ -118,9 +118,9 @@ console.log("\n=== Avec CoT ===");
 console.log(reponseAvec.content[0].text);
 ```
 
-### [10:30-12:00] Recapitulatif et bonnes pratiques
-> On a vu trois techniques fondamentales. Zero-shot pour les taches simples, few-shot quand le format compte, et chain-of-thought pour le raisonnement. Retenez cette regle : plus la tache est complexe, plus il faut guider le modele.
-**Action** : Afficher le tableau recapitulatif
+### [10:30-12:00] Récapitulatif et bonnes pratiques
+> On a vu trois techniques fondamentales. Zero-shot pour les taches simples, few-shot quand le format compte, et chain-of-thought pour le raisonnement. Retenez cette regle : plus la tache est complexe, plus il faut guider le modèle.
+**Action** : Afficher le tableau récapitulatif
 ```
 | Technique | Quand l'utiliser           | Tokens consommes |
 |-----------|----------------------------|------------------|
@@ -130,7 +130,7 @@ console.log(reponseAvec.content[0].text);
 ```
 
 ## Points d'attention pour l'enregistrement
-- Executer les scripts en live, ne pas pre-enregistrer les reponses
-- Bien montrer la difference de qualite entre sans CoT et avec CoT
-- Faire une pause apres chaque reponse pour laisser lire
+- Exécuter les scripts en live, ne pas pre-enregistrer les réponses
+- Bien montrer la différence de qualite entre sans CoT et avec CoT
+- Faire une pause après chaque réponse pour laisser lire
 - Mentionner que le CoT augmente la consommation de tokens

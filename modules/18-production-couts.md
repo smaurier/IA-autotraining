@@ -1145,3 +1145,13 @@ class CostAlertManager {
 3. **Rate limiter** : Ajoutez un rate limiter par utilisateur à votre API NestJS avec une limite de 20 requêtes/minute
 4. **Fallback** : Configurez une cascade Claude Sonnet → GPT-4o-mini → Ollama et testez la résilience en coupant les providers
 5. **Dashboard** : Créez un endpoint /admin/costs qui retourne le dashboard de monitoring des 24 dernières heures
+
+---
+
+<!-- parcours-recommande -->
+
+::: tip Parcours recommandé
+1. **Screencast** : [screencast 18 production](../screencasts/screencast-18-production.md)
+2. **Lab** : [lab-18-production-couts](../labs/lab-18-production-couts/README)
+3. **Quiz** : [quiz 18 production](../quizzes/quiz-18-production.html)
+:::

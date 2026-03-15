@@ -4,7 +4,7 @@
 - **Duree estimee** : 20-25 min
 - **Module** : `modules/15-chatbot-rag.md`
 - **Lab associe** : `labs/lab-15-chatbot-rag/`
-- **Prerequis** : Modules 13-14 completes, NestJS, Docker Compose
+- **Prérequis** : Modules 13-14 completes, NestJS, Docker Compose
 
 ## Setup
 - [ ] Docker Compose pret (PostgreSQL/pgvector + Ollama)
@@ -16,7 +16,7 @@
 ## Script
 
 ### [00:00-02:30] Architecture du chatbot RAG
-> On passe a la pratique concrete : un chatbot RAG complet avec NestJS, pgvector et Ollama. Il a trois parties : l'ingestion de documents, la recherche hybride, et le chat avec streaming. On va construire tout ca pas a pas.
+> On passe à la pratique concrete : un chatbot RAG complet avec NestJS, pgvector et Ollama. Il a trois parties : l'ingestion de documents, la recherche hybride, et le chat avec streaming. On va construire tout ça pas a pas.
 **Action** : Afficher l'architecture
 ```
 CLIENT (Browser)
@@ -36,7 +36,7 @@ NESTJS API
 ```
 
 ### [02:30-05:30] Docker Compose et schema SQL
-> On commence par l'infra. Docker Compose lance PostgreSQL avec pgvector et Ollama. Le schema SQL definit les tables pour les documents, les chunks avec embeddings, et les conversations.
+> On commence par l'infra. Docker Compose lance PostgreSQL avec pgvector et Ollama. Le schema SQL définit les tables pour les documents, les chunks avec embeddings, et les conversations.
 **Action** : Montrer le `docker-compose.yml` et le lancer
 ```yaml
 # docker-compose.yml
@@ -83,7 +83,7 @@ CREATE INDEX chunks_embedding_hnsw ON chunks
 ```
 
 ### [05:30-09:00] Pipeline d'ingestion : upload, chunking, embedding
-> L'ingestion prend un fichier, le decoupe en chunks, genere un embedding pour chaque chunk, et stocke tout dans pgvector.
+> L'ingestion prend un fichier, le découpé en chunks, généré un embedding pour chaque chunk, et stocke tout dans pgvector.
 **Action** : Montrer le IngestService
 ```typescript
 // ingest.service.ts (extrait)
@@ -117,7 +117,7 @@ curl -X POST http://localhost:3000/ingest/file \
 ```
 
 ### [09:00-13:00] Chat avec RAG et streaming SSE
-> Le coeur du chatbot : on recoit une question, on cherche les chunks pertinents, on construit le prompt augmente, et on streame la reponse token par token via SSE.
+> Le coeur du chatbot : on recoit une question, on cherche les chunks pertinents, on construit le prompt augmente, et on streame la réponse token par token via SSE.
 **Action** : Montrer le ChatService
 ```typescript
 // chat.service.ts (extrait)
@@ -167,7 +167,7 @@ async chat(@Param('conversationId') id: number, @Body() dto: ChatDto) {
 ```
 
 ### [13:00-15:30] System prompt engineering pour le RAG
-> Le system prompt fait toute la difference entre un chatbot qui hallucine et un qui cite ses sources fidelement.
+> Le system prompt fait toute la différence entre un chatbot qui hallucine et un qui cite ses sources fidelement.
 **Action** : Montrer le system prompt optimise
 ```typescript
 const SYSTEM_PROMPT = `Tu es un assistant documentaire technique.
@@ -182,10 +182,10 @@ REGLES STRICTES :
 CONTEXTE :
 {context}`;
 ```
-> Chaque regle est la pour une raison precise. La regle 2 evite les hallucinations, la regle 3 assure la tracabilite, la regle 4 est le filet de securite.
+> Chaque regle est la pour une raison précisé. La regle 2 evite les hallucinations, la regle 3 assure la tracabilite, la regle 4 est le filet de sécurité.
 
 ### [15:30-18:00] Citations et tracabilite des sources
-> Les citations ne sont pas juste un bonus — c'est ce qui rend le chatbot fiable. L'utilisateur peut verifier chaque affirmation.
+> Les citations ne sont pas juste un bonus — c'est ce qui rend le chatbot fiable. L'utilisateur peut vérifier chaque affirmation.
 **Action** : Montrer l'extraction de citations
 ```typescript
 // citation.service.ts (extrait)
@@ -210,7 +210,7 @@ extractCitations(answer: string, sources: SearchResult[]): Citation[] {
   return citations;
 }
 ```
-**Action** : Tester le chat et montrer les citations dans la reponse
+**Action** : Tester le chat et montrer les citations dans la réponse
 ```bash
 curl -X POST http://localhost:3000/chat/1/messages \
   -H "Content-Type: application/json" \
@@ -218,7 +218,7 @@ curl -X POST http://localhost:3000/chat/1/messages \
 ```
 
 ### [18:00-21:00] Gestion de l'historique de conversation
-> Un chatbot sans memoire est frustrant. On gere l'historique en stockant les messages et en les injectant dans le prompt — mais attention au context window.
+> Un chatbot sans mémoire est frustrant. On géré l'historique en stockant les messages et en les injectant dans le prompt — mais attention au context window.
 **Action** : Expliquer la gestion du contexte
 ```
 Context window = 8192 tokens (Llama 3.1 8B par defaut)
@@ -243,7 +243,7 @@ Bot: "Voici un exemple combinant le module et le provider... [Source 1, 3]"
 ```
 
 ### [21:00-23:30] Tests et Docker final
-> Avant de conclure, un mot sur les tests. On teste l'ingestion (upload + nombre de chunks), le chat (reponse pertinente), et les citations.
+> Avant de conclure, un mot sur les tests. On teste l'ingestion (upload + nombre de chunks), le chat (réponse pertinente), et les citations.
 **Action** : Montrer un test e2e
 ```typescript
 describe('Chat E2E', () => {
@@ -269,9 +269,9 @@ describe('Chat E2E', () => {
 pnpm test:e2e
 ```
 
-### [23:30-25:00] Recapitulatif et transition
-> On a construit un chatbot RAG complet : ingestion de fichiers, recherche vectorielle dans pgvector, chat avec streaming SSE, citations des sources, et historique de conversation. Le tout avec NestJS, pgvector et Ollama. Dans les prochains screencasts, on va evaluer la qualite de ce chatbot et le securiser pour la production.
-**Action** : Afficher le recapitulatif
+### [23:30-25:00] Récapitulatif et transition
+> On a construit un chatbot RAG complet : ingestion de fichiers, recherche vectorielle dans pgvector, chat avec streaming SSE, citations des sources, et historique de conversation. Le tout avec NestJS, pgvector et Ollama. Dans les prochains screencasts, on va évaluer la qualite de ce chatbot et le sécuriser pour la production.
+**Action** : Afficher le récapitulatif
 ```
 Resume :
 - NestJS + pgvector + Ollama = stack RAG complet
@@ -284,8 +284,8 @@ Resume :
 
 ## Points d'attention pour l'enregistrement
 - Docker Compose doit etre demarre et stable AVANT l'enregistrement
-- Avoir les modeles Ollama deja telecharges
+- Avoir les modèles Ollama déjà telecharges
 - Preparer les fichiers Markdown de test dans ./docs/
 - Le streaming SSE est difficile a montrer dans le terminal — utiliser curl ou un client HTTP
-- Insister sur le system prompt : c'est la cle de la qualite
-- Verifier que les citations [Source N] apparaissent bien dans les reponses
+- Insister sur le system prompt : c'est la clé de la qualite
+- Vérifier que les citations [Source N] apparaissent bien dans les réponses

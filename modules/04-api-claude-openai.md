@@ -1,8 +1,8 @@
 # Module 04 — API Claude & OpenAI
 
-> **Objectif** : Maitriser les SDKs Anthropic et OpenAI pour integrer les LLMs dans des applications TypeScript. Comprendre le streaming, le tool use, la gestion des couts et les bonnes pratiques de production.
+> **Objectif** : Maîtriser les SDKs Anthropic et OpenAI pour intégrer les LLMs dans des applications TypeScript. Comprendre le streaming, le tool use, la gestion des couts et les bonnes pratiques de production.
 > **Difficulte** : ⭐⭐⭐ (intermediaire+)
-> **Prerequis** : Module 01-02 (Prompting), bases Node.js/TypeScript
+> **Prérequis** : Module 01-02 (Prompting), bases Node.js/TypeScript
 > **Duree estimee** : 4 heures
 
 ---
@@ -89,7 +89,7 @@ for await (const event of stream) {
 }
 ```
 
-> **Analogie** : sans streaming, c'est comme attendre qu'un email soit entierement ecrit avant de le recevoir. Avec streaming, c'est comme un chat en direct — chaque mot apparait des qu'il est genere.
+> **Analogie** : sans streaming, c'est comme attendre qu'un email soit entièrement écrit avant de le recevoir. Avec streaming, c'est comme un chat en direct — chaque mot apparait des qu'il est généré.
 
 ---
 
@@ -97,7 +97,7 @@ for await (const event of stream) {
 
 ### 2.1 Le concept
 
-Le LLM ne peut pas acceder a Internet, lire des fichiers ou executer du code. Mais il peut **demander** a votre application d'executer des outils.
+Le LLM ne peut pas acceder a Internet, lire des fichiers ou exécuter du code. Mais il peut **demander** a votre application d'exécuter des outils.
 
 ```
 Utilisateur → "Quelle meteo a Paris ?"
@@ -106,7 +106,7 @@ Votre code → appelle l'API meteo → retourne le resultat
 LLM → "Il fait 18°C a Paris avec un ciel degage."
 ```
 
-### 2.2 Definir un outil
+### 2.2 Définir un outil
 
 ```typescript
 const tools: Anthropic.Tool[] = [
@@ -138,7 +138,7 @@ const tools: Anthropic.Tool[] = [
 ];
 ```
 
-### 2.3 Boucle d'execution
+### 2.3 Boucle d'exécution
 
 ```typescript
 async function runWithTools(userMessage: string) {
@@ -308,13 +308,13 @@ async function runWithToolsOpenAI(userMessage: string) {
 }
 ```
 
-> **Piege frequent** : avec Claude, les outils utilisent `input_schema` et la reponse contient `stop_reason: 'tool_use'`. Avec OpenAI, les outils utilisent `parameters` (dans un wrapper `function`) et la reponse contient `finish_reason: 'tool_calls'`. Adapter du code d'un SDK a l'autre necessite plus qu'un simple renommage.
+> **Piege frequent** : avec Claude, les outils utilisent `input_schema` et la réponse contient `stop_reason: 'tool_use'`. Avec OpenAI, les outils utilisent `parameters` (dans un wrapper `function`) et la réponse contient `finish_reason: 'tool_calls'`. Adapter du code d'un SDK a l'autre nécessité plus qu'un simple renommage.
 
 ### 3.4 Differences Claude vs OpenAI
 
 | Aspect | Claude (Anthropic) | GPT (OpenAI) |
 |--------|-------------------|--------------|
-| System prompt | Parametre `system` separe | Message `role: 'system'` |
+| System prompt | Paramètre `system` separe | Message `role: 'system'` |
 | Reponse | `message.content[0].text` | `choices[0].message.content` |
 | Streaming events | `content_block_delta` → `delta.text` | `choices[].delta.content` |
 | Streaming API | `client.messages.stream()` | `stream: true` dans les params |
@@ -356,7 +356,7 @@ const response = await client.messages.create({
 
 ### 5.1 Tarification par tokens
 
-| Modele | Input ($/M tokens) | Output ($/M tokens) |
+| Modèle | Input ($/M tokens) | Output ($/M tokens) |
 |--------|--------------------|--------------------|
 | Claude Haiku 3.5 | $0.80 | $4.00 |
 | Claude Sonnet 4 | $3.00 | $15.00 |
@@ -382,12 +382,12 @@ const cost = calculateCost(1000, 500, 3.0, 15.0);
 // = 0.003 + 0.0075 = $0.0105 par requete
 ```
 
-### 5.3 Strategies d'optimisation
+### 5.3 Stratégies d'optimisation
 
-1. **Utiliser le bon modele** : Haiku pour les taches simples, Sonnet pour le gros du travail, Opus pour les taches complexes
+1. **Utiliser le bon modèle** : Haiku pour les taches simples, Sonnet pour le gros du travail, Opus pour les taches complexes
 2. **Reduire les tokens input** : system prompt concis, historique compresse
 3. **Limiter max_tokens** : ne pas mettre 4096 si 256 suffisent
-4. **Cacher les reponses** : pour les memes questions, retourner la reponse en cache
+4. **Cacher les réponses** : pour les memes questions, retourner la réponse en cache
 
 ---
 
@@ -466,7 +466,7 @@ async function robustCallOpenAI(prompt: string, maxRetries = 3) {
 }
 ```
 
-> **Bonne pratique** : les erreurs `AuthenticationError` (cle invalide) et `BadRequestError` (prompt mal forme) ne doivent jamais etre retentees — elles echoueront toujours. Seules les erreurs `RateLimitError` et les erreurs serveur (5xx) meritent un retry avec backoff exponentiel.
+> **Bonne pratique** : les erreurs `AuthenticationError` (clé invalide) et `BadRequestError` (prompt mal forme) ne doivent jamais etre retentees — elles echoueront toujours. Seules les erreurs `RateLimitError` et les erreurs serveur (5xx) meritent un retry avec backoff exponentiel.
 
 ---
 
@@ -513,8 +513,8 @@ main();
 
 Dans le Lab 04, vous allez :
 1. Construire un historique de conversation multi-turn
-2. Definir un schema d'outil (JSON Schema)
-3. Parser un appel d'outil depuis la reponse du LLM
+2. Définir un schema d'outil (JSON Schema)
+3. Parser un appel d'outil depuis la réponse du LLM
 4. Calculer le cout d'un appel API
 5. Implementer un handler de streaming SSE
 6. Implementer un retry avec exponential backoff
@@ -522,3 +522,13 @@ Dans le Lab 04, vous allez :
 ```bash
 npm run lab:04
 ```
+
+---
+
+<!-- parcours-recommande -->
+
+::: tip Parcours recommandé
+1. **Screencast** : [screencast 04 api claude openai](../screencasts/screencast-04-api-claude-openai.md)
+2. **Lab** : [lab-04-api-claude-openai](../labs/lab-04-api-claude-openai/README)
+3. **Quiz** : [quiz 04 api claude openai](../quizzes/quiz-04-api-claude-openai.html)
+:::

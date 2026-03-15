@@ -4,20 +4,20 @@
 - **Duree estimee** : 18-22 min
 - **Module** : `modules/03-assistants-code.md`
 - **Lab associe** : `labs/lab-03-assistants-code/`
-- **Prerequis** : Screencast 01, 02
+- **Prérequis** : Screencast 01, 02
 
 ## Setup
 - [ ] VS Code avec GitHub Copilot active et connecte
 - [ ] Claude Code installe et configure (`claude --version`)
 - [ ] Projet TypeScript initialise (`pnpm init && pnpm add -D typescript tsx vitest`)
 - [ ] `tsconfig.json` configure (strict: true)
-- [ ] Terminal split : un pour Claude Code, un pour executer le code
-- [ ] Fichier CLAUDE.md prepare a la racine du projet
+- [ ] Terminal split : un pour Claude Code, un pour exécuter le code
+- [ ] Fichier CLAUDE.md prepare à la racine du projet
 
 ## Script
 
 ### [00:00-03:00] Le paysage des assistants code en 2025
-> Les assistants de code ont revolutionne notre facon de developper. Mais il y a deux paradigmes tres differents : la completion inline comme Copilot qui anticipe ce que vous tapez, et l'agent conversationnel comme Claude Code a qui vous donnez un brief complet. On va voir les deux en detail.
+> Les assistants de code ont revolutionne notre façon de développer. Mais il y a deux paradigmes très différents : la completion inline comme Copilot qui anticipe ce que vous tapez, et l'agent conversationnel comme Claude Code a qui vous donnez un brief complet. On va voir les deux en detail.
 **Action** : Afficher le tableau comparatif des outils
 ```
 | Outil          | Editeur          | Points forts                          |
@@ -31,7 +31,7 @@
 > La completion inline, c'est un copilote qui finit vos phrases. L'agent conversationnel, c'est un collegue a qui vous donnez un brief et qui revient avec le code.
 
 ### [03:00-07:00] GitHub Copilot — Tab completion et Chat
-> Commencons par Copilot. Sa force, c'est la completion inline : il suggere du code en temps reel pendant que vous tapez.
+> Commencons par Copilot. Sa force, c'est la completion inline : il suggere du code en temps réel pendant que vous tapez.
 **Action** : Ouvrir un fichier vide `levenshtein.ts` et commencer a taper
 ```typescript
 // Astuce 1 : un commentaire descriptif AVANT la fonction guide Copilot
@@ -55,10 +55,10 @@ Prompt: "Ajoute de la validation Zod a tous les DTOs du dossier src/dto/"
 → Copilot modifie tous les fichiers concernes
 → Tu review chaque changement avant de l'accepter
 ```
-> La cle avec Copilot : nommez bien vos variables et ecrivez des commentaires descriptifs. Copilot utilise les noms pour inferer votre intention.
+> La clé avec Copilot : nommez bien vos variables et ecrivez des commentaires descriptifs. Copilot utilise les noms pour inferer votre intention.
 
 ### [07:00-12:00] Claude Code — L'approche agent
-> Maintenant passons a Claude Code. C'est un CLI qui fonctionne en mode agent : il peut lire des fichiers, ecrire du code, executer des commandes, et iterer de maniere autonome.
+> Maintenant passons a Claude Code. C'est un CLI qui fonctionne en mode agent : il peut lire des fichiers, écrire du code, exécuter des commandes, et iterer de manière autonome.
 **Action** : Lancer Claude Code et montrer le fichier CLAUDE.md
 ```markdown
 # CLAUDE.md — donne du contexte permanent a Claude Code
@@ -97,7 +97,7 @@ claude
 # 5. Supprimer l'ancien code Express
 # Approuver ? (y/n)
 ```
-> Le Plan mode est crucial pour les refactorings importants. Claude Code analyse la tache, propose un plan detaille, et attend votre validation avant d'executer. Pas de surprise.
+> Le Plan mode est crucial pour les refactorings importants. Claude Code analyse la tache, propose un plan détaillé, et attend votre validation avant d'exécuter. Pas de surprise.
 
 ### [12:00-15:30] Workflows quotidiens avec l'IA
 > Voici les workflows qui marchent le mieux au quotidien.
@@ -127,7 +127,7 @@ L'IA ne peut pas halluciner si le test passe.
 ```
 
 ### [15:30-18:30] Limites, pieges et fichiers de configuration
-> L'IA est un outil formidable, mais elle a des limites serieuses qu'il faut connaitre.
+> L'IA est un outil formidable, mais elle a des limites serieuses qu'il faut connaître.
 **Action** : Montrer les pieges courants
 ```typescript
 // Piege 1 : Hallucinations d'API
@@ -140,7 +140,7 @@ await prisma.user.softDelete(id);      // N'existe pas dans Prisma
 // Piege 3 : Code non-idiomatique
 // Melange callbacks et async/await, patterns inconstants
 ```
-> Defense : toujours verifier les imports, toujours lancer les tests, toujours relire le code genere.
+> Defense : toujours vérifier les imports, toujours lancer les tests, toujours relire le code généré.
 **Action** : Montrer les bonnes pratiques pour CLAUDE.md et .cursorrules
 ```
 Un bon CLAUDE.md / .cursorrules :
@@ -169,11 +169,11 @@ Anti-patterns :
 | Prix               | $10/mois   | Usage Claude| $20/mois  |
 ```
 > Ma recommandation : Copilot pour la completion inline au quotidien, Claude Code pour les taches complexes de refactoring et architecture. C'est la combinaison la plus productive.
-> Et la regle d'or : l'IA est un copilote, pas un pilote. Vous devez comprendre chaque ligne de code generee. Si vous ne comprenez pas pourquoi le code fonctionne, vous ne pourrez pas debugger quand il cassera.
+> Et la regle d'or : l'IA est un copilote, pas un pilote. Vous devez comprendre chaque ligne de code générée. Si vous ne comprenez pas pourquoi le code fonctionne, vous ne pourrez pas debugger quand il cassera.
 
 ## Points d'attention pour l'enregistrement
 - S'assurer que les suggestions Copilot sont visibles a l'ecran (zoom VS Code)
 - Montrer les raccourcis clavier (Tab, Esc, Alt+], Cmd+I) avec un overlay
-- Ne pas accelerer les reponses de Claude Code — laisser le temps de lire
-- Insister sur la relecture critique du code genere
+- Ne pas accelerer les réponses de Claude Code — laisser le temps de lire
+- Insister sur la relecture critique du code généré
 - Avoir un backup si Copilot ne suggere pas ce qu'on attend

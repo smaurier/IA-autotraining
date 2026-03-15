@@ -4,7 +4,7 @@
 - **Duree estimee** : 20-25 min
 - **Module** : `modules/04-api-claude-openai.md`
 - **Lab associe** : `labs/lab-04-chatbot-cli-tools/`
-- **Prerequis** : Screencast 01, 02
+- **Prérequis** : Screencast 01, 02
 
 ## Setup
 - [ ] Cle API Anthropic dans `.env` (`ANTHROPIC_API_KEY`)
@@ -16,7 +16,7 @@
 ## Script
 
 ### [00:00-03:00] Introduction aux SDKs et premiers appels
-> Aujourd'hui on plonge dans les API. On va voir comment appeler Claude et OpenAI depuis TypeScript, gerer le streaming, implementer le tool use, et construire un chatbot CLI complet. C'est le socle technique pour tout ce qui suit dans le cours.
+> Aujourd'hui on plonge dans les API. On va voir comment appeler Claude et OpenAI depuis TypeScript, gérer le streaming, implementer le tool use, et construire un chatbot CLI complet. C'est le socle technique pour tout ce qui suit dans le cours.
 **Action** : Montrer l'installation et le premier appel Claude
 ```typescript
 import Anthropic from '@anthropic-ai/sdk';
@@ -38,7 +38,7 @@ console.log(`Tokens : ${message.usage.input_tokens} in, ${message.usage.output_t
 > Notez la structure : model, max_tokens obligatoire, system prompt separe, et messages avec alternance user/assistant.
 
 ### [03:00-06:00] Conversation multi-turn et historique
-> Un chatbot doit se souvenir du contexte. Pour ca, on accumule les messages dans un tableau et on les renvoie a chaque appel.
+> Un chatbot doit se souvenir du contexte. Pour ça, on accumule les messages dans un tableau et on les renvoie à chaque appel.
 **Action** : Construire le chatbot CLI conversationnel
 ```typescript
 import Anthropic from '@anthropic-ai/sdk';
@@ -74,10 +74,10 @@ while (true) {
 }
 ```
 **Action** : Lancer le chatbot, poser 3 questions qui dependent du contexte
-> Regardez les tokens : ils augmentent a chaque echange parce qu'on renvoie tout l'historique. C'est un point important pour la gestion des couts.
+> Regardez les tokens : ils augmentent à chaque echange parce qu'on renvoie tout l'historique. C'est un point important pour la gestion des couts.
 
 ### [06:00-09:00] Streaming — Affichage token par token
-> Par defaut, on attend la reponse complete. Avec le streaming, chaque token s'affiche des qu'il est genere. C'est essentiel pour l'experience utilisateur — personne ne veut regarder un curseur pendant 10 secondes.
+> Par defaut, on attend la réponse complete. Avec le streaming, chaque token s'affiche des qu'il est généré. C'est essentiel pour l'experience utilisateur — personne ne veut regarder un curseur pendant 10 secondes.
 **Action** : Implementer le streaming
 ```typescript
 const stream = client.messages.stream({
@@ -97,11 +97,11 @@ console.log('\n');
 const finalMessage = await stream.finalMessage();
 console.log(`[${finalMessage.usage.input_tokens} + ${finalMessage.usage.output_tokens} tokens]`);
 ```
-> Sans streaming, c'est comme attendre qu'un email soit entierement ecrit avant de le recevoir. Avec streaming, c'est un chat en direct — chaque mot apparait des qu'il est genere.
+> Sans streaming, c'est comme attendre qu'un email soit entièrement écrit avant de le recevoir. Avec streaming, c'est un chat en direct — chaque mot apparait des qu'il est généré.
 
-### [09:00-14:00] Tool Use — Donner des capacites au modele
-> Maintenant le plus puissant : le tool use. Le LLM ne peut pas acceder a Internet ou executer du code. Mais il peut demander a votre application d'executer des outils. Le modele decide seul quand utiliser quel outil.
-**Action** : Definir les outils et montrer la boucle d'execution
+### [09:00-14:00] Tool Use — Donner des capacites au modèle
+> Maintenant le plus puissant : le tool use. Le LLM ne peut pas acceder a Internet ou exécuter du code. Mais il peut demander a votre application d'exécuter des outils. Le modèle decide seul quand utiliser quel outil.
+**Action** : Définir les outils et montrer la boucle d'exécution
 ```typescript
 // Definition des outils — JSON Schema
 const tools: Anthropic.Tool[] = [
@@ -160,8 +160,8 @@ while (true) {
   return response.content[0].text;
 }
 ```
-**Action** : Executer avec "Quelle meteo a Paris ? Et cherche des ecouteurs a moins de 50 euros."
-> Le modele appelle d'abord get_weather, puis search_products, et formule une reponse naturelle avec les deux resultats. Il a decide seul quel outil utiliser et dans quel ordre.
+**Action** : Exécuter avec "Quelle meteo a Paris ? Et cherche des ecouteurs a moins de 50 euros."
+> Le modèle appelle d'abord get_weather, puis search_products, et formule une réponse naturelle avec les deux résultats. Il a decide seul quel outil utiliser et dans quel ordre.
 
 ### [14:00-17:00] Gestion des couts et optimisation
 > Les API sont facturees au token. Il faut comprendre les couts pour ne pas avoir de surprise.
@@ -184,7 +184,7 @@ function calculateCost(inputTokens: number, outputTokens: number,
 
 // 1000 tokens input + 500 output avec Sonnet = $0.0105 par requete
 ```
-> Quatre strategies d'optimisation : utiliser le bon modele par tache, system prompt concis, limiter max_tokens, et cacher les reponses repetitives.
+> Quatre stratégies d'optimisation : utiliser le bon modèle par tache, system prompt concis, limiter max_tokens, et cacher les réponses repetitives.
 
 ### [17:00-20:00] Gestion des erreurs et retry
 > En production, les appels API echouent. Rate limiting, erreurs serveur, timeouts. Il faut un retry avec exponential backoff.
@@ -217,7 +217,7 @@ async function robustCall(prompt: string, maxRetries = 3) {
 ```
 
 ### [20:00-22:30] Comparaison Claude vs OpenAI
-> Pour ceux qui connaissent OpenAI, voici les differences. Les concepts sont identiques, seule la syntaxe change.
+> Pour ceux qui connaissent OpenAI, voici les différences. Les concepts sont identiques, seule la syntaxe change.
 **Action** : Afficher la comparaison cote a cote
 ```
 | Aspect         | Claude (Anthropic)              | GPT (OpenAI)                   |
@@ -229,7 +229,7 @@ async function robustCall(prompt: string, maxRetries = 3) {
 | Vision         | type: 'image' dans content       | type: 'image_url' dans content |
 | max_tokens     | Requis                           | Optionnel                      |
 ```
-**Action** : Montrer un appel OpenAI equivalent
+**Action** : Montrer un appel OpenAI équivalent
 ```typescript
 import OpenAI from 'openai';
 const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
@@ -244,7 +244,7 @@ const completion = await openai.chat.completions.create({
 console.log(completion.choices[0].message.content);
 ```
 
-### [22:30-25:00] Vision et recapitulatif
+### [22:30-25:00] Vision et récapitulatif
 > Derniere fonctionnalite : la vision. Les deux APIs peuvent analyser des images encodees en base64.
 **Action** : Montrer un appel avec image
 ```typescript
@@ -260,11 +260,11 @@ const response = await client.messages.create({
   }],
 });
 ```
-> Recapitulatif : on a vu les SDKs Claude et OpenAI, la conversation multi-turn, le streaming, le tool use avec sa boucle, la gestion des couts, le retry robuste, la vision, et la comparaison des deux APIs. Vous avez maintenant tous les outils pour integrer des LLMs dans vos applications.
+> Récapitulatif : on a vu les SDKs Claude et OpenAI, la conversation multi-turn, le streaming, le tool use avec sa boucle, la gestion des couts, le retry robuste, la vision, et la comparaison des deux APIs. Vous avez maintenant tous les outils pour intégrer des LLMs dans vos applications.
 
 ## Points d'attention pour l'enregistrement
-- Montrer les tokens consommes a chaque appel pour sensibiliser aux couts
-- Bien expliquer la boucle tool_use : le modele decide, on execute, on renvoie
+- Montrer les tokens consommes à chaque appel pour sensibiliser aux couts
+- Bien expliquer la boucle tool_use : le modèle decide, on exécuté, on renvoie
 - Le streaming doit etre visible token par token — ne pas aller trop vite
-- Masquer les cles API dans le terminal (utiliser .env)
-- Avoir un fallback si l'API est lente (preparer les reponses en cache)
+- Masquer les clés API dans le terminal (utiliser .env)
+- Avoir un fallback si l'API est lente (preparer les réponses en cache)

@@ -1,8 +1,8 @@
 # Module 14 — RAG Avancé
 
-> **Objectif** : Passer d'un RAG qui "marche" a un RAG qui marche **bien**. Techniques de qualite production.
+> **Objectif** : Passer d'un RAG qui "marche" à un RAG qui marche **bien**. Techniques de qualite production.
 > **Difficulte** : ⭐⭐⭐⭐ (avance)
-> **Prerequis** : Module 13 (RAG Fondamental — obligatoire)
+> **Prérequis** : Module 13 (RAG Fondamental — obligatoire)
 > **Duree estimee** : 4 heures
 
 ---
@@ -20,7 +20,7 @@ Métriques manuelles            →     Framework RAGAS automatisé
 "Ca marche"                    →     "Ca marche bien en production"
 ```
 
-> **Conseil** : si votre RAG du Module 13 donne deja de bons resultats sur vos donnees, vous n'avez pas besoin de toutes les techniques de ce module. Ajoutez-les une par une en mesurant l'impact avec RAGAS.
+> **Conseil** : si votre RAG du Module 13 donne déjà de bons résultats sur vos donnees, vous n'avez pas besoin de toutes les techniques de ce module. Ajoutez-les une par une en mesurant l'impact avec RAGAS.
 
 ---
 
@@ -255,11 +255,11 @@ class HybridSearchEngine {
 
 ### Le problème
 
-Quand un utilisateur pose une question courte comme "Guards NestJS ?", l'embedding de cette question courte est très différent de l'embedding d'un paragraphe détaillé sur les Guards NestJS. Il y a un **écart sémantique** entre questions et documents.
+Quand un utilisateur pose une question courte comme "Guards NestJS ?", l'embedding de cette question courte est très différent de l'embedding d'un paragraphe détaillé sur les Guards NestJS. Il y à un **écart sémantique** entre questions et documents.
 
 ### L'idée
 
-Au lieu d'embedder la question directement, on demande au LLM de **générer un document hypothétique** qui répondrait à la question, puis on utilise l'embedding de ce document pour la recherche.
+Au lieu d'embedder la question directement, on demandé au LLM de **générer un document hypothétique** qui répondrait à la question, puis on utilise l'embedding de ce document pour la recherche.
 
 ```
 Question courte → LLM génère un "faux" document → Embedding du faux document → Recherche vectorielle
@@ -879,7 +879,7 @@ Question → Retrieval → Augmented Prompt → Fine-tuned LLM → Réponse styl
 
 ### Les métriques RAGAS
 
-RAGAS (Retrieval-Augmented Generation Assessment) définit 4 métriques clés :
+RAGAS (Retrieval-Augmented Génération Assessment) définit 4 métriques clés :
 
 | Métrique | Question posée | Score idéal |
 |----------|---------------|-------------|
@@ -1405,3 +1405,13 @@ Assemblez un pipeline RAG avancé avec : hybrid search + multi-query + reranking
 | GraphRAG | Relations entre entités | Réponses relationnelles |
 
 Le RAG avancé n'est pas un choix binaire : c'est un menu de techniques à combiner selon vos besoins. Commencez par hybrid search + reranking (le meilleur rapport effort/qualité), puis ajoutez les autres techniques en mesurant l'impact avec RAGAS.
+
+---
+
+<!-- parcours-recommande -->
+
+::: tip Parcours recommandé
+1. **Screencast** : [screencast 14 rag avance](../screencasts/screencast-14-rag-avance.md)
+2. **Lab** : [lab-14-rag-avance](../labs/lab-14-rag-avance/README)
+3. **Quiz** : [quiz 14 rag avance](../quizzes/quiz-14-rag-avance.html)
+:::

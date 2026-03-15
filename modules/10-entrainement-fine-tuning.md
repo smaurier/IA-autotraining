@@ -1027,3 +1027,13 @@ async function validateDataset(
 3. **Modelfile** : Créez un Modelfile Ollama spécialisé pour votre domaine et testez-le
 4. **Benchmark** : Comparez les réponses de 3 modèles Ollama sur 10 questions identiques et scorez-les
 5. **Analyse** : Pour un cas d'usage donné (ex : chatbot support client), argumentez le choix entre prompting, RAG et fine-tuning
+
+---
+
+<!-- parcours-recommande -->
+
+::: tip Parcours recommandé
+1. **Screencast** : [screencast 10 fine tuning](../screencasts/screencast-10-fine-tuning.md)
+2. **Lab** : [lab-10-fine-tuning](../labs/lab-10-fine-tuning/README)
+3. **Quiz** : [quiz 10 fine tuning](../quizzes/quiz-10-fine-tuning.html)
+:::

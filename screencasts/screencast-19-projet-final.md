@@ -4,19 +4,19 @@
 - **Duree estimee** : 20-25 min
 - **Module** : `modules/19-projet-final.md`
 - **Lab associe** : `labs/lab-19-projet-final/`
-- **Prerequis** : Modules 11-18 completes, Docker, NestJS
+- **Prérequis** : Modules 11-18 completes, Docker, NestJS
 
 ## Setup
 - [ ] Docker Compose pret (PostgreSQL/pgvector + Ollama)
 - [ ] NestJS CLI installe (`npx @nestjs/cli`)
-- [ ] Modeles Ollama deja telecharges (`llama3.1:8b`, `nomic-embed-text`)
+- [ ] Modeles Ollama déjà telecharges (`llama3.1:8b`, `nomic-embed-text`)
 - [ ] Terminal et VS Code ouverts
 - [ ] Slides de l'architecture du projet pretes
 
 ## Script
 
 ### [00:00-03:00] Presentation du projet final
-> C'est le dernier module. On va assembler TOUT ce qu'on a appris en 18 modules dans un seul projet : un assistant documentaire intelligent. Il ingere des documents, cherche avec un RAG hybride, converse avec streaming et citations, s'evalue automatiquement, se securise, et se monitore. Six phases, un projet complet.
+> C'est le dernier module. On va assembler TOUT ce qu'on a appris en 18 modules dans un seul projet : un assistant documentaire intelligent. Il ingere des documents, cherche avec un RAG hybride, converse avec streaming et citations, s'évalué automatiquement, se sécurisé, et se monitore. Six phases, un projet complet.
 **Action** : Afficher les fonctionnalites et les modules correspondants
 ```
 | Fonctionnalite        | Description                        | Modules  |
@@ -35,7 +35,7 @@
 ```
 
 ### [03:00-05:30] Architecture technique
-> Voici l'architecture cible. Le client parle a NestJS. NestJS a 6 modules : ingestion, recherche, chat, evaluation, admin et les services partages. En dessous : PostgreSQL, Ollama et optionnellement Claude.
+> Voici l'architecture cible. Le client parle a NestJS. NestJS a 6 modules : ingestion, recherche, chat, évaluation, admin et les services partages. En dessous : PostgreSQL, Ollama et optionnellement Claude.
 **Action** : Afficher le schema d'architecture
 ```
 CLIENT
@@ -78,8 +78,8 @@ doc-assistant/
 ```
 
 ### [05:30-09:00] Phase 1 : Setup et infrastructure
-> Phase 1 : le socle. Docker Compose, schema SQL, services partages. A la fin de cette phase, on a un NestJS qui demarre, qui peut generer des embeddings, stocker des vecteurs et appeler un LLM.
-**Action** : Montrer le Docker Compose et le demarrer
+> Phase 1 : le socle. Docker Compose, schema SQL, services partages. A la fin de cette phase, on à un NestJS qui demarre, qui peut générer des embeddings, stocker des vecteurs et appeler un LLM.
+**Action** : Montrer le Docker Compose et le démarrer
 ```bash
 # Creer le projet
 npx @nestjs/cli new doc-assistant
@@ -107,7 +107,7 @@ CREATE TABLE interaction_logs (id SERIAL PRIMARY KEY, trace_id VARCHAR(100),
 
 CREATE INDEX chunks_embedding_hnsw ON chunks USING hnsw (embedding vector_cosine_ops);
 ```
-**Action** : Verifier que tout demarre
+**Action** : Vérifier que tout demarre
 ```
 Checklist Phase 1 :
 [x] docker compose up -d fonctionne
@@ -119,7 +119,7 @@ Checklist Phase 1 :
 ```
 
 ### [09:00-12:00] Phase 2 : Pipeline d'ingestion
-> Phase 2 : on uploade un fichier, on le decoupe en chunks, on embede chaque chunk, on stocke dans pgvector. Support Markdown, texte brut et code TypeScript.
+> Phase 2 : on uploade un fichier, on le découpé en chunks, on embede chaque chunk, on stocke dans pgvector. Support Markdown, texte brut et code TypeScript.
 **Action** : Montrer le IngestService et tester l'upload
 ```bash
 # Upload d'un fichier Markdown
@@ -131,10 +131,10 @@ curl -X POST http://localhost:3000/ingest/file \
 curl http://localhost:3000/ingest/documents
 # [{ "id": 1, "filename": "nestjs-modules.md", "chunks": 8 }]
 ```
-**Action** : Montrer le parser de code TypeScript qui decoupe par fonctions/classes
+**Action** : Montrer le parser de code TypeScript qui découpé par fonctions/classes
 
 ### [12:00-14:30] Phase 3 : RAG hybride
-> Phase 3 : la recherche combine vectorielle et BM25. On utilise Reciprocal Rank Fusion pour fusionner les resultats.
+> Phase 3 : la recherche combine vectorielle et BM25. On utilise Reciprocal Rank Fusion pour fusionner les résultats.
 **Action** : Montrer le SearchService et tester
 ```bash
 # Recherche hybride
@@ -144,7 +144,7 @@ curl "http://localhost:3000/search?q=Comment+creer+un+module+NestJS"
 #   { "chunkId": 1, "content": "...", "score": 0.0138, "method": "hybrid" }
 # ]
 ```
-> Le RRF combine les rangs des deux methodes. Un chunk trouve en position 1 par les deux methodes aura le meilleur score final.
+> Le RRF combine les rangs des deux méthodes. Un chunk trouve en position 1 par les deux méthodes aura le meilleur score final.
 
 ### [14:30-17:30] Phase 4 : Conversation et citations
 > Phase 4 : le chat avec streaming SSE, historique et citations. C'est la partie visible pour l'utilisateur.
@@ -165,11 +165,11 @@ curl -X POST http://localhost:3000/chat/1/messages \
   -H "Content-Type: application/json" \
   -d '{"message": "Et comment ajouter un provider dedans ?"}'
 ```
-**Action** : Montrer les citations extraites dans la reponse
+**Action** : Montrer les citations extraites dans la réponse
 
-### [17:30-19:30] Phase 5 : Pipeline d'evaluation
-> Phase 5 : on evalue automatiquement la qualite du RAG. On cree un dataset de 15+ questions, on mesure faithfulness, relevancy, precision et recall. Cible : score overall > 0.7.
-**Action** : Montrer le dataset et lancer l'evaluation
+### [17:30-19:30] Phase 5 : Pipeline d'évaluation
+> Phase 5 : on évalué automatiquement la qualite du RAG. On créé un dataset de 15+ questions, on mesure faithfulness, relevancy, précision et recall. Cible : score overall > 0.7.
+**Action** : Montrer le dataset et lancer l'évaluation
 ```bash
 # Lancer l'evaluation
 curl -X POST http://localhost:3000/eval/run
@@ -183,10 +183,10 @@ curl -X POST http://localhost:3000/eval/run
 #   }
 # }
 ```
-> Un score overall de 0.84, c'est tres bon. En dessous de 0.7, il faut ameliorer le chunking ou le system prompt.
+> Un score overall de 0.84, c'est très bon. En dessous de 0.7, il faut ameliorer le chunking ou le system prompt.
 
 ### [19:30-21:30] Phase 6 : Production et monitoring
-> Phase 6 : securite, cache, monitoring et Docker final. On branche le middleware d'injection, le semantic cache, et le dashboard admin.
+> Phase 6 : sécurité, cache, monitoring et Docker final. On branche le middleware d'injection, le semantic cache, et le dashboard admin.
 **Action** : Montrer les endpoints admin
 ```bash
 # Dashboard
@@ -199,7 +199,7 @@ curl http://localhost:3000/admin/health
 # { "status": "healthy",
 #   "services": { "postgres": "ok", "ollama": "ok", "pgvector": "ok" } }
 ```
-**Action** : Verifier la checklist finale
+**Action** : Vérifier la checklist finale
 ```
 Phase 6 :
 [x] Middleware de securite actif
@@ -212,8 +212,8 @@ Phase 6 :
 [x] docker compose up lance tout le stack
 ```
 
-### [21:30-23:30] Criteres d'evaluation et livrables
-> Voici les criteres d'evaluation du projet et les livrables attendus.
+### [21:30-23:30] Criteres d'évaluation et livrables
+> Voici les criteres d'évaluation du projet et les livrables attendus.
 **Action** : Afficher la grille
 ```
 | Critere          | Poids | Excellent (A)                         |
@@ -235,7 +235,7 @@ Livrables :
 ```
 
 ### [23:30-25:00] Retrospective et conclusion du cours
-> On arrive au bout. En 19 modules, vous etes passes de "qu'est-ce qu'un LLM" a "deployer un assistant documentaire avec RAG hybride, evaluation, securite et monitoring". Voici le chemin parcouru.
+> On arrive au bout. En 19 modules, vous etes passes de "qu'est-ce qu'un LLM" a "déployer un assistant documentaire avec RAG hybride, évaluation, sécurité et monitoring". Voici le chemin parcouru.
 **Action** : Afficher la retrospective
 ```
 Le parcours complet :
@@ -256,11 +256,11 @@ Competences acquises :
 - Securite : injection, PII, guardrails, EU AI Act
 - Production : couts, cache, rate limiting, monitoring
 ```
-> Bravo. Vous avez toutes les cles pour construire des applications IA en production. Bon projet final !
+> Bravo. Vous avez toutes les clés pour construire des applications IA en production. Bon projet final !
 
 ## Points d'attention pour l'enregistrement
 - Ce screencast est un survol des 6 phases — ne pas entrer dans les details d'implementation
-- Avoir le projet deja fonctionnel pour les demos (pas de live coding complet)
+- Avoir le projet déjà fonctionnel pour les demos (pas de live coding complet)
 - Les curls doivent etre pre-testes et fonctionnels
 - Insister sur les checklists de chaque phase
 - La retrospective finale doit etre inspirante — on clot le cours

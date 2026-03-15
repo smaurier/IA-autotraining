@@ -1,23 +1,23 @@
-# Screencast 16 — Evaluation & Observabilite LLM
+# Screencast 16 — Évaluation & Observabilité LLM
 
 ## Informations
 - **Duree estimee** : 20-25 min
 - **Module** : `modules/16-evaluation-observabilite-llm.md`
 - **Lab associe** : `labs/lab-16-evaluation-observabilite/`
-- **Prerequis** : Module 15 complete, chatbot RAG fonctionnel
+- **Prérequis** : Module 15 complete, chatbot RAG fonctionnel
 
 ## Setup
 - [ ] Chatbot RAG du module 15 fonctionnel
 - [ ] Ollama avec `llama3.1:8b` et `nomic-embed-text`
-- [ ] Jeu de test de 10 questions avec reponses attendues
+- [ ] Jeu de test de 10 questions avec réponses attendues
 - [ ] Terminal et VS Code ouverts sur le dossier du lab
-- [ ] `pnpm install` deja execute
+- [ ] `pnpm install` déjà exécuté
 
 ## Script
 
-### [00:00-02:30] Pourquoi evaluer un systeme LLM ?
-> Avec du code classique, c'est simple : `add(2, 3)` retourne 5 ou pas. Avec un LLM, "Explique les closures" peut donner mille reponses differentes — toutes correctes ou toutes fausses. Comment savoir si votre chatbot fonctionne bien ? Il faut mesurer.
-**Action** : Afficher les 3 niveaux d'evaluation
+### [00:00-02:30] Pourquoi évaluer un système LLM ?
+> Avec du code classique, c'est simple : `add(2, 3)` retourne 5 ou pas. Avec un LLM, "Explique les closures" peut donner mille réponses différentes — toutes correctes ou toutes fausses. Comment savoir si votre chatbot fonctionne bien ? Il faut mesurer.
+**Action** : Afficher les 3 niveaux d'évaluation
 ```
 Niveau 1 -- OFFLINE (avant deploiement)
   Benchmarks, metriques automatiques, eval datasets
@@ -33,7 +33,7 @@ Niveau 3 -- OBSERVABILITE (continu)
 ```
 
 ### [02:30-05:30] Metriques classiques : BLEU et ROUGE
-> BLEU mesure la precision des n-grammes — combien de mots generes sont dans la reference. ROUGE mesure le rappel — combien de mots de la reference sont dans la generation. Les deux ont une limite majeure : ils comparent des mots, pas du sens.
+> BLEU mesure la précision des n-grammes — combien de mots generes sont dans la référence. ROUGE mesure le rappel — combien de mots de la référence sont dans la génération. Les deux ont une limite majeure : ils comparent des mots, pas du sens.
 **Action** : Implementer BLEU en TypeScript et tester
 ```typescript
 // bleu-demo.ts (extrait)
@@ -66,10 +66,10 @@ console.log(`BLEU: ${(score * 100).toFixed(1)}%`); // ~45%
 ```bash
 npx tsx bleu-demo.ts
 ```
-> "Le felin se repose" et "Le chat dort" ont un faible BLEU mais le meme sens. C'est pourquoi on utilise aussi le LLM-as-judge.
+> "Le felin se repose" et "Le chat dort" ont un faible BLEU mais le même sens. C'est pourquoi on utilise aussi le LLM-as-judge.
 
 ### [05:30-09:00] LLM-as-Judge : le standard de l'industrie
-> L'idee : utiliser un LLM pour evaluer la sortie d'un autre LLM. On lui donne la question, la reponse, et des criteres — il note de 1 a 5 avec justification.
+> L'idee : utiliser un LLM pour évaluer la sortie d'un autre LLM. On lui donne la question, la réponse, et des criteres — il note de 1 a 5 avec justification.
 **Action** : Implementer le LLM-as-Judge
 ```typescript
 // judge-demo.ts
@@ -104,7 +104,7 @@ npx tsx judge-demo.ts
 > L'avantage du LLM-as-judge : il comprend le SENS, pas juste les mots. L'inconvenient : il a ses propres biais.
 
 ### [09:00-13:00] Metriques RAG : les 4 piliers
-> Pour un RAG specifiquement, on mesure 4 choses : la fidelite au contexte, la pertinence de la reponse, la precision du contexte, et le recall du contexte.
+> Pour un RAG specifiquement, on mesure 4 choses : la fidelite au contexte, la pertinence de la réponse, la précision du contexte, et le recall du contexte.
 **Action** : Afficher les 4 metriques et leur calcul
 ```
 Question --> Retrieval --> Contexte --> LLM --> Reponse
@@ -121,7 +121,7 @@ Faithfulness : La reponse est-elle fidele au contexte ?
 Answer Relevancy : La reponse repond-elle a la question ?
   = Similarite cosinus(question, questions-generees-depuis-reponse)
 ```
-**Action** : Executer l'evaluation sur le chatbot du module 15
+**Action** : Exécuter l'évaluation sur le chatbot du module 15
 ```typescript
 // rag-eval.ts
 const evaluator = new RAGEvaluator(llm, embedder);
@@ -143,7 +143,7 @@ npx tsx rag-eval.ts
 ```
 
 ### [13:00-16:00] Detection d'hallucinations
-> L'hallucination est le risque principal d'un RAG. Le LLM invente des faits, des URLs, des numeros de version qui n'existent pas dans le contexte.
+> L'hallucination est le risque principal d'un RAG. Le LLM invente des faits, des URLs, des numéros de version qui n'existent pas dans le contexte.
 **Action** : Montrer les types d'hallucinations
 ```
 Types d'hallucinations :
@@ -173,8 +173,8 @@ Identifie les hallucinations. JSON : {"hallucinations": [...], "supported_claims
 }
 ```
 
-### [16:00-19:30] Observabilite : tracer chaque requete
-> En production, il faut tracer chaque requete : combien de temps pour l'embedding, le retrieval, la generation ? Combien de tokens consommes ? Quel cout ?
+### [16:00-19:30] Observabilité : tracer chaque requête
+> En production, il faut tracer chaque requête : combien de temps pour l'embedding, le retrieval, la génération ? Combien de tokens consommes ? Quel cout ?
 **Action** : Implementer le LLMLogger
 ```typescript
 // llm-logger.ts (extrait)
@@ -214,8 +214,8 @@ Par etape :
   generation : avg 2280ms   <-- le bottleneck
 ```
 
-### [19:30-22:00] Langfuse : observabilite open source
-> Langfuse est une plateforme open source qui fait tout ca avec un dashboard web. On peut la self-hoster en Docker ou utiliser la version cloud.
+### [19:30-22:00] Langfuse : observabilité open source
+> Langfuse est une plateforme open source qui fait tout ça avec un dashboard web. On peut la self-hoster en Docker ou utiliser la version cloud.
 **Action** : Montrer l'architecture Langfuse
 ```
 Votre Application
@@ -233,8 +233,8 @@ Langfuse Server (self-hosted ou cloud)
 ```
 > L'alternative proprietaire est Langsmith (de LangChain) — plus complet mais cloud uniquement.
 
-### [22:00-25:00] Alerting et recapitulatif
-> Derniere brique : les alertes. On configure des seuils sur la latence, le cout, les hallucinations et le taux d'erreur. Si un seuil est depasse, on alerte.
+### [22:00-25:00] Alerting et récapitulatif
+> Derniere brique : les alertes. On configure des seuils sur la latence, le cout, les hallucinations et le taux d'erreur. Si un seuil est dépasse, on alerte.
 **Action** : Montrer la configuration des alertes
 ```typescript
 const alertConfig = {
@@ -245,7 +245,7 @@ const alertConfig = {
   errorRateThreshold: 0.05,   // 5% max d'erreurs
 };
 ```
-**Action** : Afficher le recapitulatif
+**Action** : Afficher le récapitulatif
 ```
 Resume :
 - BLEU/ROUGE : metriques textuelles (mots, pas le sens)
@@ -258,9 +258,9 @@ Resume :
 ```
 
 ## Points d'attention pour l'enregistrement
-- Avoir le chatbot du module 15 fonctionnel pour les demos d'evaluation
-- Preparer un jeu de 5 questions avec reponses de reference
-- Le LLM-as-Judge necessite un modele de bonne qualite (llama3.1:8b minimum)
+- Avoir le chatbot du module 15 fonctionnel pour les demos d'évaluation
+- Preparer un jeu de 5 questions avec réponses de référence
+- Le LLM-as-Judge nécessité un modèle de bonne qualite (llama3.1:8b minimum)
 - La partie Langfuse peut etre montree avec des captures d'ecran si pas installe
-- Insister sur le fait que mesurer AVANT d'optimiser est la cle
+- Insister sur le fait que mesurer AVANT d'optimiser est la clé
 - La detection d'hallucinations est le point qui interesse le plus les stagiaires

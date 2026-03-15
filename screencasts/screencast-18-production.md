@@ -4,19 +4,19 @@
 - **Duree estimee** : 20-25 min
 - **Module** : `modules/18-production-couts.md`
 - **Lab associe** : `labs/lab-18-production-couts/`
-- **Prerequis** : Module 17 complete, chatbot RAG fonctionnel
+- **Prérequis** : Module 17 complete, chatbot RAG fonctionnel
 
 ## Setup
 - [ ] Chatbot RAG du module 15 fonctionnel
 - [ ] Ollama avec `llama3.1:8b` et `nomic-embed-text`
 - [ ] Terminal et VS Code ouverts sur le dossier du lab
-- [ ] Tableau des prix des modeles pret (slide ou fichier)
-- [ ] `pnpm install` deja execute
+- [ ] Tableau des prix des modèles pret (slide ou fichier)
+- [ ] `pnpm install` déjà exécuté
 
 ## Script
 
 ### [00:00-03:00] Combien coute un LLM en production ?
-> Avant de deployer, la premiere question du CTO sera : "Combien ca coute ?" On va apprendre a calculer. Les prix varient de 100x entre les modeles.
+> Avant de déployer, la première question du CTO sera : "Combien ça coute ?" On va apprendre a calculer. Les prix varient de 100x entre les modèles.
 **Action** : Afficher le tableau des prix
 ```
 | Modele              | Input ($/M tokens) | Output ($/M tokens) |
@@ -56,10 +56,10 @@ console.log('Claude Opus :', estimateCost('claude-opus-4', 3000, 500));    // $0
 ```bash
 npx tsx cost-calculator.ts
 ```
-> 100x de difference entre GPT-4o-mini et Claude Opus. Le choix du modele est LA decision financiere la plus impactante.
+> 100x de différence entre GPT-4o-mini et Claude Opus. Le choix du modèle est LA decision financiere la plus impactante.
 
-### [03:00-07:00] Semantic Cache : eviter les appels redondants
-> Le semantic cache evite d'appeler le LLM quand une question similaire a deja ete posee. "Comment installer Node.js ?" et "Installer NodeJS comment ?" c'est la meme question — pas besoin de payer deux fois.
+### [03:00-07:00] Semantic Cache : éviter les appels redondants
+> Le semantic cache evite d'appeler le LLM quand une question similaire a déjà ete posee. "Comment installer Node.js ?" et "Installer NodeJS comment ?" c'est la même question — pas besoin de payer deux fois.
 **Action** : Montrer le concept et l'implementation
 ```
 Sans cache :
@@ -106,7 +106,7 @@ npx tsx semantic-cache-demo.ts
 **Action** : Tester avec des reformulations et montrer les cache hits
 
 ### [07:00-10:00] Rate Limiting : le token bucket
-> Le rate limiting protege votre budget et vos quotas. Le token bucket est l'algorithme le plus utilise : un seau se remplit a un debit constant, chaque requete consomme des tokens du seau. Seau vide = requete refusee.
+> Le rate limiting protege votre budget et vos quotas. Le token bucket est l'algorithme le plus utilise : un seau se remplit à un debit constant, chaque requête consomme des tokens du seau. Seau vide = requête refusee.
 **Action** : Implementer le TokenBucket
 ```typescript
 // token-bucket.ts
@@ -143,11 +143,11 @@ if (!limiter.consume()) {
   return res.status(429).json({ error: 'Rate limit depasse', retryAfterMs: 500 });
 }
 ```
-> En production, on a un bucket par utilisateur. Un utilisateur qui fait 100 requetes en une minute est soit un bot, soit un bug.
+> En production, on à un bucket par utilisateur. Un utilisateur qui fait 100 requêtes en une minute est soit un bot, soit un bug.
 
-### [10:00-13:30] Fallback Models : la resilience
-> Que se passe-t-il si Claude est en panne ? On a besoin d'une cascade de fallback : si le modele principal echoue, on essaie le suivant.
-**Action** : Montrer la cascade de modeles
+### [10:00-13:30] Fallback Models : la résilience
+> Que se passe-t-il si Claude est en panne ? On a besoin d'une cascade de fallback : si le modèle principal echoue, on essaie le suivant.
+**Action** : Montrer la cascade de modèles
 ```
 Requete --> Claude Sonnet --timeout/erreur--> GPT-4o
                 |                               |
@@ -195,8 +195,8 @@ npx tsx fallback-demo.ts
 ```
 
 ### [13:30-16:00] Optimisation de la latence
-> La latence perdue pour l'utilisateur est repartie : reseau (20-100ms), time to first token (200-2000ms), generation (500-5000ms). Voici les leviers.
-**Action** : Afficher les strategies
+> La latence perdue pour l'utilisateur est repartie : réseau (20-100ms), time to first token (200-2000ms), génération (500-5000ms). Voici les leviers.
+**Action** : Afficher les stratégies
 ```
 | Strategie        | Gain latence      | Complexite | Impact qualite |
 |------------------|-------------------|------------|----------------|
@@ -221,7 +221,7 @@ Question : Comment optimiser les requetes SQL ?`;
 ```
 
 ### [16:00-19:00] Self-hosted vs API Cloud
-> La question qui revient toujours : heberger soi-meme ou utiliser une API cloud ?
+> La question qui revient toujours : heberger soi-même ou utiliser une API cloud ?
 **Action** : Afficher l'arbre de decision
 ```
 Les donnees sont-elles sensibles/reglementees ?
@@ -252,7 +252,7 @@ Qualite d'un 8B/70B suffisante ?
 ```
 
 ### [19:00-22:00] Monitoring en production
-> En production, on monitore trois choses : les couts, la latence et le throughput. On a besoin d'un dashboard en temps reel.
+> En production, on monitore trois choses : les couts, la latence et le throughput. On a besoin d'un dashboard en temps réel.
 **Action** : Montrer le ProductionMonitor
 ```typescript
 // production-monitor.ts (extrait)
@@ -275,10 +275,10 @@ class ProductionMonitor {
 ```bash
 npx tsx monitor-demo.ts
 ```
-**Action** : Montrer le rapport avec les couts par modele et la latence p95
+**Action** : Montrer le rapport avec les couts par modèle et la latence p95
 
 ### [22:00-23:30] Alertes de couts
-> Derniere brique : les alertes automatiques quand le budget est depasse ou la latence explose.
+> Derniere brique : les alertes automatiques quand le budget est dépasse ou la latence explose.
 **Action** : Montrer la configuration des alertes
 ```typescript
 const alerts = new CostAlertManager(
@@ -291,9 +291,9 @@ const newAlerts = alerts.check(monitor);
 // [WARNING] Projection : $15.30/jour (80% du budget)
 ```
 
-### [23:30-25:00] Recapitulatif et transition
-> On a couvert tout ce qu'il faut pour la production : calcul des couts, semantic cache pour economiser 60%+, rate limiting pour proteger le budget, fallback pour la resilience, optimisation de la latence, et monitoring continu. Le dernier screencast met tout ca ensemble dans le projet final.
-**Action** : Afficher le recapitulatif
+### [23:30-25:00] Récapitulatif et transition
+> On a couvert tout ce qu'il faut pour la production : calcul des couts, semantic cache pour economiser 60%+, rate limiting pour proteger le budget, fallback pour la résilience, optimisation de la latence, et monitoring continu. Le dernier screencast met tout ça ensemble dans le projet final.
+**Action** : Afficher le récapitulatif
 ```
 Resume :
 - Couts : $0.15 a $75/M tokens -- le choix du modele est critique
@@ -306,9 +306,9 @@ Resume :
 ```
 
 ## Points d'attention pour l'enregistrement
-- Les calculs de couts doivent etre precis — verifier les prix actuels avant
-- Le semantic cache est une demo tres visuelle (montrer le cache hit en direct)
+- Les calculs de couts doivent etre précis — vérifier les prix actuels avant
+- Le semantic cache est une demo très visuelle (montrer le cache hit en direct)
 - Le fallback peut etre simule en coupant Ollama puis en le relancant
 - La partie self-hosted vs cloud est une discussion, pas une demo
-- Insister sur le fait que le semantic cache est le levier numero 1
-- Mentionner que les prix changent souvent — toujours verifier avant de planifier
+- Insister sur le fait que le semantic cache est le levier numéro 1
+- Mentionner que les prix changent souvent — toujours vérifier avant de planifier

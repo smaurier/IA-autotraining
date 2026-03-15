@@ -1,17 +1,17 @@
-# Module 08 — Reseaux de Neurones from Scratch
+# Module 08 — Réseaux de Neurones from Scratch
 
-> **Objectif** : Construire un reseau de neurones complet en TypeScript pur. Comprendre le perceptron, le forward/backward pass, et resoudre le probleme XOR.
+> **Objectif** : Construire un réseau de neurones complet en TypeScript pur. Comprendre le perceptron, le forward/backward pass, et résoudre le problème XOR.
 > **Difficulte** : ⭐⭐⭐⭐ (avance — le module le plus technique du cours)
-> **Prerequis** : Module 07 (Maths Essentielles — obligatoire)
+> **Prérequis** : Module 07 (Maths Essentielles — obligatoire)
 > **Duree estimee** : 4-5 heures
 
 ---
 
-> **⚠️ Ce module est le plus difficile de la Partie 2.** Construire un reseau de neurones from scratch demande de la patience. Si tu galeres, c'est normal — meme des devs seniors trouvent ca difficile la premiere fois. L'objectif n'est pas de memoriser les formules mais de comprendre l'intuition : forward pass, loss, backpropagation, gradient descent. Le lab est guide pas a pas.
+> **⚠️ Ce module est le plus difficile de la Partie 2.** Construire un réseau de neurones from scratch demandé de la patience. Si tu galeres, c'est normal — même des devs seniors trouvent ça difficile la première fois. L'objectif n'est pas de memoriser les formules mais de comprendre l'intuition : forward pass, loss, backpropagation, gradient descent. Le lab est guide pas a pas.
 
 ## Avant de commencer
 
-Ce module est **le plus ambitieux** du cours. Vous allez coder un reseau de neurones from scratch, sans aucun framework (pas de TensorFlow, pas de PyTorch, pas de brain.js).
+Ce module est **le plus ambitieux** du cours. Vous allez coder un réseau de neurones from scratch, sans aucun framework (pas de TensorFlow, pas de PyTorch, pas de brain.js).
 
 ### Parcours selon votre objectif
 
@@ -46,9 +46,9 @@ Ce module est **le plus ambitieux** du cours. Vous allez coder un reseau de neur
 | 2 | Forward pass | Propagation des signaux |
 | 3 | Loss & backward | Calcul de l'erreur et des gradients |
 | 4 | Backpropagation | Chain rule appliquee |
-| 5 | MLP complet | Reseau multi-couches |
+| 5 | MLP complet | Réseau multi-couches |
 | 6 | Training loop | Boucle d'entrainement |
-| 7 | Le probleme XOR | Demonstration de la puissance des couches cachees |
+| 7 | Le problème XOR | Demonstration de la puissance des couches cachees |
 | 8 | Overfitting vs Underfitting | Le compromis biais-variance |
 
 ---
@@ -67,7 +67,7 @@ Neurone biologique :              Neurone artificiel :
                                         + biais
 ```
 
-Le perceptron est le neurone artificiel le plus simple : il prend des entrees, les multiplie par des poids, ajoute un biais, et passe le resultat dans une fonction d'activation.
+Le perceptron est le neurone artificiel le plus simple : il prend des entrees, les multiplie par des poids, ajoute un biais, et passe le résultat dans une fonction d'activation.
 
 ### La formule
 
@@ -170,7 +170,7 @@ trainPerceptron();
 //   [1,1] → 0.921 (attendu: 1)
 ```
 
-### Le probleme XOR — la limite du perceptron
+### Le problème XOR — la limite du perceptron
 
 ```
 Porte XOR :
@@ -592,8 +592,8 @@ function train(
 | Learning rate | Taille du pas de gradient | 0.001 - 0.1 | Divergence | Convergence lente |
 | Epochs | Nombre de passages sur les donnees | 100 - 10000 | Overfitting | Underfitting |
 | Batch size | Exemples par mise a jour | 16 - 128 | Generalisation instable | Lent, RAM++ |
-| Couches cachees | Profondeur du reseau | 1 - 5 | Overfitting, lent | Capacite limitee |
-| Neurones/couche | Largeur du reseau | 4 - 256 | Overfitting, lent | Capacite limitee |
+| Couches cachees | Profondeur du réseau | 1 - 5 | Overfitting, lent | Capacité limitee |
+| Neurones/couche | Largeur du réseau | 4 - 256 | Overfitting, lent | Capacité limitee |
 
 ### Visualiser l'apprentissage
 
@@ -630,7 +630,7 @@ Accuracy qui monte (bon signe) :
 
 ---
 
-## 7. Le probleme XOR — Demonstration
+## 7. Le problème XOR — Demonstration
 
 ### XOR : impossible pour un perceptron, trivial pour un MLP
 
@@ -802,7 +802,7 @@ simple pour capturer    la vraie structure      le bruit des donnees
 la structure.           des donnees.            d'entrainement.
 ```
 
-### Comment detecter l'overfitting
+### Comment détecter l'overfitting
 
 ```typescript
 // --- Split train/test ---
@@ -873,14 +873,14 @@ Detection de l'overfitting — les deux courbes :
        (early stopping)
 ```
 
-### Strategies contre l'overfitting
+### Stratégies contre l'overfitting
 
-| Strategie | Comment ca marche | Quand l'utiliser |
+| Stratégie | Comment ça marche | Quand l'utiliser |
 |-----------|-------------------|-----------------|
 | Plus de donnees | Plus d'exemples = meilleure generalisation | Toujours, si possible |
-| Reseau plus petit | Moins de parametres = moins de memorisation | Reseau surdimensionne |
+| Réseau plus petit | Moins de paramètres = moins de memorisation | Réseau surdimensionne |
 | Early stopping | Arreter quand la validation loss monte | Toujours |
-| Dropout | Desactiver aleatoirement des neurones | Reseaux profonds |
+| Dropout | Desactiver aleatoirement des neurones | Réseaux profonds |
 | Regularisation L2 | Penaliser les gros poids | Overfitting modere |
 | Data augmentation | Transformer les donnees existantes | Images, texte |
 
@@ -941,11 +941,11 @@ Couche 3 : detecte des objets           (yeux, nez, bouche)
 Couche 4 : reconnait des concepts       (visage, chat, voiture)
 ```
 
-> Analogie : c'est comme le systeme visuel humain. La retine detecte des contrastes locaux. Le cortex visuel primaire detecte des bords. Les zones superieures reconnaissent des objets entiers. Chaque niveau abstrait un peu plus.
+> Analogie : c'est comme le système visuel humain. La retine détecté des contrastes locaux. Le cortex visuel primaire détecté des bords. Les zones superieures reconnaissent des objets entiers. Chaque niveau abstrait un peu plus.
 
 ### Les innovations qui ont rendu le deep learning possible
 
-| Innovation | Annee | Probleme resolu |
+| Innovation | Annee | Problème resolu |
 |-----------|-------|----------------|
 | ReLU | 2010 | Vanishing gradient |
 | Dropout | 2012 | Overfitting |
@@ -956,7 +956,7 @@ Couche 4 : reconnait des concepts       (visage, chat, voiture)
 
 ---
 
-## Recapitulatif
+## Récapitulatif
 
 ### Ce qu'on a construit
 
@@ -984,7 +984,7 @@ De zero, en TypeScript pur :
 | Chain rule | ∂L/∂w = produit des derivees le long du chemin |
 | Learning rate | Taille du pas de mise a jour |
 | Epoch | Un passage complet sur toutes les donnees |
-| Overfitting | Le modele memorise au lieu de generaliser |
+| Overfitting | Le modèle memorise au lieu de generaliser |
 | Dropout | Desactive des neurones aleatoirement |
 | Deep learning | Beaucoup de couches = representations hierarchiques |
 
@@ -992,10 +992,20 @@ De zero, en TypeScript pur :
 
 1. **Modifier le XOR** : essayer avec 2, 8, et 16 neurones caches. Observer l'impact sur la vitesse de convergence.
 2. **Implementer Adam** : remplacer la descente de gradient simple par l'optimiseur Adam (momentum + RMSprop).
-3. **Early stopping** : ajouter un mecanisme qui arrete l'entrainement quand la validation loss remonte pendant 10 epochs.
-4. **Classifier des spirales** : generer des donnees en forme de spirale (plus difficile que les cercles) et trouver l'architecture minimale qui resout le probleme.
-5. **Benchmark** : mesurer le temps d'entrainement pour differentes tailles de reseau et tracer un graphe.
+3. **Early stopping** : ajouter un mécanisme qui arrete l'entrainement quand la validation loss remonte pendant 10 epochs.
+4. **Classifier des spirales** : générer des donnees en forme de spirale (plus difficile que les cercles) et trouver l'architecture minimale qui resout le problème.
+5. **Benchmark** : mesurer le temps d'entrainement pour différentes tailles de réseau et tracer un graphe.
 
 ---
 
 *Prochain module : [09 — Architecture Transformer](./09-transformer-attention.md)*
+
+---
+
+<!-- parcours-recommande -->
+
+::: tip Parcours recommandé
+1. **Screencast** : [screencast 08 neural networks](../screencasts/screencast-08-neural-networks.md)
+2. **Lab** : [lab-08-neural-network-scratch](../labs/lab-08-neural-network-scratch/README)
+3. **Quiz** : [quiz 08 neural networks](../quizzes/quiz-08-neural-networks.html)
+:::

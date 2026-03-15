@@ -29,7 +29,7 @@
   * Pour les petits modèles sur GPU puissant
 ```
 
-> **Analogie** : Un LLM cloud, c'est comme commander au restaurant — pratique, varié, mais cher et vous ne contrôlez pas la cuisine. Un LLM local, c'est cuisiner chez soi — demande de l'équipement et du savoir-faire, mais c'est gratuit, personnalisable, et personne ne voit ce que vous mangez.
+> **Analogie** : Un LLM cloud, c'est comme commander au restaurant — pratique, varié, mais cher et vous ne contrôlez pas la cuisine. Un LLM local, c'est cuisiner chez soi — demandé de l'équipement et du savoir-faire, mais c'est gratuit, personnalisable, et personne ne voit ce que vous mangez.
 
 ### Cas d'usage idéaux pour le local
 
@@ -1069,3 +1069,13 @@ console.log(answer);
 4. **Benchmark** : Comparez 3 modèles sur 10 prompts identiques, mesurez la qualité (scoring subjectif 1-5) et la vitesse
 5. **Quantization** : Téléchargez le même modèle en Q4, Q5, Q8 et F16, comparez la qualité sur 5 questions précises
 6. **Mini-RAG** : Adaptez l'exemple ci-dessus avec 5-10 paragraphes de votre propre documentation, testez 3 questions
+
+---
+
+<!-- parcours-recommande -->
+
+::: tip Parcours recommandé
+1. **Screencast** : [screencast 11 ollama](../screencasts/screencast-11-ollama.md)
+2. **Lab** : [lab-11-ollama-local](../labs/lab-11-ollama-local/README)
+3. **Quiz** : [quiz 11 ollama](../quizzes/quiz-11-ollama.html)
+:::

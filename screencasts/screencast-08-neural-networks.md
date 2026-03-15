@@ -1,21 +1,21 @@
-# Screencast 08 — Reseaux de Neurones from Scratch
+# Screencast 08 — Réseaux de Neurones from Scratch
 
 ## Informations
 - **Duree estimee** : 22-25 min
 - **Module** : `modules/08-neural-network-scratch.md`
 - **Lab associe** : `labs/lab-08-neural-network/`
-- **Prerequis** : Screencast 07 (Maths essentielles)
+- **Prérequis** : Screencast 07 (Maths essentielles)
 
 ## Setup
 - [ ] Terminal avec le projet lab ouvert
 - [ ] Fichiers TypeScript prets : perceptron.ts, dense-layer.ts, network.ts, xor.ts
-- [ ] Pas de dependance externe — tout en TypeScript pur
+- [ ] Pas de dépendance externe — tout en TypeScript pur
 - [ ] Taille de police suffisante pour voir les traces d'entrainement
 
 ## Script
 
 ### [00:00-02:30] Introduction — Construire pour comprendre
-> Aujourd'hui, on construit un reseau de neurones complet en TypeScript pur. Pas de TensorFlow, pas de PyTorch, pas de brain.js. On code chaque piece du puzzle : du perceptron simple au MLP qui apprend le XOR. Si vous pouvez le coder from scratch, vous le comprenez vraiment.
+> Aujourd'hui, on construit un réseau de neurones complet en TypeScript pur. Pas de TensorFlow, pas de PyTorch, pas de brain.js. On code chaque piece du puzzle : du perceptron simple au MLP qui apprend le XOR. Si vous pouvez le coder from scratch, vous le comprenez vraiment.
 **Action** : Afficher le plan de construction
 ```
 Ce qu'on va construire :
@@ -68,10 +68,10 @@ class Perceptron {
 // [1,0] → 0.089 (attendu: 0)
 // [1,1] → 0.921 (attendu: 1)
 ```
-> Ca marche pour AND et OR. Mais pour XOR, c'est impossible avec un seul perceptron. On ne peut pas tracer une seule ligne droite qui separe les classes XOR. Il faut une couche cachee.
+> Ça marche pour AND et OR. Mais pour XOR, c'est impossible avec un seul perceptron. On ne peut pas tracer une seule ligne droite qui separe les classes XOR. Il faut une couche cachee.
 
 ### [06:00-10:00] Forward Pass — Propagation des signaux
-> Le forward pass, c'est le signal qui traverse le reseau de gauche a droite. Chaque couche transforme le vecteur d'entree via une multiplication matricielle + activation.
+> Le forward pass, c'est le signal qui traverse le réseau de gauche a droite. Chaque couche transforme le vecteur d'entree via une multiplication matricielle + activation.
 **Action** : Afficher l'architecture et implementer DenseLayer
 ```
 Couche d'entree    Couche cachee    Couche de sortie
@@ -154,7 +154,7 @@ function backwardDenseLayer(layer: DenseLayer, dOutput: Vector): LayerGradients 
 > Comme une chaine de dominos : l'erreur de sortie fait tomber l'avant-dernier domino, qui fait tomber celui d'avant. Chaque couche recoit son bout de responsabilite.
 
 ### [14:00-17:30] Le MLP complet et la boucle d'entrainement
-> On assemble tout : un reseau multi-couches avec forward, backward et mise a jour des poids.
+> On assemble tout : un réseau multi-couches avec forward, backward et mise a jour des poids.
 **Action** : Montrer la classe NeuralNetwork
 ```typescript
 class NeuralNetwork {
@@ -208,9 +208,9 @@ for (let epoch = 0; epoch < epochs; epoch++) {
 }
 ```
 
-### [17:30-20:30] Le probleme XOR — La preuve par le code
+### [17:30-20:30] Le problème XOR — La preuve par le code
 > Le moment de verite : le XOR. Impossible pour un perceptron, trivial pour un MLP avec une couche cachee.
-**Action** : Executer le XOR solver en live
+**Action** : Exécuter le XOR solver en live
 ```typescript
 const network = new NeuralNetwork([2, 4, 1], 'sigmoid');
 
@@ -243,7 +243,7 @@ Espace d'entree (2D)          Espace cache (projete)
 > Imaginez les donnees sur une feuille de papier. Impossible de les separer avec un trait droit. Mais si vous pliez la feuille dans l'espace 3D, vous pouvez passer un plan entre les classes. C'est exactement ce que fait la couche cachee : elle deplie l'espace.
 
 ### [20:30-23:00] Overfitting vs Underfitting
-> Un reseau qui marche sur les donnees d'entrainement mais pas sur de nouvelles donnees, c'est de l'overfitting. Il a memorise au lieu de generaliser.
+> Un réseau qui marche sur les donnees d'entrainement mais pas sur de nouvelles donnees, c'est de l'overfitting. Il a memorise au lieu de generaliser.
 **Action** : Afficher le schema
 ```
 Underfitting              Bon fit                Overfitting
@@ -277,9 +277,9 @@ function applyDropout(layer: Vector, rate: number, training: boolean): Vector {
 // En inference : utilise tous les neurones, scales
 ```
 
-### [23:00-25:00] Recapitulatif
-> On a construit un reseau de neurones complet from scratch en TypeScript. Du perceptron au MLP, du forward pass a la backpropagation, de la boucle d'entrainement a la resolution du XOR.
-**Action** : Afficher le resume
+### [23:00-25:00] Récapitulatif
+> On a construit un réseau de neurones complet from scratch en TypeScript. Du perceptron au MLP, du forward pass à la backpropagation, de la boucle d'entrainement à la résolution du XOR.
+**Action** : Afficher le résumé
 ```
 Ce qu'on a construit en TypeScript pur :
 1. Perceptron        → y = activation(W·X + b)
@@ -295,8 +295,8 @@ Prochain module : l'architecture Transformer — le modele derriere GPT et Claud
 ```
 
 ## Points d'attention pour l'enregistrement
-- Executer le XOR en live — c'est le moment "wow" du screencast
+- Exécuter le XOR en live — c'est le moment "wow" du screencast
 - Montrer les epochs qui defilent avec la loss qui diminue
 - Ne pas aller trop vite sur la backpropagation — c'est le concept le plus difficile
-- Faire une pause apres chaque section pour laisser assimiler
-- Insister sur le fait que c'est du TypeScript pur, zero dependance
+- Faire une pause après chaque section pour laisser assimiler
+- Insister sur le fait que c'est du TypeScript pur, zero dépendance

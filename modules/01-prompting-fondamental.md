@@ -4,12 +4,12 @@
 
 A l'issue de ce module, vous serez capable de :
 
-- Comprendre la difference entre zero-shot et few-shot prompting
+- Comprendre la différence entre zero-shot et few-shot prompting
 - Structurer vos prompts avec les roles system, user et assistant
 - Utiliser le chain-of-thought pour ameliorer le raisonnement
 - Demander des sorties structurees (JSON, markdown, listes)
 - Appliquer les bonnes pratiques de prompting
-- Eviter les anti-patterns courants
+- Éviter les anti-patterns courants
 
 ---
 
@@ -17,9 +17,9 @@ A l'issue de ce module, vous serez capable de :
 
 ### 1.1 Qu'est-ce qu'un prompt ?
 
-Un prompt est l'ensemble des instructions et du contexte que vous envoyez a un LLM pour obtenir une reponse. C'est votre interface avec le modele.
+Un prompt est l'ensemble des instructions et du contexte que vous envoyez à un LLM pour obtenir une réponse. C'est votre interface avec le modèle.
 
-> **Analogie** : Pensez au prompt comme a un brief donne a un developpeur freelance tres competent mais qui ne connait rien de votre projet. Plus votre brief est clair, precis et contextuellement riche, meilleur sera le resultat.
+> **Analogie** : Pensez au prompt comme à un brief donne à un développeur freelance très competent mais qui ne connait rien de votre projet. Plus votre brief est clair, précis et contextuellement riche, meilleur sera le résultat.
 
 ### 1.2 La structure d'un appel API
 
@@ -44,9 +44,9 @@ const response = await client.messages.create({
 
 | Role | Description | Quand l'utiliser |
 |------|------------|-----------------|
-| **system** | Instructions globales, personnalite, contraintes | Toujours — definit le comportement general |
-| **user** | Messages de l'utilisateur, questions, demandes | Chaque requete |
-| **assistant** | Reponses precedentes du modele (ou prefill) | Conversations multi-tours, prefill pour forcer un format |
+| **system** | Instructions globales, personnalite, contraintes | Toujours — définit le comportement général |
+| **user** | Messages de l'utilisateur, questions, demandes | Chaque requête |
+| **assistant** | Reponses precedentes du modèle (où prefill) | Conversations multi-tours, prefill pour forcer un format |
 
 ```typescript
 // Le system prompt definit le "qui" et les regles
@@ -68,7 +68,7 @@ const userMessage = 'Comment gerer les erreurs async en TypeScript ?'
 
 ### 2.1 Zero-shot : aucun exemple
 
-En zero-shot, vous donnez simplement l'instruction sans aucun exemple. Le modele s'appuie uniquement sur son entrainement.
+En zero-shot, vous donnez simplement l'instruction sans aucun exemple. Le modèle s'appuie uniquement sur son entrainement.
 
 ```typescript
 // Zero-shot : classement de sentiment
@@ -87,7 +87,7 @@ Le zero-shot fonctionne bien pour les taches simples et non-ambigues.
 
 ### 2.2 Few-shot : apprendre par l'exemple
 
-En few-shot, vous fournissez quelques exemples (generalement 2 a 5) du comportement attendu avant de poser votre vraie question.
+En few-shot, vous fournissez quelques exemples (généralement 2 a 5) du comportement attendu avant de poser votre vraie question.
 
 ```typescript
 // Few-shot : extraction de donnees structurees
@@ -122,12 +122,12 @@ const fewShot = await client.messages.create({
 
 ### 2.3 Quand utiliser quoi ?
 
-| Methode | Cas d'usage | Avantages | Inconvenients |
+| Méthode | Cas d'usage | Avantages | Inconvenients |
 |---------|------------|-----------|---------------|
-| **Zero-shot** | Taches simples, classification evidente, resume | Moins de tokens, plus rapide | Peut etre ambigu |
-| **Few-shot** | Format de sortie specifique, tache peu commune, nuances a capturer | Plus precis, format garanti | Plus de tokens (= plus cher) |
+| **Zero-shot** | Taches simples, classification evidente, résumé | Moins de tokens, plus rapide | Peut etre ambigu |
+| **Few-shot** | Format de sortie spécifique, tache peu commune, nuances a capturer | Plus précis, format garanti | Plus de tokens (= plus cher) |
 
-> **Regle empirique** : commencez toujours en zero-shot. Si le resultat n'est pas satisfaisant, ajoutez 2-3 exemples. Si ca ne suffit toujours pas, ameliorez votre system prompt.
+> **Regle empirique** : commencez toujours en zero-shot. Si le résultat n'est pas satisfaisant, ajoutez 2-3 exemples. Si ça ne suffit toujours pas, ameliorez votre system prompt.
 
 ### 2.4 Bonnes pratiques pour le few-shot
 
@@ -157,9 +157,9 @@ const badFewShot = [
 
 ## 3. Chain-of-Thought (CoT)
 
-### 3.1 Le probleme : les LLMs "sautent" aux conclusions
+### 3.1 Le problème : les LLMs "sautent" aux conclusions
 
-Les LLMs generent token par token, de gauche a droite. Sans incitation a reflechir, ils peuvent donner une reponse impulsive, surtout pour les problemes qui necessitent un raisonnement en plusieurs etapes.
+Les LLMs generent token par token, de gauche a droite. Sans incitation a reflechir, ils peuvent donner une réponse impulsive, surtout pour les problèmes qui necessitent un raisonnement en plusieurs étapes.
 
 ```typescript
 // Sans CoT — le modele peut se tromper
@@ -174,7 +174,7 @@ const sansCoT = await client.messages.create({
 // Risque de repondre directement "60€" (en faisant 25% sur 80€) → FAUX
 ```
 
-### 3.2 La solution : forcer le raisonnement etape par etape
+### 3.2 La solution : forcer le raisonnement étape par étape
 
 ```typescript
 // Avec CoT — le modele raisonne avant de repondre
@@ -194,14 +194,14 @@ Reflechis etape par etape avant de donner ta reponse.`,
 // → Correct !
 ```
 
-### 3.3 Pourquoi ca marche ?
+### 3.3 Pourquoi ça marche ?
 
-> **Analogie** : imaginez qu'on vous demande de resoudre un calcul mental complexe. Si vous devez donner la reponse instantanement, vous risquez de vous tromper. Mais si on vous donne un papier brouillon pour poser le calcul, vous etes beaucoup plus precis. Le CoT est le "papier brouillon" du LLM.
+> **Analogie** : imaginez qu'on vous demandé de résoudre un calcul mental complexe. Si vous devez donner la réponse instantanement, vous risquez de vous tromper. Mais si on vous donne un papier brouillon pour poser le calcul, vous etes beaucoup plus précis. Le CoT est le "papier brouillon" du LLM.
 
-Le mecanisme technique est le suivant :
-- Le LLM genere token par token
-- Quand il ecrit les etapes intermediaires, ces tokens deviennent du contexte pour les tokens suivants
-- Le raisonnement intermediaire "guide" la generation finale
+Le mécanisme technique est le suivant :
+- Le LLM généré token par token
+- Quand il écrit les étapes intermédiaires, ces tokens deviennent du contexte pour les tokens suivants
+- Le raisonnement intermédiaire "guide" la génération finale
 
 ### 3.4 Variantes du CoT
 
@@ -274,16 +274,16 @@ La temperature controle la diversite de la sortie. On l'a vu au module 00, mais 
 
 | Cas d'usage | Temperature recommandee | Raison |
 |------------|------------------------|--------|
-| Generation de code | 0.0 - 0.2 | Determinisme, correction |
+| Génération de code | 0.0 - 0.2 | Determinisme, correction |
 | Extraction de donnees | 0.0 | Precision maximale |
 | Classification | 0.0 | Pas besoin de creativite |
 | Reformulation de texte | 0.3 - 0.5 | Un peu de variete, mais fidele |
-| Ecriture de documentation | 0.3 - 0.5 | Claire mais pas ennuyeuse |
+| Écriture de documentation | 0.3 - 0.5 | Claire mais pas ennuyeuse |
 | Brainstorming | 0.7 - 1.0 | Maximum de creativite |
-| Ecriture creative | 0.8 - 1.0 | Originalite |
-| Generation de tests | 0.3 - 0.5 | Variete des cas, mais correct |
+| Écriture creative | 0.8 - 1.0 | Originalite |
+| Génération de tests | 0.3 - 0.5 | Variete des cas, mais correct |
 
-### 4.3 Impact sur le code genere
+### 4.3 Impact sur le code généré
 
 ```typescript
 // Avec temperature 0 : toujours le meme code, previsible
@@ -329,11 +329,11 @@ Donne uniquement le code du test, sans explication.`,
 
 ## 5. Structured Output : obtenir du JSON, du markdown, des listes
 
-### 5.1 Le probleme
+### 5.1 Le problème
 
-Par defaut, un LLM genere du texte libre. Mais en tant que developpeur, vous avez besoin de sorties **parsables** : du JSON, des listes, des tableaux.
+Par defaut, un LLM généré du texte libre. Mais en tant que développeur, vous avez besoin de sorties **parsables** : du JSON, des listes, des tableaux.
 
-### 5.2 Strategie 1 : demander le format explicitement
+### 5.2 Stratégie 1 : demander le format explicitement
 
 ```typescript
 // Demander du JSON dans le prompt
@@ -360,9 +360,9 @@ Reponds UNIQUEMENT avec le JSON, sans texte autour. Schema :
 })
 ```
 
-### 5.3 Strategie 2 : assistant prefill
+### 5.3 Stratégie 2 : assistant prefill
 
-Avec l'API Claude, vous pouvez "pre-remplir" le debut de la reponse de l'assistant pour forcer le format.
+Avec l'API Claude, vous pouvez "pre-remplir" le debut de la réponse de l'assistant pour forcer le format.
 
 ```typescript
 // Prefill : forcer le modele a commencer par "{"
@@ -387,7 +387,7 @@ const fullJson = '{' + (prefillResponse.content[0].type === 'text' ? prefillResp
 const metrics = JSON.parse(fullJson)
 ```
 
-### 5.4 Strategie 3 : system prompt avec schema
+### 5.4 Stratégie 3 : system prompt avec schema
 
 ```typescript
 const structuredAnalysis = await client.messages.create({
@@ -423,9 +423,9 @@ function fetchData(url) {
 })
 ```
 
-### 5.5 Parser la reponse de maniere robuste
+### 5.5 Parser la réponse de manière robuste
 
-Le modele peut parfois ajouter du texte avant ou apres le JSON. Voici comment gerer ca :
+Le modèle peut parfois ajouter du texte avant ou après le JSON. Voici comment gérer ça :
 
 ```typescript
 function extractJson<T>(text: string): T {
@@ -492,7 +492,7 @@ Colonnes : Nom, Typage, Performance, Courbe d'apprentissage, Migrations, Stars G
 
 ## 6. Bonnes pratiques de prompting
 
-### 6.1 Etre specifique
+### 6.1 Etre spécifique
 
 ```typescript
 // MAUVAIS : vague
@@ -531,7 +531,7 @@ const { data: products } = await useFetch('/api/products', {
 Comment corriger cette race condition ?`
 ```
 
-### 6.3 Definir le format de sortie
+### 6.3 Définir le format de sortie
 
 ```typescript
 const formatDefini = `Analyse cette pull request et donne ton avis.
@@ -555,7 +555,7 @@ Format de reponse attendu :
 APPROUVE / CHANGEMENTS DEMANDES / A DISCUTER`
 ```
 
-### 6.4 Definir ce que le modele ne doit PAS faire
+### 6.4 Définir ce que le modèle ne doit PAS faire
 
 ```typescript
 const contraintes = `Reponds a la question technique ci-dessous.
@@ -590,20 +590,20 @@ with a variety of types rather than a single one.
 Traduis le texte source dans la langue cible en respectant le glossaire.`
 ```
 
-### 6.6 Tableau recapitulatif des bonnes pratiques
+### 6.6 Tableau récapitulatif des bonnes pratiques
 
 | Pratique | Exemple | Impact |
 |----------|---------|--------|
-| Etre specifique | "Cree un composant X avec les props Y" | Reponse precise, moins d'iterations |
+| Etre spécifique | "Cree un composant X avec les props Y" | Reponse précisé, moins d'iterations |
 | Donner du contexte | "Dans un projet Nuxt 3 avec TypeScript..." | Reponse adaptee a votre stack |
-| Definir le format | "Reponds en JSON avec ce schema..." | Sortie parsable et previsible |
-| Definir les contraintes | "Maximum 100 mots, pas de code" | Evite le hors-sujet |
+| Définir le format | "Reponds en JSON avec ce schema..." | Sortie parsable et previsible |
+| Définir les contraintes | "Maximum 100 mots, pas de code" | Evite le hors-sujet |
 | Utiliser des delimiteurs | `<code>...</code>`, `---`, XML tags | Separation claire des sections |
 | Donner des exemples | Few-shot avec 2-3 cas | Format et style garantis |
 
 ---
 
-## 7. Anti-patterns a eviter
+## 7. Anti-patterns a éviter
 
 ### 7.1 Le prompt vague
 
@@ -657,7 +657,7 @@ const avecFormat = `Liste les 5 principaux avantages de TypeScript.
 Format : liste a puces, une phrase par avantage, pas d'introduction ni de conclusion.`
 ```
 
-### 7.5 Le prompt qui "menace" le modele
+### 7.5 Le prompt qui "menace" le modèle
 
 ```typescript
 // ANTI-PATTERN : menaces et manipulations
@@ -668,7 +668,7 @@ const menace = 'Si tu ne reponds pas correctement, je vais annuler mon abonnemen
 const clair = 'Reponds uniquement si tu es confiant dans ta reponse. Sinon, dis-le.'
 ```
 
-### 7.6 Le prompt qui demande d'inventer
+### 7.6 Le prompt qui demandé d'inventer
 
 ```typescript
 // ANTI-PATTERN : demander des faits sans preciser
@@ -890,22 +890,22 @@ main().catch(console.error)
 
 ### Exercice 1 — Zero-shot vs Few-shot
 
-Creez un script qui classifie des commits Git en categories (feat, fix, refactor, docs, test, chore). Implementez une version zero-shot et une version few-shot. Comparez les resultats sur 10 messages de commit reels de vos projets.
+Creez un script qui classifie des commits Git en categories (feat, fix, refactor, docs, test, chore). Implementez une version zero-shot et une version few-shot. Comparez les résultats sur 10 messages de commit réels de vos projets.
 
 ### Exercice 2 — Chain-of-Thought pour le debug
 
 Ecrivez un prompt qui prend un message d'erreur TypeScript et le code correspondant, puis :
-1. Explique l'erreur en francais simple
-2. Identifie la cause racine etape par etape
+1. Explique l'erreur en français simple
+2. Identifie la cause racine étape par étape
 3. Propose un correctif avec du code
 
-Testez avec au moins 3 erreurs TypeScript differentes.
+Testez avec au moins 3 erreurs TypeScript différentes.
 
 ### Exercice 3 — Structured Output robuste
 
 Creez une fonction `analyzePackageJson(content: string)` qui utilise Claude pour analyser un `package.json` et retourner un objet type avec :
-- `outdatedDeps: string[]` (dependances potentiellement obsoletes)
-- `securityConcerns: string[]` (scripts suspects, dependances risquees)
+- `outdatedDeps: string[]` (dépendances potentiellement obsoletes)
+- `securityConcerns: string[]` (scripts suspects, dépendances risquees)
 - `suggestions: string[]` (ameliorations possibles)
 - `score: number` (0-100)
 
@@ -913,20 +913,30 @@ Gerez les cas d'erreur (JSON invalide du LLM, timeout, etc.).
 
 ### Exercice 4 — System prompt engineering
 
-Creez 3 system prompts differents pour un meme cas d'usage (assistant de code review) :
+Creez 3 system prompts différents pour un même cas d'usage (assistant de code review) :
 1. Un prompt minimaliste (2-3 lignes)
-2. Un prompt detaille avec regles et format (15-20 lignes)
-3. Un prompt avec few-shot integre (exemples de bonnes reviews)
+2. Un prompt détaillé avec regles et format (15-20 lignes)
+3. Un prompt avec few-shot intégré (exemples de bonnes reviews)
 
-Comparez la qualite des reviews sur le meme code source.
+Comparez la qualite des reviews sur le même code source.
 
 ---
 
-## 10. Points cles a retenir
+## 10. Points clés à retenir
 
-1. **Zero-shot d'abord, few-shot si necessaire** : ne complexifiez pas sans raison
-2. **Le CoT est votre meilleur ami** : "Reflechis etape par etape" ameliore presque toujours les reponses complexes
-3. **Definissez toujours le format de sortie** : surtout si vous allez parser la reponse programmatiquement
+1. **Zero-shot d'abord, few-shot si nécessaire** : ne complexifiez pas sans raison
+2. **Le CoT est votre meilleur ami** : "Reflechis étape par étape" ameliore presque toujours les réponses complexes
+3. **Definissez toujours le format de sortie** : surtout si vous allez parser la réponse programmatiquement
 4. **Le system prompt est votre fondation** : investissez du temps a le peaufiner
 5. **Les anti-patterns coutent cher** : un prompt vague = plus d'iterations = plus de tokens = plus d'argent
-6. **Testez, itérez, mesurez** : le prompting est empirique, pas theorique
+6. **Testez, itérez, mesurez** : le prompting est empirique, pas théorique
+
+---
+
+<!-- parcours-recommande -->
+
+::: tip Parcours recommandé
+1. **Screencast** : [screencast 01 prompting fondamental](../screencasts/screencast-01-prompting-fondamental.md)
+2. **Lab** : [lab-01-prompting-fondamental](../labs/lab-01-prompting-fondamental/README)
+3. **Quiz** : [quiz 01 prompting fondamental](../quizzes/quiz-01-prompting-fondamental.html)
+:::

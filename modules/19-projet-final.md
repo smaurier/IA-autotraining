@@ -38,7 +38,7 @@ Vous allez construire un **assistant documentaire** capable de :
 | Conversation | Multi-tours avec historique | M4, M15 |
 | Streaming SSE | Réponse en temps réel | M4, M15 |
 | Citations | Traçabilité des sources | M15 |
-| Évaluation | Faithfulness, relevancy, precision | M16 |
+| Évaluation | Faithfulness, relevancy, précision | M16 |
 | Sécurité | Input/output guardrails | M17 |
 | Monitoring | Coûts, latence, qualité | M16, M18 |
 | Semantic cache | Réduction des coûts | M18 |
@@ -1117,3 +1117,23 @@ Module 19: Projet final             ──→ Vous avez tout assemblé
 4. **Phase 4** : Créez le chat avec streaming SSE, historique et citations
 5. **Phase 5** : Implémentez le pipeline d'évaluation avec 4 métriques et un dataset de 15+ questions
 6. **Phase 6** : Ajoutez la sécurité (guardrails), le cache sémantique, le monitoring et le Docker complet
+
+---
+
+<!-- parcours-recommande -->
+
+::: tip Parcours recommandé
+1. **Screencast** : [screencast 19 projet final](../screencasts/screencast-19-projet-final.md)
+2. **Lab** : [lab-19-projet-final](../labs/lab-19-projet-final/README)
+3. **Quiz** : [quiz 19 projet final](../quizzes/quiz-19-projet-final.html)
+:::
+
+---
+
+<!-- navigation-inter-cours -->
+
+::: info Curriculum termine
+Bravo, tu as termine le dernier cours du curriculum Full-Stack JavaScript !
+
+Consulte le [projet capstone](../../capstone/projet-capstone-fullstack.md) pour mettre en pratique l'ensemble de tes compétences dans un projet intégré.
+:::

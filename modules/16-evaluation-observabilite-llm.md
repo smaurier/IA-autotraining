@@ -5,7 +5,7 @@
 - Comprendre pourquoi évaluer un système LLM est indispensable
 - Maîtriser les métriques classiques (BLEU, ROUGE, perplexité)
 - Implémenter l'approche LLM-as-Judge pour l'évaluation automatique
-- Connaître les métriques RAG (faithfulness, relevancy, context precision/recall)
+- Connaître les métriques RAG (faithfulness, relevancy, context précision/recall)
 - Utiliser RAGAS pour évaluer un pipeline RAG
 - Détecter les hallucinations
 - Mettre en place l'observabilité avec Langfuse/Langsmith
@@ -64,7 +64,7 @@ add(2, 3) → 6 ✗        Comment évaluer la qualité ?
 
 ## 2. Métriques classiques
 
-### BLEU (Bilingual Evaluation Understudy)
+### BLEU (Bilingual Évaluation Understudy)
 
 BLEU mesure la **correspondance de n-grammes** entre le texte généré et une référence.
 
@@ -137,7 +137,7 @@ console.log(`BLEU: ${(result.score * 100).toFixed(1)}%`);
 // BLEU: ~45.2% (correspondance partielle)
 ```
 
-### ROUGE (Recall-Oriented Understudy for Gisting Evaluation)
+### ROUGE (Recall-Oriented Understudy for Gisting Évaluation)
 
 ROUGE est orienté **rappel** (recall) — il mesure quelle proportion de la référence est couverte par la génération.
 
@@ -231,7 +231,7 @@ function longestCommonSubsequence(a: string[], b: string[]): number {
 ```typescript
 /**
  * La perplexité mesure la "surprise" du modèle face au texte.
- * PPL = 2^H où H est l'entropie croisée moyenne.
+ * PPL = 2^H ou H est l'entropie croisée moyenne.
  * Plus elle est basse, meilleur est le modèle.
  */
 function perplexity(tokenLogProbs: number[]): number {
@@ -260,7 +260,7 @@ function perplexity(tokenLogProbs: number[]): number {
 
 ### Concept
 
-Utiliser un LLM pour évaluer la sortie d'un autre LLM (ou de lui-même). C'est devenu le standard de l'industrie car les métriques textuelles (BLEU/ROUGE) ne capturent pas la qualité sémantique.
+Utiliser un LLM pour évaluer la sortie d'un autre LLM (où de lui-même). C'est devenu le standard de l'industrie car les métriques textuelles (BLEU/ROUGE) ne capturent pas la qualité sémantique.
 
 ```
 ┌──────────────┐     ┌──────────────────┐     ┌──────────────┐
@@ -1150,6 +1150,16 @@ class AlertManager {
 
 1. **Métriques** : Implémentez BLEU et ROUGE, testez sur 10 paires question/réponse vs référence
 2. **LLM-as-Judge** : Créez un évaluateur qui compare les réponses de 2 modèles Ollama sur 20 questions
-3. **RAG Eval** : Évaluez votre pipeline RAG du module 15 avec les 4 métriques (faithfulness, relevancy, precision, recall)
+3. **RAG Eval** : Évaluez votre pipeline RAG du module 15 avec les 4 métriques (faithfulness, relevancy, précision, recall)
 4. **Logger** : Intégrez le LLMLogger dans votre chatbot et créez un endpoint /metrics qui retourne le dashboard
 5. **Alertes** : Configurez des alertes et simulez des scénarios de dépassement de seuil
+
+---
+
+<!-- parcours-recommande -->
+
+::: tip Parcours recommandé
+1. **Screencast** : [screencast 16 évaluation llm](../screencasts/screencast-16-evaluation-llm.md)
+2. **Lab** : [lab-16-évaluation-observabilité](../labs/lab-16-evaluation-observabilite/README)
+3. **Quiz** : [quiz 16 évaluation llm](../quizzes/quiz-16-evaluation-llm.html)
+:::

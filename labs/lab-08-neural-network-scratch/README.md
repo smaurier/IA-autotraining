@@ -2,11 +2,11 @@
 
 ## Objectifs
 
-- Creer des neurones et des couches
+- Créer des neurones et des couches
 - Implementer la propagation avant (forward pass)
 - Calculer le Mean Squared Error
 - Implementer la retropropagation pour la couche de sortie
-- Entrainer un reseau sur le probleme XOR
+- Entrainer un réseau sur le problème XOR
 
 ## Exercices
 
@@ -44,7 +44,7 @@ Met a jour les poids et le biais d'un neurone de sortie :
 
 ### 7. `trainXOR()`
 
-Entraine un reseau a approximer XOR. Apres entrainement, les sorties doivent etre proches des valeurs attendues (tolerance < 0.3).
+Entraine un réseau a approximer XOR. Après entrainement, les sorties doivent etre proches des valeurs attendues (tolerance < 0.3).
 
 ## Lancer les tests
 

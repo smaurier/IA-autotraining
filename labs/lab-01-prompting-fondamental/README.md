@@ -2,7 +2,7 @@
 
 ## Objectifs
 
-- Construire des prompts systeme structures
+- Construire des prompts système structures
 - Utiliser le few-shot prompting
 - Appliquer le Chain of Thought
 - Formater les sorties en JSON
@@ -12,7 +12,7 @@
 
 ### 1. `buildSystemPrompt(config: SystemPromptConfig): string`
 
-Genere un prompt systeme structure a partir d'une configuration.
+Genere un prompt système structure à partir d'une configuration.
 
 ```typescript
 interface SystemPromptConfig {
@@ -38,11 +38,11 @@ interface Example {
 
 ### 3. `buildChainOfThought(prompt: string): string`
 
-Ajoute l'instruction "Reflechis etape par etape" au prompt.
+Ajoute l'instruction "Reflechis étape par étape" au prompt.
 
 ### 4. `formatJsonOutput(rawResponse: string): Record<string, unknown> | null`
 
-Extrait et parse le JSON d'une reponse LLM (qui peut contenir du texte avant/apres le JSON ou des blocs ```json).
+Extrait et parse le JSON d'une réponse LLM (qui peut contenir du texte avant/après le JSON ou des blocs ```json).
 
 ### 5. `validatePrompt(prompt: string): ValidationResult`
 

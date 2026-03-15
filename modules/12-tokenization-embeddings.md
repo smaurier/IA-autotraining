@@ -1029,3 +1029,13 @@ for (const [i, j, sim] of dupes) {
 3. **pgvector** : Mettez en place une recherche sémantique sur un fichier Markdown de documentation
 4. **Clustering** : Utilisez le K-Means sur des embeddings de tickets de support et identifiez les thèmes
 5. **Benchmark** : Comparez les temps de recherche avec et sans index HNSW sur 10 000 documents
+
+---
+
+<!-- parcours-recommande -->
+
+::: tip Parcours recommandé
+1. **Screencast** : [screencast 12 tokenization embeddings](../screencasts/screencast-12-tokenization-embeddings.md)
+2. **Lab** : [lab-12-tokenization-embeddings](../labs/lab-12-tokenization-embeddings/README)
+3. **Quiz** : [quiz 12 embeddings](../quizzes/quiz-12-embeddings.html)
+:::

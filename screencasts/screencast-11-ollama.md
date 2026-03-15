@@ -4,19 +4,19 @@
 - **Duree estimee** : 20-25 min
 - **Module** : `modules/11-ollama-llms-locaux.md`
 - **Lab associe** : `labs/lab-11-ollama-local/`
-- **Prerequis** : Modules 00-10 completes, GPU recommande (8 Go+ VRAM)
+- **Prérequis** : Modules 00-10 completes, GPU recommande (8 Go+ VRAM)
 
 ## Setup
 - [ ] Ollama installe et fonctionnel (`ollama --version`)
 - [ ] Terminal ouvert
 - [ ] Editeur VS Code avec le dossier du lab
-- [ ] `nvidia-smi` ou equivalent pret (si GPU)
-- [ ] Connexion Internet (pour le pull initial des modeles)
+- [ ] `nvidia-smi` ou équivalent pret (si GPU)
+- [ ] Connexion Internet (pour le pull initial des modèles)
 
 ## Script
 
-### [00:00-02:30] Pourquoi executer un LLM en local ?
-> Jusqu'ici, on a utilise des APIs cloud — Claude, OpenAI. C'est pratique, mais il y a des cas ou vous DEVEZ executer en local : donnees medicales ou juridiques, code source proprietaire, prototypage sans frais, ou tout simplement en avion sans WiFi. On va voir comment faire avec Ollama.
+### [00:00-02:30] Pourquoi exécuter un LLM en local ?
+> Jusqu'ici, on a utilise des APIs cloud — Claude, OpenAI. C'est pratique, mais il y a des cas où vous DEVEZ exécuter en local : donnees medicales ou juridiques, code source proprietaire, prototypage sans frais, ou tout simplement en avion sans WiFi. On va voir comment faire avec Ollama.
 **Action** : Afficher le tableau comparatif local vs cloud
 ```
 Local vs API Cloud :
@@ -29,8 +29,8 @@ Local vs API Cloud :
 | Maintenance     | Zero                    | A votre charge          |
 ```
 
-### [02:30-05:00] Installation et premier modele
-> L'installation d'Ollama est triviale. Sur Mac c'est brew, sur Linux un script curl, sur Windows un installer. Une fois installe, on telecharge un modele et on le teste en une ligne.
+### [02:30-05:00] Installation et premier modèle
+> L'installation d'Ollama est triviale. Sur Mac c'est brew, sur Linux un script curl, sur Windows un installer. Une fois installe, on telecharge un modèle et on le teste en une ligne.
 **Action** : Ouvrir le terminal et installer Ollama
 ```bash
 # Verifier l'installation
@@ -46,11 +46,11 @@ ollama pull llama3.1:8b
 # Premier test !
 ollama run llama3.1:8b "Bonjour, explique-moi ce qu'est TypeScript en 2 phrases."
 ```
-**Action** : Montrer la reponse et le temps de generation
+**Action** : Montrer la réponse et le temps de génération
 
-### [05:00-08:00] Catalogue des modeles et choix selon le GPU
-> Ollama donne acces a des dizaines de modeles. Le choix depend de votre GPU — plus exactement de la VRAM. Voici le guide de selection.
-**Action** : Afficher l'arbre de decision GPU/modele
+### [05:00-08:00] Catalogue des modèles et choix selon le GPU
+> Ollama donne acces a des dizaines de modèles. Le choix depend de votre GPU — plus exactement de la VRAM. Voici le guide de selection.
+**Action** : Afficher l'arbre de decision GPU/modèle
 ```
 Votre GPU a combien de VRAM ?
 |
@@ -66,7 +66,7 @@ Votre GPU a combien de VRAM ?
 +-- 24 Go (RTX 4090)
 |   --> Gemma 2 27B Q4 ou Mixtral 8x7B Q4
 ```
-**Action** : Lister les modeles installes et en telecharger un second
+**Action** : Lister les modèles installes et en telecharger un second
 ```bash
 ollama list
 
@@ -78,7 +78,7 @@ ollama run deepseek-coder-v2:16b "Ecris une fonction TypeScript qui inverse un t
 ```
 
 ### [08:00-11:00] Quantization : comprendre Q4, Q8, F16
-> Vous avez vu "Q4" dans les noms de modeles. C'est la quantization — on compresse les poids du modele pour qu'il tienne en memoire. Moins de bits = plus petit mais moins precis.
+> Vous avez vu "Q4" dans les noms de modèles. C'est la quantization — on compresse les poids du modèle pour qu'il tienne en mémoire. Moins de bits = plus petit mais moins précis.
 **Action** : Afficher le schema de quantization
 ```
 Q4_K_M --> Quantization 4-bit, methode K-quant, taille Medium
@@ -99,7 +99,7 @@ Impact sur Llama 3.1 8B :
 
 ### [11:00-14:30] L'API REST Ollama depuis TypeScript
 > Ollama expose une API REST sur localhost:11434. On va l'appeler depuis TypeScript — d'abord une completion simple, puis une conversation multi-tours.
-**Action** : Creer le fichier `ollama-chat.ts` et l'executer
+**Action** : Créer le fichier `ollama-chat.ts` et l'exécuter
 ```typescript
 // ollama-chat.ts
 interface ChatMessage {
@@ -132,11 +132,11 @@ console.log(reply);
 ```bash
 npx tsx ollama-chat.ts
 ```
-**Action** : Montrer la reponse, puis ajouter le streaming
+**Action** : Montrer la réponse, puis ajouter le streaming
 
 ### [14:30-17:30] Streaming et mesure de performance
 > En mode streaming, on recoit les tokens un par un — exactement comme ChatGPT. Profitons-en pour mesurer les tokens par seconde.
-**Action** : Creer `ollama-stream.ts`
+**Action** : Créer `ollama-stream.ts`
 ```typescript
 // ollama-stream.ts
 async function streamChat(prompt: string): Promise<void> {
@@ -163,12 +163,12 @@ await streamChat('Ecris une fonction debounce en TypeScript avec les types gener
 ```bash
 npx tsx ollama-stream.ts
 ```
-**Action** : Montrer le resultat avec la vitesse en tokens/seconde
-> Le seuil de confort est environ 15 tokens par seconde — c'est suffisant pour lire en temps reel. En dessous, c'est utilisable mais un peu lent.
+**Action** : Montrer le résultat avec la vitesse en tokens/seconde
+> Le seuil de confort est environ 15 tokens par seconde — c'est suffisant pour lire en temps réel. En dessous, c'est utilisable mais un peu lent.
 
-### [17:30-20:30] Modelfile : personnaliser un modele
-> On peut creer des modeles custom avec un Modelfile. C'est comme un Dockerfile mais pour les LLMs — on choisit un modele de base, on ajoute un system prompt permanent, et on fixe les parametres.
-**Action** : Creer et utiliser un Modelfile
+### [17:30-20:30] Modelfile : personnaliser un modèle
+> On peut créer des modèles custom avec un Modelfile. C'est comme un Dockerfile mais pour les LLMs — on choisit un modèle de base, on ajoute un system prompt permanent, et on fixe les paramètres.
+**Action** : Créer et utiliser un Modelfile
 ```dockerfile
 # Modelfile.reviewer
 FROM llama3.1:8b
@@ -190,11 +190,11 @@ ollama create ts-reviewer -f ./Modelfile.reviewer
 # Tester
 ollama run ts-reviewer "function add(a, b) { return a + b }"
 ```
-**Action** : Montrer la review de code generee
+**Action** : Montrer la review de code générée
 
-### [20:30-23:00] GPU vs CPU et verification VRAM
-> Dernier point critique : la VRAM. Si votre modele ne tient pas entierement en GPU, les couches restantes vont en RAM CPU — et c'est 10 a 50 fois plus lent.
-**Action** : Verifier l'utilisation GPU
+### [20:30-23:00] GPU vs CPU et vérification VRAM
+> Dernier point critique : la VRAM. Si votre modèle ne tient pas entièrement en GPU, les couches restantes vont en RAM CPU — et c'est 10 a 50 fois plus lent.
+**Action** : Vérifier l'utilisation GPU
 ```bash
 # NVIDIA : voir la VRAM utilisee
 nvidia-smi
@@ -204,11 +204,11 @@ ollama ps
 # NAME           SIZE     PROCESSOR   UNTIL
 # llama3.1:8b    6.7 GB   100% GPU    4 minutes from now
 ```
-> Si vous voyez "100% GPU" c'est parfait. Si c'est "50% GPU / 50% CPU", votre modele est trop gros pour votre carte.
+> Si vous voyez "100% GPU" c'est parfait. Si c'est "50% GPU / 50% CPU", votre modèle est trop gros pour votre carte.
 
-### [23:00-25:00] Recapitulatif et transition
-> On a couvert l'essentiel d'Ollama : installation, choix de modeles, quantization, API REST en TypeScript, streaming, Modelfile et gestion du GPU. Vous avez maintenant un LLM qui tourne sur votre machine, gratuitement, sans envoyer la moindre donnee a l'exterieur. Dans le prochain screencast, on va plonger dans la tokenization et les embeddings — les fondations du RAG.
-**Action** : Afficher le recapitulatif
+### [23:00-25:00] Récapitulatif et transition
+> On a couvert l'essentiel d'Ollama : installation, choix de modèles, quantization, API REST en TypeScript, streaming, Modelfile et gestion du GPU. Vous avez maintenant un LLM qui tourne sur votre machine, gratuitement, sans envoyer la moindre donnee a l'exterieur. Dans le prochain screencast, on va plonger dans la tokenization et les embeddings — les fondations du RAG.
+**Action** : Afficher le récapitulatif
 ```
 Resume :
 - Ollama = LLMs locaux en une commande
@@ -220,8 +220,8 @@ Resume :
 ```
 
 ## Points d'attention pour l'enregistrement
-- Verifier que Ollama est demarre AVANT le screencast
-- Avoir les modeles deja telecharges (le pull prend du temps)
+- Vérifier que Ollama est demarre AVANT le screencast
+- Avoir les modèles déjà telecharges (le pull prend du temps)
 - Masquer les chemins personnels dans le terminal
 - Montrer nvidia-smi uniquement si GPU NVIDIA disponible
 - Garder un rythme soutenu sur la partie quantization, c'est dense

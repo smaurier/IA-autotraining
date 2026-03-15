@@ -4,7 +4,7 @@
 
 - Comprendre les embeddings et la table de lookup
 - Implementer le positional encoding (sin/cos)
-- Implementer le mecanisme de Scaled Dot-Product Attention
+- Implementer le mécanisme de Scaled Dot-Product Attention
 - Implementer la normalisation de couche (Layer Norm)
 - Tokeniser et detokeniser du texte
 
@@ -16,7 +16,7 @@ Cree une table d'embeddings de taille `vocabSize x dim` avec des valeurs aleatoi
 
 ### 2. `lookupEmbedding(table: number[][], tokenId: number): number[]`
 
-Retourne le vecteur d'embedding correspondant a un token ID.
+Retourne le vecteur d'embedding correspondant à un token ID.
 
 ### 3. `positionalEncoding(position: number, dim: number): number[]`
 
@@ -30,11 +30,11 @@ Calcule l'attention :
 1. Scores = Q * K^T
 2. Scale = scores / sqrt(d_k) ou `d_k` = nombre de colonnes de K
 3. Applique softmax sur chaque ligne
-4. Resultat = scores * V
+4. Résultat = scores * V
 
 ### 5. `layerNorm(v: number[]): number[]`
 
-Normalise un vecteur : `(v[i] - mean) / std` pour chaque element. Si std = 0, retourne un vecteur de zeros.
+Normalise un vecteur : `(v[i] - mean) / std` pour chaque élément. Si std = 0, retourne un vecteur de zeros.
 
 ### 6. `simpleTokenize(text: string): string[]`
 

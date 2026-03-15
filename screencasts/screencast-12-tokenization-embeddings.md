@@ -4,18 +4,18 @@
 - **Duree estimee** : 20-25 min
 - **Module** : `modules/12-tokenization-embeddings.md`
 - **Lab associe** : `labs/lab-12-tokenization-embeddings/`
-- **Prerequis** : Module 11 complete, Ollama avec `nomic-embed-text`, Docker pour pgvector
+- **Prérequis** : Module 11 complete, Ollama avec `nomic-embed-text`, Docker pour pgvector
 
 ## Setup
-- [ ] Ollama en cours d'execution avec `nomic-embed-text` (`ollama pull nomic-embed-text`)
+- [ ] Ollama en cours d'exécution avec `nomic-embed-text` (`ollama pull nomic-embed-text`)
 - [ ] Docker installe (pour pgvector)
 - [ ] Terminal et VS Code ouverts sur le dossier du lab
-- [ ] `pnpm install` deja execute (dependance `pg`)
+- [ ] `pnpm install` déjà exécuté (dépendance `pg`)
 
 ## Script
 
 ### [00:00-02:30] Les LLMs ne voient pas des mots
-> On croit souvent que les LLMs lisent des mots. C'est faux. Ils lisent des tokens — des fragments de texte qui peuvent etre des mots entiers, des bouts de mots, ou meme des caracteres. Comprendre les tokens, c'est comprendre comment le LLM "pense" et surtout comment il facture.
+> On croit souvent que les LLMs lisent des mots. C'est faux. Ils lisent des tokens — des fragments de texte qui peuvent etre des mots entiers, des bouts de mots, ou même des caracteres. Comprendre les tokens, c'est comprendre comment le LLM "pense" et surtout comment il facture.
 **Action** : Afficher l'exemple de tokenization
 ```
 Phrase : "Le developpeur TypeScript implemente une fonction"
@@ -46,7 +46,7 @@ Etape 2 -- Paire la plus frequente : (aa, b) --> 3 fois
 Fusionner : aab
 Tokens : [aab, ' ', aab, ' ', aab, ' ', a, b]
 ```
-**Action** : Ouvrir `bpe-demo.ts` et executer l'implementation TypeScript
+**Action** : Ouvrir `bpe-demo.ts` et exécuter l'implementation TypeScript
 ```typescript
 // bpe-demo.ts (extrait)
 const bpe = new BPETokenizer();
@@ -68,17 +68,17 @@ console.log(`Detail :`, tokens);
 ```bash
 npx tsx bpe-demo.ts
 ```
-**Action** : Montrer comment "function" et "return" deviennent des tokens uniques apres l'entrainement
+**Action** : Montrer comment "function" et "return" deviennent des tokens uniques après l'entrainement
 
 ### [06:00-09:30] Embeddings : donner du sens aux nombres
-> Maintenant, la partie la plus puissante : les embeddings. Un embedding transforme un texte en un vecteur — un tableau de 768 nombres. Et le truc magique, c'est que les textes qui ont le meme sens produisent des vecteurs proches.
+> Maintenant, la partie la plus puissante : les embeddings. Un embedding transforme un texte en un vecteur — un tableau de 768 nombres. Et le truc magique, c'est que les textes qui ont le même sens produisent des vecteurs proches.
 **Action** : Afficher le concept
 ```
 "TypeScript" --> [0.23, -0.45, 0.89, 0.12, ..., -0.33]  (768 dimensions)
 "JavaScript" --> [0.25, -0.42, 0.91, 0.15, ..., -0.30]  (tres proche !)
 "banane"     --> [-0.67, 0.33, -0.12, 0.78, ..., 0.55]  (tres eloigne)
 ```
-**Action** : Generer des embeddings avec Ollama et comparer
+**Action** : Générer des embeddings avec Ollama et comparer
 ```typescript
 // embeddings-demo.ts
 async function embed(text: string): Promise<number[]> {
@@ -119,12 +119,12 @@ function cosineSimilarity(a: number[], b: number[]): number {
   return dotProduct / (Math.sqrt(normA) * Math.sqrt(normB));
 }
 ```
-> Pourquoi le cosinus et pas la distance euclidienne ? Parce que le cosinus est insensible a la magnitude — il mesure la direction, pas la longueur. Deux textes courts ou longs sur le meme sujet auront un cosinus eleve.
+> Pourquoi le cosinus et pas la distance euclidienne ? Parce que le cosinus est insensible à la magnitude — il mesure la direction, pas la longueur. Deux textes courts ou longs sur le même sujet auront un cosinus eleve.
 **Action** : Tester avec 5-6 phrases de complexite variable et afficher la matrice de similarite
 
 ### [12:30-16:00] pgvector : stocker et chercher des vecteurs
-> Stocker des vecteurs dans un tableau JavaScript, ca marche pour 100 documents. Pour 100 000, il faut une base de donnees vectorielle. On va utiliser pgvector — une extension PostgreSQL.
-**Action** : Lancer pgvector avec Docker et creer le schema
+> Stocker des vecteurs dans un tableau JavaScript, ça marche pour 100 documents. Pour 100 000, il faut une base de donnees vectorielle. On va utiliser pgvector — une extension PostgreSQL.
+**Action** : Lancer pgvector avec Docker et créer le schema
 ```bash
 docker run -d \
   --name pgvector \
@@ -149,11 +149,11 @@ CREATE INDEX ON documents
   USING hnsw (embedding vector_cosine_ops)
   WITH (m = 16, ef_construction = 64);
 ```
-> L'index HNSW est crucial. Sans lui, chaque recherche compare votre requete avec TOUS les vecteurs — c'est en O(n). Avec HNSW, c'est en O(log n). Sur un million de documents, ca fait la difference entre 200ms et 2ms.
+> L'index HNSW est crucial. Sans lui, chaque recherche compare votre requête avec TOUS les vecteurs — c'est en O(n). Avec HNSW, c'est en O(log n). Sur un million de documents, ça fait la différence entre 200ms et 2ms.
 
 ### [16:00-20:00] Recherche semantique complete en TypeScript
 > Assemblons tout : on charge des documents, on les transforme en embeddings, on les stocke dans pgvector, et on fait une recherche semantique.
-**Action** : Executer le pipeline complet
+**Action** : Exécuter le pipeline complet
 ```typescript
 // search-demo.ts
 const docs = [
@@ -186,7 +186,7 @@ npx tsx search-demo.ts
 **Action** : Montrer que la recherche comprend les synonymes — "typage en JS" trouve "TypeScript"
 
 ### [20:00-22:30] Modeles d'embeddings : local vs cloud
-> On utilise nomic-embed-text (768 dimensions, local, gratuit). Pour la production, il y a aussi les modeles OpenAI — meilleure qualite, mais payants.
+> On utilise nomic-embed-text (768 dimensions, local, gratuit). Pour la production, il y a aussi les modèles OpenAI — meilleure qualite, mais payants.
 **Action** : Afficher le comparatif
 ```
 | Modele                  | Dimensions | Cout         | Qualite |
@@ -198,9 +198,9 @@ npx tsx search-demo.ts
 ```
 > En local avec Ollama, je recommande nomic-embed-text pour commencer. Si vous avez besoin de mieux, mxbai-embed-large. Et si la qualite est critique, text-embedding-3-large d'OpenAI.
 
-### [22:30-25:00] Recapitulatif et transition
-> On a couvert le cycle complet : tokenization avec BPE, embeddings qui transforment du texte en vecteurs numeriques, similarite cosinus pour comparer le sens, et pgvector pour stocker et chercher a grande echelle. Ce sont les fondations du RAG — le sujet du prochain screencast.
-**Action** : Afficher le recapitulatif
+### [22:30-25:00] Récapitulatif et transition
+> On a couvert le cycle complet : tokenization avec BPE, embeddings qui transforment du texte en vecteurs numériques, similarite cosinus pour comparer le sens, et pgvector pour stocker et chercher a grande echelle. Ce sont les fondations du RAG — le sujet du prochain screencast.
+**Action** : Afficher le récapitulatif
 ```
 Resume :
 - Tokens = sous-mots, pas des mots entiers (BPE)
@@ -212,8 +212,8 @@ Resume :
 ```
 
 ## Points d'attention pour l'enregistrement
-- Avoir nomic-embed-text deja telecharge (ollama pull nomic-embed-text)
-- Avoir pgvector deja demarre en Docker avant le screencast
+- Avoir nomic-embed-text déjà telecharge (ollama pull nomic-embed-text)
+- Avoir pgvector déjà demarre en Docker avant le screencast
 - Le BPE pas a pas peut etre montre avec un slide anime
 - Laisser 2-3 secondes sur les scores de similarite pour que l'audience les lise
 - Insister sur le fait que "TypeScript" et "typage en JS" sont semantiquement proches

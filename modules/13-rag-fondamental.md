@@ -2,7 +2,7 @@
 
 > **Objectif** : Comprendre et implementer un pipeline RAG complet de A a Z.
 > **Difficulte** : ⭐⭐⭐ (avance)
-> **Prerequis** : Module 12 (Embeddings), Module 11 (Ollama)
+> **Prérequis** : Module 12 (Embeddings), Module 11 (Ollama)
 > **Duree estimee** : 4 heures
 
 ---
@@ -24,13 +24,13 @@ Objectif : faire marcher           Objectif : faire marcher       Objectif : con
 un RAG de bout en bout             BIEN (qualite production)      une vraie application
 ```
 
-> Chaque module RAG a un objectif distinct. Si vous ne devez en faire qu'un, faites celui-ci — il contient tout le necessaire pour comprendre et utiliser le RAG.
+> Chaque module RAG à un objectif distinct. Si vous ne devez en faire qu'un, faites celui-ci — il contient tout le nécessaire pour comprendre et utiliser le RAG.
 
 ---
 
 ## Objectifs du module
 
-- Comprendre ce qu'est le RAG (Retrieval-Augmented Generation) et pourquoi c'est indispensable
+- Comprendre ce qu'est le RAG (Retrieval-Augmented Génération) et pourquoi c'est indispensable
 - Maîtriser l'architecture complète : du document brut à la réponse augmentée
 - Implémenter un pipeline RAG complet en TypeScript avec Ollama
 - Connaître les stratégies de chunking et leur impact sur la qualité
@@ -42,7 +42,7 @@ un RAG de bout en bout             BIEN (qualite production)      une vraie appl
 
 ### Le problème fondamental
 
-Un LLM, même très performant, a une **limite incontournable** : il ne connaît que ce sur quoi il a été entraîné. Il ne connaît pas :
+Un LLM, même très performant, à une **limite incontournable** : il ne connaît que ce sur quoi il a été entraîné. Il ne connaît pas :
 
 - Vos documents internes d'entreprise
 - Votre base de connaissances produit
@@ -54,7 +54,7 @@ Un LLM, même très performant, a une **limite incontournable** : il ne connaît
 
 ### Définition
 
-**RAG** (Retrieval-Augmented Generation) est une technique qui consiste à :
+**RAG** (Retrieval-Augmented Génération) est une technique qui consiste à :
 
 1. **Retrouver** (Retrieve) des informations pertinentes depuis vos propres données
 2. **Augmenter** (Augment) le prompt envoyé au LLM avec ces informations
@@ -1187,3 +1187,13 @@ Créez un jeu de test de 10 questions avec les réponses attendues et les source
 | Évaluation | Précision, recall, fidélité — mesurer avant d'optimiser |
 
 Le RAG fondamental est la base sur laquelle tout le reste se construit. Dans le module suivant, nous verrons comment dépasser ces limites avec des techniques avancées : hybrid search, reranking, parent-child chunking et GraphRAG.
+
+---
+
+<!-- parcours-recommande -->
+
+::: tip Parcours recommandé
+1. **Screencast** : [screencast 13 rag fondamental](../screencasts/screencast-13-rag-fondamental.md)
+2. **Lab** : [lab-13-rag-fondamental](../labs/lab-13-rag-fondamental/README)
+3. **Quiz** : [quiz 13 rag fondamental](../quizzes/quiz-13-rag-fondamental.html)
+:::

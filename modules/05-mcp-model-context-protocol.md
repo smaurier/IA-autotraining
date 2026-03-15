@@ -1,27 +1,27 @@
 # Module 05 — MCP — Model Context Protocol
 
-> **Objectif** : Comprendre et implementer le Model Context Protocol pour connecter les LLMs a des sources de donnees et des outils externes. Creer un MCP Server en Node.js.
+> **Objectif** : Comprendre et implementer le Model Context Protocol pour connecter les LLMs a des sources de donnees et des outils externes. Créer un MCP Server en Node.js.
 > **Difficulte** : ⭐⭐⭐ (avance)
-> **Prerequis** : Module 04 (API Claude), bases Node.js
+> **Prérequis** : Module 04 (API Claude), bases Node.js
 > **Duree estimee** : 4 heures
 
 ---
 
 ## 1. Qu'est-ce que MCP ?
 
-### 1.1 Le probleme
+### 1.1 Le problème
 
 Les LLMs sont puissants mais isoles. Ils ne peuvent pas :
 - Lire vos fichiers locaux
 - Interroger votre base de donnees
 - Appeler vos APIs internes
-- Executer des commandes sur votre machine
+- Exécuter des commandes sur votre machine
 
-Le tool use (Module 04) resout partiellement ce probleme, mais chaque integration est custom.
+Le tool use (Module 04) resout partiellement ce problème, mais chaque intégration est custom.
 
 ### 1.2 La solution : un protocole standard
 
-MCP (Model Context Protocol) est un **protocole ouvert** cree par Anthropic qui standardise la communication entre les LLMs et les sources de donnees/outils externes.
+MCP (Model Context Protocol) est un **protocole ouvert** créé par Anthropic qui standardise la communication entre les LLMs et les sources de donnees/outils externes.
 
 > **Analogie** : MCP est au LLM ce que USB est au PC. Avant USB, chaque peripherique avait son propre connecteur. USB a standardise la connexion. MCP standardise la connexion entre un LLM et n'importe quelle source de donnees.
 
@@ -62,9 +62,9 @@ Les Resources exposent des donnees que le LLM peut lire :
 // → Le serveur retourne le texte du fichier
 ```
 
-### 2.2 Tools — Executer des actions
+### 2.2 Tools — Exécuter des actions
 
-Les Tools permettent au LLM d'executer des actions :
+Les Tools permettent au LLM d'exécuter des actions :
 
 ```typescript
 // Un tool definit une action executable
@@ -81,7 +81,7 @@ Les Tools permettent au LLM d'executer des actions :
 }
 ```
 
-### 2.3 Prompts — Templates reutilisables
+### 2.3 Prompts — Templates réutilisables
 
 Les Prompts sont des templates parametrables :
 
@@ -99,7 +99,7 @@ Les Prompts sont des templates parametrables :
 
 ---
 
-## 3. Creer un MCP Server en Node.js
+## 3. Créer un MCP Server en Node.js
 
 ### 3.1 Installation
 
@@ -278,12 +278,12 @@ app.listen(3001);
 
 ---
 
-## 6. Securite
+## 6. Sécurité
 
 ### 6.1 Principes
 
 - **Valider tous les inputs** : le LLM peut envoyer n'importe quoi
-- **Limiter les actions** : un tool "execute_sql" ne devrait accepter que des SELECT
+- **Limiter les actions** : un tool "exécuté_sql" ne devrait accepter que des SELECT
 - **Pas de credentials dans les tools** : utiliser des variables d'environnement
 - **Audit log** : logger chaque appel de tool
 
@@ -316,13 +316,23 @@ server.tool(
 ## Exercice du module
 
 Dans le Lab 05, vous allez :
-1. Creer une definition de Resource MCP
-2. Creer une definition de Tool MCP
+1. Créer une définition de Resource MCP
+2. Créer une définition de Tool MCP
 3. Implementer un dispatcher de tool calls
 4. Valider les inputs d'un tool contre un JSON Schema
-5. Generer un fichier de configuration MCP
+5. Générer un fichier de configuration MCP
 6. Parser un message JSON-RPC
 
 ```bash
 npm run lab:05
 ```
+
+---
+
+<!-- parcours-recommande -->
+
+::: tip Parcours recommandé
+1. **Screencast** : [screencast 05 mcp](../screencasts/screencast-05-mcp.md)
+2. **Lab** : [lab-05-mcp-server](../labs/lab-05-mcp-server/README)
+3. **Quiz** : [quiz 05 mcp](../quizzes/quiz-05-mcp.html)
+:::

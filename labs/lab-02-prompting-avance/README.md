@@ -15,7 +15,7 @@ Genere un prompt au format ReAct avec la liste des outils disponibles et le form
 
 ### 2. `buildTreeOfThought(problem: string, numPaths: number): string`
 
-Genere un prompt demandant au LLM d'explorer `numPaths` chemins de raisonnement differents avant de choisir le meilleur.
+Genere un prompt demandant au LLM d'explorer `numPaths` chemins de raisonnement différents avant de choisir le meilleur.
 
 ### 3. `detectPromptInjection(input: string): boolean`
 
@@ -27,7 +27,7 @@ Neutralise les tentatives d'injection en encapsulant l'input utilisateur dans de
 
 ### 5. `buildPromptChain(steps: PromptStep[]): string[]`
 
-Genere une chaine de prompts ou chaque etape peut referencer la sortie de l'etape precedente via `{{previous}}`.
+Genere une chaine de prompts ou chaque étape peut referencer la sortie de l'étape précédente via `{{previous}}`.
 
 ```typescript
 interface PromptStep {

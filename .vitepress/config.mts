@@ -38,10 +38,10 @@ export default defineConfig({
           items: [
             { text: '07 - Maths Essentielles', link: '/modules/07-maths-essentielles' },
             { text: '08 - Reseaux de Neurones from Scratch', link: '/modules/08-neural-network-scratch' },
+            { text: '12 - Tokenization & Embeddings', link: '/modules/12-tokenization-embeddings' },
             { text: '09 - Architecture Transformer', link: '/modules/09-transformer-attention' },
             { text: '10 - Entrainement & Fine-tuning', link: '/modules/10-entrainement-fine-tuning' },
             { text: '11 - LLMs Locaux avec Ollama', link: '/modules/11-ollama-llms-locaux' },
-            { text: '12 - Tokenization & Embeddings', link: '/modules/12-tokenization-embeddings' },
           ],
         },
         {

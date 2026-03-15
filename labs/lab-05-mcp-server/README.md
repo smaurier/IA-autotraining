@@ -2,7 +2,7 @@
 
 ## Objectifs
 
-- Creer des definitions de ressources et d'outils MCP
+- Créer des définitions de ressources et d'outils MCP
 - Dispatcher des appels d'outils vers des handlers
 - Valider les inputs selon un schema
 - Construire une configuration MCP pour Claude Desktop
@@ -12,11 +12,11 @@
 
 ### 1. `createResourceDefinition(uri: string, name: string, mimeType: string): { uri, name, mimeType }`
 
-Cree un objet de definition de ressource MCP.
+Cree un objet de définition de ressource MCP.
 
 ### 2. `createToolDefinition(name: string, description: string, params: { name: string, type: string, desc: string }[]): object`
 
-Cree une definition d'outil MCP avec un `inputSchema` au format JSON Schema (`type: "object"`, `properties` avec `type` et `description` pour chaque param).
+Cree une définition d'outil MCP avec un `inputSchema` au format JSON Schema (`type: "object"`, `properties` avec `type` et `description` pour chaque param).
 
 ### 3. `handleToolCall(toolName: string, input: any, handlers: Record<string, (input: any) => any>): any`
 

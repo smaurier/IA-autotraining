@@ -4,19 +4,19 @@
 - **Duree estimee** : 18-22 min
 - **Module** : `modules/10-fine-tuning.md`
 - **Lab associe** : `labs/lab-10-fine-tuning/`
-- **Prerequis** : Screencast 08, 11
+- **Prérequis** : Screencast 08, 11
 
 ## Setup
 - [ ] Ollama installe et fonctionnel (`ollama --version`)
-- [ ] Modele `llama3.2:3b` deja telecharge
+- [ ] Modèle `llama3.2:3b` déjà telecharge
 - [ ] Fichier `Modelfile` du lab pret
 - [ ] Slides sur le concept de LoRA
 - [ ] Dataset d'exemple au format JSONL
 
 ## Script
 
-### [00:00-02:30] Pourquoi fine-tuner un modele
-> Les modeles generiques sont puissants, mais parfois on a besoin d'un modele specialise — un modele qui parle comme votre marque, qui connait votre jargon metier, ou qui suit un format tres precis. C'est la que le fine-tuning entre en jeu.
+### [00:00-02:30] Pourquoi fine-tuner un modèle
+> Les modèles génériques sont puissants, mais parfois on a besoin d'un modèle specialise — un modèle qui parle comme votre marque, qui connait votre jargon metier, ou qui suit un format très précis. C'est la que le fine-tuning entre en jeu.
 **Action** : Afficher le spectre des options de personnalisation
 ```
 Niveau de personnalisation :
@@ -41,7 +41,7 @@ Quand NE PAS fine-tuner ?
 ```
 
 ### [02:30-05:30] LoRA : l'astuce qui rend le fine-tuning accessible
-> Le fine-tuning complet d'un LLM necessite des centaines de GPU. LoRA — Low-Rank Adaptation — est une technique maligne : au lieu de modifier tous les poids du modele, on ajoute de petites matrices d'adaptation. Le modele original ne change pas, on ajoute juste un "adaptateur" leger.
+> Le fine-tuning complet d'un LLM nécessité des centaines de GPU. LoRA — Low-Rank Adaptation — est une technique maligne : au lieu de modifier tous les poids du modèle, on ajoute de petites matrices d'adaptation. Le modèle original ne change pas, on ajoute juste un "adaptateur" leger.
 **Action** : Expliquer LoRA avec un schema
 ```
 Fine-tuning classique :          LoRA :
@@ -62,9 +62,9 @@ LoRA fonctionne en decomposant la matrice de poids :
   avec r << d (rang faible, typiquement 8-64)
 ```
 
-### [05:30-08:30] Creer un Modelfile Ollama
-> Avec Ollama, on peut creer des modeles personnalises via un Modelfile. Ce n'est pas du vrai fine-tuning LoRA (ca necessite un entrainement), mais c'est un excellent moyen de customiser le comportement d'un modele local.
-**Action** : Creer et tester un Modelfile
+### [05:30-08:30] Créer un Modelfile Ollama
+> Avec Ollama, on peut créer des modèles personnalises via un Modelfile. Ce n'est pas du vrai fine-tuning LoRA (ça nécessité un entrainement), mais c'est un excellent moyen de customiser le comportement d'un modèle local.
+**Action** : Créer et tester un Modelfile
 ```dockerfile
 # Modelfile-expert-code
 FROM llama3.2:3b
@@ -99,7 +99,7 @@ TEMPLATE """{{ if .System }}<|start_header_id|>system<|end_header_id|>
 {{ .Prompt }}<|eot_id|>{{ end }}<|start_header_id|>assistant<|end_header_id|>
 {{ .Response }}<|eot_id|>"""
 ```
-**Action** : Construire et tester le modele
+**Action** : Construire et tester le modèle
 ```bash
 # Creer le modele custom
 ollama create expert-code -f Modelfile-expert-code
@@ -112,7 +112,7 @@ ollama run llama3.2:3b "Comment implementer un debounce generique ?"
 ```
 
 ### [08:30-10:30] Preparer des donnees pour un vrai fine-tuning
-> Si vous voulez aller plus loin avec un vrai fine-tuning LoRA, voici comment preparer vos donnees. Le format standard, c'est du JSONL avec des paires instruction/reponse.
+> Si vous voulez aller plus loin avec un vrai fine-tuning LoRA, voici comment preparer vos donnees. Le format standard, c'est du JSONL avec des paires instruction/réponse.
 **Action** : Montrer le format de donnees et les bonnes pratiques
 ```jsonl
 {"messages":[{"role":"system","content":"Expert TypeScript"},{"role":"user","content":"Explique les generics"},{"role":"assistant","content":"Les generics en TypeScript permettent..."}]}
@@ -144,8 +144,8 @@ console.log(`Dataset : ${valid} valides, ${invalid} invalides sur ${lines.length
 console.log(`Taille recommandee : 100-10000 exemples de qualite`);
 ```
 
-### [10:30-12:00] Recapitulatif et quand choisir quoi
-> En resume, le fine-tuning est un outil puissant mais rarement necessaire. Dans 90% des cas, le prompting ou le RAG suffisent.
+### [10:30-12:00] Récapitulatif et quand choisir quoi
+> En résumé, le fine-tuning est un outil puissant mais rarement nécessaire. Dans 90% des cas, le prompting ou le RAG suffisent.
 **Action** : Afficher l'arbre de decision
 ```
 Votre modele ne donne pas de bons resultats ?
@@ -169,7 +169,7 @@ Votre modele ne donne pas de bons resultats ?
 ```
 
 ## Points d'attention pour l'enregistrement
-- Ollama doit etre deja installe — ne pas perdre de temps sur l'installation (screencast 11)
-- La creation du Modelfile est quasi instantanee, bien montrer le resultat
-- Bien distinguer Modelfile (customisation systeme) vs LoRA (vrai entrainement)
+- Ollama doit etre déjà installe — ne pas perdre de temps sur l'installation (screencast 11)
+- La création du Modelfile est quasi instantanee, bien montrer le résultat
+- Bien distinguer Modelfile (customisation système) vs LoRA (vrai entrainement)
 - Insister sur l'arbre de decision : fine-tuning = dernier recours

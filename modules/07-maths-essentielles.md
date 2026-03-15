@@ -1,13 +1,13 @@
 # Module 07 — Maths Essentielles pour l'IA
 
-> **Objectif** : Maitriser les briques mathematiques indispensables pour comprendre les modules 08 (reseaux de neurones) et 09 (transformers). Aucun prerequis au-dela du niveau lycee.
-> **Difficulte** : ⭐⭐ (intermediaire)
-> **Prerequis** : Module 01-06 (Utiliser l'IA) — aucune base math specifique
+> **Objectif** : Maîtriser les briques mathematiques indispensables pour comprendre les modules 08 (réseaux de neurones) et 09 (transformers). Aucun prérequis au-dela du niveau lycee.
+> **Difficulte** : ⭐⭐ (intermédiaire)
+> **Prérequis** : Module 01-06 (Utiliser l'IA) — aucune base math spécifique
 > **Duree estimee** : 3 heures
 
 ---
 
-> **⚠️ Changement de registre.** Apres 6 modules pratiques (prompting, API, agents), tu passes aux fondamentaux mathematiques. C'est normal que le rythme change. Tu n'as PAS besoin de tout maitriser pour continuer — comprendre l'intuition suffit. Les formules sont la pour ceux qui veulent aller plus loin. Si les maths te bloquent, lis le module en diagonal, fais le lab, et passe au module 08.
+> **⚠️ Changement de registre.** Après 6 modules pratiques (prompting, API, agents), tu passes aux fondamentaux mathematiques. C'est normal que le rythme change. Tu n'as PAS besoin de tout maîtriser pour continuer — comprendre l'intuition suffit. Les formules sont la pour ceux qui veulent aller plus loin. Si les maths te bloquent, lis le module en diagonal, fais le lab, et passe au module 08.
 
 ## Pourquoi ce module maintenant ?
 
@@ -25,17 +25,17 @@ Softmax / temperature (Module 01)←──   Fonctions d'activation, softmax
 "Loss" dans les logs d'entrainement←── Cross-entropy loss
 ```
 
-Chaque concept est lie a quelque chose que vous avez deja utilise. Pas de maths abstraites — uniquement ce qui sert dans les modules suivants.
+Chaque concept est lie a quelque chose que vous avez déjà utilise. Pas de maths abstraites — uniquement ce qui sert dans les modules suivants.
 
-> **Si vous etes presse** : les sections 1 (Vecteurs) et 3 (Fonctions d'activation / Softmax) sont les plus importantes. Les sections 4-5 (Derivees, Cross-entropy) sont necessaires uniquement si vous comptez faire le module 08 (neural network from scratch).
+> **Si vous etes presse** : les sections 1 (Vecteurs) et 3 (Fonctions d'activation / Softmax) sont les plus importantes. Les sections 4-5 (Derivees, Cross-entropy) sont nécessaires uniquement si vous comptez faire le module 08 (neural network from scratch).
 
 ---
 
 ## Objectif du module
 
-Ce module couvre **uniquement** les maths necessaires pour comprendre les reseaux de neurones et les transformers. Pas de theorie abstraite, pas de demonstrations formelles — juste ce dont vous avez besoin en tant que developpeur JavaScript pour lire du code d'IA et comprendre ce qui se passe sous le capot.
+Ce module couvre **uniquement** les maths nécessaires pour comprendre les réseaux de neurones et les transformers. Pas de théorie abstraite, pas de demonstrations formelles — juste ce dont vous avez besoin en tant que développeur JavaScript pour lire du code d'IA et comprendre ce qui se passe sous le capot.
 
-> Analogie : vous n'avez pas besoin de connaitre la metallurgie pour conduire une voiture, mais comprendre le moteur vous aide a diagnostiquer les problemes. C'est pareil ici.
+> Analogie : vous n'avez pas besoin de connaître la metallurgie pour conduire une voiture, mais comprendre le moteur vous aide a diagnostiquer les problèmes. C'est pareil ici.
 
 ---
 
@@ -104,11 +104,11 @@ const nouvellePosition = vectorAdd(position, deplacement);
 // → [4, 1]
 ```
 
-> Analogie : additionner deux vecteurs, c'est comme suivre deux directions successives sur une carte. Allez 3 pas a l'est puis 4 pas au nord, c'est la meme chose que le vecteur [3, 4].
+> Analogie : additionner deux vecteurs, c'est comme suivre deux directions successives sur une carte. Allez 3 pas a l'est puis 4 pas au nord, c'est la même chose que le vecteur [3, 4].
 
 ### Produit scalaire (dot product)
 
-Le produit scalaire est **l'operation la plus importante en IA**. Il mesure a quel point deux vecteurs pointent dans la meme direction.
+Le produit scalaire est **l'operation la plus importante en IA**. Il mesure a quel point deux vecteurs pointent dans la même direction.
 
 ```typescript
 // --- Produit scalaire ---
@@ -140,11 +140,11 @@ Produit scalaire — calcul pas a pas :
   sum = 1
 ```
 
-Le produit scalaire est au coeur du mecanisme d'**attention** dans les transformers : c'est comme ca qu'un token "regarde" les autres tokens.
+Le produit scalaire est au coeur du mécanisme d'**attention** dans les transformers : c'est comme ça qu'un token "regarde" les autres tokens.
 
 ### Norme d'un vecteur
 
-La norme mesure la **longueur** d'un vecteur. C'est le theoreme de Pythagore generalise.
+La norme mesure la **longueur** d'un vecteur. C'est le théorème de Pythagore generalise.
 
 ```typescript
 // --- Norme euclidienne (L2) ---
@@ -172,7 +172,7 @@ Norme — theoreme de Pythagore :
 
 ### Distance euclidienne
 
-La distance entre deux vecteurs mesure a quel point ils sont **differents**.
+La distance entre deux vecteurs mesure a quel point ils sont **différents**.
 
 ```typescript
 // --- Distance euclidienne ---
@@ -255,7 +255,7 @@ const W: Matrix = [
 ];
 ```
 
-En IA, les **poids** d'un reseau de neurones sont stockes dans des matrices. Quand on dit qu'un modele a 7 milliards de parametres (comme Llama 3.1 8B), ce sont 7 milliards de nombres dans des matrices.
+En IA, les **poids** d'un réseau de neurones sont stockes dans des matrices. Quand on dit qu'un modèle a 7 milliards de paramètres (comme Llama 3.1 8B), ce sont 7 milliards de nombres dans des matrices.
 
 ### Transposee
 
@@ -301,7 +301,7 @@ Transposee — rotation des axes :
 
 ### Multiplication matrice-vecteur
 
-C'est **l'operation fondamentale** dans un reseau de neurones. Chaque couche transforme un vecteur d'entree en un vecteur de sortie via une multiplication matricielle.
+C'est **l'operation fondamentale** dans un réseau de neurones. Chaque couche transforme un vecteur d'entree en un vecteur de sortie via une multiplication matricielle.
 
 ```typescript
 // --- Multiplication matrice × vecteur ---
@@ -374,7 +374,7 @@ function matMul(a: Matrix, b: Matrix): Matrix {
 //    doivent etre egaux
 ```
 
-> Analogie : la multiplication matricielle, c'est comme une chaine de montage. La premiere matrice transforme les donnees d'une facon, la deuxieme les transforme d'une autre facon. Le resultat est la composition des deux transformations.
+> Analogie : la multiplication matricielle, c'est comme une chaine de montage. La première matrice transforme les donnees d'une façon, la deuxieme les transforme d'une autre façon. Le résultat est la composition des deux transformations.
 
 ---
 
@@ -382,7 +382,7 @@ function matMul(a: Matrix, b: Matrix): Matrix {
 
 ### Pourquoi on a besoin de fonctions d'activation ?
 
-Sans fonctions d'activation, un reseau de neurones n'est qu'une suite de multiplications matricielles — et une suite de transformations lineaires reste lineaire. On ne pourrait apprendre que des relations lineaires (des lignes droites).
+Sans fonctions d'activation, un réseau de neurones n'est qu'une suite de multiplications matricielles — et une suite de transformations lineaires reste lineaire. On ne pourrait apprendre que des relations lineaires (des lignes droites).
 
 ```
 Sans activation :       Avec activation :
@@ -395,11 +395,11 @@ Sans activation :       Avec activation :
   (lineaire seulement)    (peut approximer n'importe quoi)
 ```
 
-Les fonctions d'activation introduisent de la **non-linearite**, ce qui permet au reseau d'apprendre des relations complexes.
+Les fonctions d'activation introduisent de la **non-linearite**, ce qui permet au réseau d'apprendre des relations complexes.
 
 ### Sigmoid
 
-La sigmoid ecrase n'importe quelle valeur entre 0 et 1. Historiquement tres utilisee, aujourd'hui surtout dans les portes (gates) des LSTM et les couches de sortie binaires.
+La sigmoid ecrase n'importe quelle valeur entre 0 et 1. Historiquement très utilisee, aujourd'hui surtout dans les portes (gates) des LSTM et les couches de sortie binaires.
 
 ```typescript
 // --- Sigmoid ---
@@ -427,7 +427,7 @@ Sigmoid — forme en S :
 
 ### ReLU (Rectified Linear Unit)
 
-ReLU est **la fonction d'activation la plus utilisee** dans les reseaux modernes. Extremement simple : si c'est negatif, renvoie 0 ; sinon, renvoie la valeur.
+ReLU est **la fonction d'activation la plus utilisee** dans les réseaux modernes. Extremement simple : si c'est negatif, renvoie 0 ; sinon, renvoie la valeur.
 
 ```typescript
 // --- ReLU ---
@@ -465,7 +465,7 @@ ReLU — simple et efficace :
 
 **Pourquoi ReLU fonctionne si bien ?**
 - Calcul ultra rapide (juste un `max`)
-- Pas de probleme de gradient qui s'evanouit (vanishing gradient)
+- Pas de problème de gradient qui s'evanouit (vanishing gradient)
 - Cree de la sparsity (beaucoup de neurones a zero)
 
 ### Tanh
@@ -503,7 +503,7 @@ Tanh — sigmoid centree :
 
 ### Softmax — La star des LLMs
 
-Softmax transforme un vecteur de scores bruts (logits) en **probabilites** qui somment a 1. C'est la derniere couche de tout modele de langage : elle determine la probabilite de chaque token suivant.
+Softmax transforme un vecteur de scores bruts (logits) en **probabilites** qui somment a 1. C'est la dernière couche de tout modèle de langage : elle déterminé la probabilite de chaque token suivant.
 
 ```typescript
 // --- Softmax ---
@@ -628,7 +628,7 @@ Derivees — les pentes de chaque fonction :
 
 ### Gradient : derivee en plusieurs dimensions
 
-Quand on a plusieurs parametres (des milliers en IA), le gradient est le **vecteur de toutes les derivees partielles**.
+Quand on a plusieurs paramètres (des milliers en IA), le gradient est le **vecteur de toutes les derivees partielles**.
 
 ```typescript
 // --- Gradient numerique ---
@@ -713,7 +713,7 @@ Descente de gradient — vue de dessus (courbes de niveau) :
       0   2   4   6   8  10
 ```
 
-### Le learning rate : un parametre crucial
+### Le learning rate : un paramètre crucial
 
 ```
 Learning rate trop grand :          Learning rate trop petit :
@@ -750,7 +750,7 @@ Learning rate correct :
 
 ### Pourquoi c'est LA loss function des LLMs
 
-La cross-entropy mesure la **distance entre deux distributions de probabilites** : celle predite par le modele et la distribution reelle (le token attendu).
+La cross-entropy mesure la **distance entre deux distributions de probabilites** : celle predite par le modèle et la distribution réelle (le token attendu).
 
 ### Intuition
 
@@ -818,11 +818,11 @@ console.log(batchCrossEntropy(preds, targets));
 | Critere | MSE (Mean Squared Error) | Cross-Entropy |
 |---------|-------------------------|---------------|
 | Utilisation | Regression (predire un nombre) | Classification (predire une classe) |
-| Gradient | Peut etre tres petit loin de la solution | Gradient fort quand la prediction est mauvaise |
+| Gradient | Peut etre très petit loin de la solution | Gradient fort quand la prediction est mauvaise |
 | Avec softmax | Combinaison instable | Combinaison naturelle et stable |
 | Pour les LLMs | Inadaptee | Standard universel |
 
-La cross-entropy combinee avec softmax a une derivee particulierement elegante :
+La cross-entropy combinee avec softmax à une derivee particulierement elegante :
 
 ```
 ∂Loss/∂logit_i = predicted_i - target_i
@@ -849,7 +849,7 @@ const grad = softmaxCrossEntropyGradient(pred, 0);
 
 ---
 
-## Recapitulatif
+## Récapitulatif
 
 ```
 Pipeline complet d'un forward pass :
@@ -868,7 +868,7 @@ Pipeline complet d'un forward pass :
 |---------|--------------|
 | Vecteur | Une liste de nombres = une donnee en IA |
 | Produit scalaire | Mesure la similarite entre deux vecteurs |
-| Matrice | Les poids du reseau, transforment les vecteurs |
+| Matrice | Les poids du réseau, transforment les vecteurs |
 | Sigmoid | Ecrase entre 0 et 1 |
 | ReLU | Max(0, x) — la plus utilisee |
 | Softmax | Transforme des scores en probabilites |
@@ -879,12 +879,22 @@ Pipeline complet d'un forward pass :
 
 ### Exercices pratiques
 
-1. **Implementer une normalisation de vecteur** : diviser chaque element par la norme
+1. **Implementer une normalisation de vecteur** : diviser chaque élément par la norme
 2. **Comparer sigmoid et ReLU** : tracer les valeurs pour x de -5 a 5
 3. **Mini descente de gradient** : trouver le minimum de `f(x) = (x - 7)²` en partant de x = 0
-4. **Softmax temperature** : modifier softmax pour accepter un parametre T (temperature) qui controle la "confiance" de la distribution
-5. **Cross-entropy en pratique** : calculer la loss pour differentes predictions et observer comment elle penalise les erreurs
+4. **Softmax temperature** : modifier softmax pour accepter un paramètre T (temperature) qui controle la "confiance" de la distribution
+5. **Cross-entropy en pratique** : calculer la loss pour différentes predictions et observer comment elle penalise les erreurs
 
 ---
 
-*Prochain module : [08 — Reseaux de Neurones from Scratch](./08-neural-network-scratch.md)*
+*Prochain module : [08 — Réseaux de Neurones from Scratch](./08-neural-network-scratch.md)*
+
+---
+
+<!-- parcours-recommande -->
+
+::: tip Parcours recommandé
+1. **Screencast** : [screencast 07 maths ia](../screencasts/screencast-07-maths-ia.md)
+2. **Lab** : [lab-07-maths-essentielles](../labs/lab-07-maths-essentielles/README)
+3. **Quiz** : [quiz 07 maths ia](../quizzes/quiz-07-maths-ia.html)
+:::

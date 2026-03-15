@@ -1,23 +1,27 @@
-# Module 00 — Prerequis & Paysage IA
+# Module 00 — Prérequis & Paysage IA
+
+<!-- nav-cours-précédent -->
+> **Cours précédent** : [WebGPU & 3D](../../14-webgpu-3d/modules/29-projet-final-expert.md). Si tu arrives ici sans avoir fait les cours précédents, consulte le [guide de démarrage](../../GUIDE-DEMARRAGE.md).
+
 
 ## Objectifs du module
 
 A l'issue de ce module, vous serez capable de :
 
-- Verifier que votre environnement de developpement est pret pour le cours
+- Vérifier que votre environnement de développement est pret pour le cours
 - Comprendre la terminologie essentielle de l'IA (ML, DL, LLM, token, embedding, etc.)
-- Situer les modeles de langage dans l'histoire recente de l'IA
-- Distinguer modeles proprietaires et open-source
-- Comprendre les parametres cles qui influencent le comportement d'un LLM
-- Choisir le bon modele selon votre cas d'usage
+- Situer les modèles de langage dans l'histoire recente de l'IA
+- Distinguer modèles proprietaires et open-source
+- Comprendre les paramètres clés qui influencent le comportement d'un LLM
+- Choisir le bon modèle selon votre cas d'usage
 
 ---
 
-## 1. Prerequis techniques
+## 1. Prérequis techniques
 
-### 1.1 Ce que vous devez maitriser
+### 1.1 Ce que vous devez maîtriser
 
-Ce cours s'adresse a des developpeurs JavaScript/TypeScript ayant une experience professionnelle. Avant de commencer, assurez-vous de maitriser les bases suivantes.
+Ce cours s'adresse a des développeurs JavaScript/TypeScript ayant une experience professionnelle. Avant de commencer, assurez-vous de maîtriser les bases suivantes.
 
 #### TypeScript
 
@@ -25,7 +29,7 @@ Vous devez etre a l'aise avec :
 
 - Les types de base (`string`, `number`, `boolean`, `unknown`, `any`)
 - Les interfaces et les types
-- Les generiques (`<T>`)
+- Les génériques (`<T>`)
 - `async` / `await` et les `Promise`
 - Les modules ESM (`import` / `export`)
 
@@ -54,14 +58,14 @@ async function sendMessages(messages: Message[]): Promise<string> {
 
 #### Node.js et npm/pnpm
 
-- Creer un projet avec `npm init` ou `pnpm init`
-- Installer des dependances
+- Créer un projet avec `npm init` ou `pnpm init`
+- Installer des dépendances
 - Utiliser des variables d'environnement (`.env`)
-- Executer des scripts TypeScript avec `tsx` ou `ts-node`
+- Exécuter des scripts TypeScript avec `tsx` ou `ts-node`
 
 #### Bases HTTP
 
-- Methodes HTTP (GET, POST, PUT, DELETE)
+- Méthodes HTTP (GET, POST, PUT, DELETE)
 - Headers (Authorization, Content-Type)
 - Codes de statut (200, 400, 401, 429, 500)
 - JSON comme format d'echange
@@ -86,7 +90,7 @@ pnpm add -D @types/node
 npx tsc --init --target ES2022 --module NodeNext --moduleResolution NodeNext --strict
 ```
 
-Creez un fichier `.env` a la racine :
+Creez un fichier `.env` à la racine :
 
 ```bash
 # .env — NE JAMAIS COMMITER CE FICHIER
@@ -94,7 +98,7 @@ ANTHROPIC_API_KEY=sk-ant-xxxxxxxxxxxxxxxxxxxxx
 OPENAI_API_KEY=sk-xxxxxxxxxxxxxxxxxxxxx
 ```
 
-Creez un fichier `src/hello.ts` pour verifier que tout fonctionne :
+Creez un fichier `src/hello.ts` pour vérifier que tout fonctionne :
 
 ```typescript
 // src/hello.ts
@@ -122,7 +126,7 @@ main()
 npx tsx src/hello.ts
 ```
 
-Si vous voyez une reponse du modele, votre environnement est pret.
+Si vous voyez une réponse du modèle, votre environnement est pret.
 
 ---
 
@@ -132,17 +136,17 @@ Si vous voyez une reponse du modele, votre environnement est pret.
 
 | Terme | Definition | Analogie |
 |-------|-----------|----------|
-| **IA** (Intelligence Artificielle) | Domaine de l'informatique visant a creer des systemes capables de realiser des taches qui necessitent normalement l'intelligence humaine | Un parapluie qui englobe tout le reste |
-| **ML** (Machine Learning) | Sous-domaine de l'IA ou les machines apprennent a partir de donnees sans etre explicitement programmees | Apprendre a reconnaitre des chats en regardant des milliers de photos de chats |
-| **DL** (Deep Learning) | Sous-domaine du ML utilisant des reseaux de neurones profonds (multiples couches) | Un cerveau artificiel avec des milliards de connexions |
-| **LLM** (Large Language Model) | Modele de deep learning entraine sur d'enormes quantites de texte, capable de generer et comprendre du langage | Un autocomplete surpuissant qui a lu une grande partie d'Internet |
-| **NLP** (Natural Language Processing) | Domaine de l'IA traitant du langage humain | Apprendre a un ordinateur a lire et ecrire |
+| **IA** (Intelligence Artificielle) | Domaine de l'informatique visant a créer des systèmes capables de realiser des taches qui necessitent normalement l'intelligence humaine | Un parapluie qui englobe tout le reste |
+| **ML** (Machine Learning) | Sous-domaine de l'IA ou les machines apprennent à partir de donnees sans etre explicitement programmees | Apprendre a reconnaitre des chats en regardant des milliers de photos de chats |
+| **DL** (Deep Learning) | Sous-domaine du ML utilisant des réseaux de neurones profonds (multiples couches) | Un cerveau artificiel avec des milliards de connexions |
+| **LLM** (Large Language Model) | Modèle de deep learning entraine sur d'enormes quantites de texte, capable de générer et comprendre du langage | Un autocomplete surpuissant qui a lu une grande partie d'Internet |
+| **NLP** (Natural Language Processing) | Domaine de l'IA traitant du langage humain | Apprendre à un ordinateur a lire et écrire |
 
 ### 2.2 Vocabulaire des LLMs
 
 #### Token
 
-Un token est l'unite de base que le modele manipule. Ce n'est ni un mot, ni un caractere — c'est un morceau de texte defini par le tokenizer du modele.
+Un token est l'unite de base que le modèle manipule. Ce n'est ni un mot, ni un caractere — c'est un morceau de texte défini par le tokenizer du modèle.
 
 ```typescript
 // Exemples de tokenisation (approximatif)
@@ -158,11 +162,11 @@ Un token est l'unite de base que le modele manipule. Ce n'est ni un mot, ni un c
 // - Code : variable, les mots-cles courants sont souvent 1 token
 ```
 
-> **Pourquoi c'est important ?** Les LLMs facturent par token (input + output). La taille de la context window est aussi mesuree en tokens. Un prompt trop long coute cher et peut depasser la limite du modele.
+> **Pourquoi c'est important ?** Les LLMs facturent par token (input + output). La taille de la context window est aussi mesuree en tokens. Un prompt trop long coute cher et peut depasser la limite du modèle.
 
 #### Embedding
 
-Un embedding est une representation numerique (vecteur) d'un texte dans un espace a haute dimension. Les textes semantiquement proches ont des embeddings proches.
+Un embedding est une representation numérique (vecteur) d'un texte dans un espace a haute dimension. Les textes semantiquement proches ont des embeddings proches.
 
 ```typescript
 // Conceptuellement, un embedding ressemble a ca :
@@ -176,12 +180,12 @@ const embeddingVoiture = [0.89, 0.12, -0.56, 0.01, /* ... tres differents */]
 
 #### Inference
 
-L'inference est le processus par lequel un modele entraine genere une reponse a partir d'une entree. Quand vous envoyez un prompt a Claude et recevez une reponse, c'est de l'inference.
+L'inference est le processus par lequel un modèle entraine généré une réponse à partir d'une entree. Quand vous envoyez un prompt a Claude et recevez une réponse, c'est de l'inference.
 
 #### Prompt et Completion
 
-- **Prompt** : le texte que vous envoyez au modele (votre question, vos instructions)
-- **Completion** : la reponse generee par le modele
+- **Prompt** : le texte que vous envoyez au modèle (votre question, vos instructions)
+- **Completion** : la réponse générée par le modèle
 
 ```typescript
 // Le prompt
@@ -192,9 +196,9 @@ const prompt = 'Explique les closures en JavaScript en 3 phrases.'
 //  lexical meme apres que la fonction englobante a termine son execution..."
 ```
 
-#### Context Window (fenetre de contexte)
+#### Context Window (fenêtre de contexte)
 
-La context window est la quantite maximale de tokens qu'un modele peut traiter en une seule requete (prompt + completion combines).
+La context window est la quantite maximale de tokens qu'un modèle peut traiter en une seule requête (prompt + completion combines).
 
 ```
 ┌─────────────────────────────────────────────────────────┐
@@ -217,8 +221,8 @@ La context window est la quantite maximale de tokens qu'un modele peut traiter e
 
 Imaginez l'autocomplete de votre telephone, mais en infiniment plus puissant :
 
-1. Votre telephone predit le prochain **mot** a partir des quelques mots precedents
-2. Un LLM predit le prochain **token** a partir de toute la conversation precedente
+1. Votre telephone predit le prochain **mot** à partir des quelques mots précédents
+2. Un LLM predit le prochain **token** à partir de toute la conversation précédente
 3. Votre telephone a ete entraine sur vos SMS ; un LLM a ete entraine sur une immense partie d'Internet
 
 ```
@@ -226,9 +230,9 @@ Telephone :  "Salut, ca va ?" → predit "bien" ou "?"
 LLM :        "Explique les closures en JS" → genere un paragraphe complet et structure
 ```
 
-Le LLM ne "comprend" pas comme un humain. Il est extraordinairement bon pour predire la suite la plus probable d'un texte. Mais cette capacite de prediction, a grande echelle, produit un comportement qui ressemble fortement a de la comprehension.
+Le LLM ne "comprend" pas comme un humain. Il est extraordinairement bon pour predire la suite la plus probable d'un texte. Mais cette capacité de prediction, a grande echelle, produit un comportement qui ressemble fortement a de la comprehension.
 
-> **A retenir** : un LLM genere du texte token par token, de gauche a droite, en choisissant le token le plus probable (module les parametres de temperature). Il ne "reflechit" pas en arriere, il ne "relit" pas ce qu'il a ecrit. C'est une prediction sequentielle massivement parallelisee.
+> **A retenir** : un LLM généré du texte token par token, de gauche a droite, en choisissant le token le plus probable (module les paramètres de temperature). Il ne "reflechit" pas en arriere, il ne "relit" pas ce qu'il a écrit. C'est une prediction sequentielle massivement parallelisee.
 
 ---
 
@@ -236,24 +240,24 @@ Le LLM ne "comprend" pas comme un humain. Il est extraordinairement bon pour pre
 
 ### 3.1 La timeline
 
-| Annee | Modele / Evenement | Impact |
+| Annee | Modèle / Événement | Impact |
 |-------|-------------------|--------|
 | 2017 | **Attention Is All You Need** (Google) | Invention de l'architecture Transformer |
-| 2018 | **GPT-1** (OpenAI) | 117M parametres, premier GPT |
-| 2019 | **GPT-2** (OpenAI) | 1.5B parametres, "trop dangereux pour etre publie" |
-| 2020 | **GPT-3** (OpenAI) | 175B parametres, few-shot learning emergent |
+| 2018 | **GPT-1** (OpenAI) | 117M paramètres, premier GPT |
+| 2019 | **GPT-2** (OpenAI) | 1.5B paramètres, "trop dangereux pour etre publie" |
+| 2020 | **GPT-3** (OpenAI) | 175B paramètres, few-shot learning emergent |
 | 2021 | **Codex** (OpenAI) | GPT-3 fine-tune sur du code → GitHub Copilot |
 | 2022 | **ChatGPT** (OpenAI) | GPT-3.5 avec RLHF, explosion grand public |
 | 2023 | **GPT-4** (OpenAI) | Multimodal (texte + image), raisonnement ameliore |
 | 2023 | **Claude 2** (Anthropic) | Context window de 100K tokens |
 | 2023 | **Llama 2** (Meta) | Open-source, democratisation |
-| 2023 | **Mistral 7B** (Mistral AI) | Petit modele open-source tres performant |
+| 2023 | **Mistral 7B** (Mistral AI) | Petit modèle open-source très performant |
 | 2024 | **Claude 3** (Anthropic) | Famille Opus/Sonnet/Haiku, leadership sur certains benchmarks |
 | 2024 | **GPT-4o** (OpenAI) | Multimodal natif (texte, image, audio) |
-| 2024 | **Llama 3.1** (Meta) | 405B parametres, open-source competitif |
-| 2024 | **Mistral Large** (Mistral AI) | Modele proprietaire competitif |
+| 2024 | **Llama 3.1** (Meta) | 405B paramètres, open-source competitif |
+| 2024 | **Mistral Large** (Mistral AI) | Modèle proprietaire competitif |
 | 2025 | **Claude 4** (Anthropic) | Opus, Sonnet — agents, raisonnement etendu |
-| 2025 | **Gemini 2** (Google) | Integration profonde dans l'ecosysteme Google |
+| 2025 | **Gemini 2** (Google) | Intégration profonde dans l'ecosysteme Google |
 
 ### 3.2 L'architecture Transformer
 
@@ -284,18 +288,18 @@ Sans entrer dans les details mathematiques, voici l'intuition :
 └─────────────────────────────────────────────────┘
 ```
 
-Le mecanisme de **self-attention** est la cle : il permet a chaque token de "faire attention" a tous les autres tokens du contexte, ce qui capture les relations a longue distance dans le texte.
+Le mécanisme de **self-attention** est la clé : il permet à chaque token de "faire attention" a tous les autres tokens du contexte, ce qui capture les relations a longue distance dans le texte.
 
 ### 3.3 De GPT-1 a aujourd'hui : l'echelle change tout
 
-L'une des decouvertes les plus surprenantes est que des capacites **emergentes** apparaissent quand on augmente la taille du modele :
+L'une des découvertes les plus surprenantes est que des capacites **emergentes** apparaissent quand on augmente la taille du modèle :
 
-- **GPT-1** (117M params) : genere du texte coherent mais basique
-- **GPT-2** (1.5B params) : ecrit des articles convaincants
+- **GPT-1** (117M params) : généré du texte coherent mais basique
+- **GPT-2** (1.5B params) : écrit des articles convaincants
 - **GPT-3** (175B params) : few-shot learning, traduction, code simple
 - **GPT-4** (taille inconnue, estimee >1T params) : raisonnement complexe, multimodal
 
-C'est comme si un telephone qui autocomplete des mots devenait, a force d'etre agrandi, capable de rediger des dissertations. Personne ne l'avait completement prevu.
+C'est comme si un telephone qui autocomplete des mots devenait, a force d'etre agrandi, capable de rediger des dissertations. Personne ne l'avait complètement prévu.
 
 ---
 
@@ -303,7 +307,7 @@ C'est comme si un telephone qui autocomplete des mots devenait, a force d'etre a
 
 ### 4.1 Modeles proprietaires
 
-Ces modeles sont accessibles uniquement via API. Vous ne pouvez pas les telecharger, les modifier ou les heberger vous-meme.
+Ces modèles sont accessibles uniquement via API. Vous ne pouvez pas les telecharger, les modifier ou les heberger vous-même.
 
 #### Claude (Anthropic)
 
@@ -331,8 +335,8 @@ const response = await client.messages.create({
 #### GPT (OpenAI)
 
 - **GPT-4o** : multimodal, rapide, bon rapport qualite/prix
-- **GPT-4o mini** : tres economique, suffisant pour beaucoup de taches
-- **o1 / o3** : modeles de raisonnement (thinking models)
+- **GPT-4o mini** : très economique, suffisant pour beaucoup de taches
+- **o1 / o3** : modèles de raisonnement (thinking models)
 
 #### Gemini (Google)
 
@@ -341,11 +345,11 @@ const response = await client.messages.create({
 
 ### 4.2 Modeles open-source
 
-Ces modeles peuvent etre telecharges, modifies et heberges sur votre propre infrastructure.
+Ces modèles peuvent etre telecharges, modifies et heberges sur votre propre infrastructure.
 
 #### Llama (Meta)
 
-- **Llama 3.1 405B** : le plus gros modele open-source, competitif avec GPT-4
+- **Llama 3.1 405B** : le plus gros modèle open-source, competitif avec GPT-4
 - **Llama 3.1 70B** : excellent rapport taille/performance
 - **Llama 3.1 8B** : suffisant pour beaucoup de taches, tourneable sur un bon GPU
 
@@ -355,10 +359,10 @@ Ces modeles peuvent etre telecharges, modifies et heberges sur votre propre infr
 - **Mixtral 8x22B** : architecture MoE (Mixture of Experts), efficace
 - **Mistral 7B** : petit, rapide, open-source
 
-#### Autres modeles open-source notables
+#### Autres modèles open-source notables
 
-- **Phi-3** (Microsoft) : petits modeles tres performants pour leur taille
-- **Gemma 2** (Google) : modeles legers derives de Gemini
+- **Phi-3** (Microsoft) : petits modèles très performants pour leur taille
+- **Gemma 2** (Google) : modèles legers dérivés de Gemini
 - **CodeLlama** (Meta) : specialise code
 - **DeepSeek Coder** : specialise code, open-source
 
@@ -367,14 +371,14 @@ Ces modeles peuvent etre telecharges, modifies et heberges sur votre propre infr
 | Critere | Proprietaire | Open-source |
 |---------|-------------|-------------|
 | **Performance brute** | Generalement superieure (Opus, GPT-4) | S'ameliore rapidement, Llama 3.1 405B est competitif |
-| **Cout par requete** | Pay-per-use via API | Gratuit une fois heberge (mais cout infra) |
-| **Latence** | Depend du provider, generalement optimise | Depend de votre infra, peut etre plus rapide en local |
+| **Cout par requête** | Pay-per-use via API | Gratuit une fois heberge (mais cout infra) |
+| **Latence** | Depend du provider, généralement optimise | Depend de votre infra, peut etre plus rapide en local |
 | **Confidentialite** | Donnees envoyees au provider | Donnees restent chez vous |
 | **Personnalisation** | Limitee (system prompt, fine-tuning parfois) | Totale (fine-tuning, modification, etc.) |
-| **Maintenance** | Zero (le provider gere tout) | A votre charge (GPU, mises a jour, etc.) |
-| **Disponibilite** | SLA du provider, risque de downtime | Sous votre controle |
+| **Maintenance** | Zero (le provider géré tout) | A votre charge (GPU, mises a jour, etc.) |
+| **Disponibilité** | SLA du provider, risque de downtime | Sous votre controle |
 
-> **Conseil pour debuter** : commencez avec les APIs proprietaires (Claude ou GPT). L'infra pour heberger des modeles open-source est un sujet en soi. Une fois que vous maitrisez les concepts, explorez l'open-source avec Ollama pour le developpement local.
+> **Conseil pour debuter** : commencez avec les APIs proprietaires (Claude ou GPT). L'infra pour heberger des modèles open-source est un sujet en soi. Une fois que vous maitrisez les concepts, explorez l'open-source avec Ollama pour le développement local.
 
 ---
 
@@ -382,7 +386,7 @@ Ces modeles peuvent etre telecharges, modifies et heberges sur votre propre infr
 
 ### 5.1 Temperature
 
-La temperature controle le "degre de creativite" du modele. Techniquement, elle modifie la distribution de probabilite des tokens.
+La temperature controle le "degre de creativite" du modèle. Techniquement, elle modifie la distribution de probabilite des tokens.
 
 ```
 Temperature = 0.0 (deterministe)
@@ -456,7 +460,7 @@ Tokens tries par probabilite :
   "lune"    0.02  ─── elimine
 ```
 
-> **En pratique** : modifiez soit la temperature, soit top-p, mais rarement les deux en meme temps. Anthropic recommande d'utiliser principalement la temperature.
+> **En pratique** : modifiez soit la temperature, soit top-p, mais rarement les deux en même temps. Anthropic recommande d'utiliser principalement la temperature.
 
 ### 5.3 Top-k
 
@@ -473,7 +477,7 @@ top_k = 3 :
 
 ### 5.4 Max tokens
 
-Le nombre maximum de tokens que le modele peut generer dans sa reponse.
+Le nombre maximum de tokens que le modèle peut générer dans sa réponse.
 
 ```typescript
 // Reponse courte
@@ -491,11 +495,11 @@ const long = await client.messages.create({
 })
 ```
 
-> **Attention** : `max_tokens` est une limite haute. Si le modele n'a besoin que de 50 tokens pour repondre, il s'arretera a 50 meme si vous avez mis `max_tokens: 4096`. Vous ne payez que les tokens effectivement generes.
+> **Attention** : `max_tokens` est une limite haute. Si le modèle n'a besoin que de 50 tokens pour repondre, il s'arretera a 50 même si vous avez mis `max_tokens: 4096`. Vous ne payez que les tokens effectivement generes.
 
 ### 5.5 Stop sequences
 
-Des chaines de caracteres qui, si le modele les genere, arretent la generation.
+Des chaines de caracteres qui, si le modèle les généré, arretent la génération.
 
 ```typescript
 const response = await client.messages.create({
@@ -503,7 +507,7 @@ const response = await client.messages.create({
   max_tokens: 1024,
   stop_sequences: ['```', '---', 'FIN'],
   messages: [
-    { role: 'user', content: 'Ecris une fonction, arrete-toi apres le bloc de code.' },
+    { role: 'user', content: 'Ecris une fonction, arrete-toi après le bloc de code.' },
   ],
 })
 ```
@@ -552,7 +556,7 @@ const response = await client.messages.create({
 ### 6.4 Comment choisir ?
 
 ```
-Votre tache ─── Est-ce critique (prod, precision haute) ?
+Votre tache ─── Est-ce critique (prod, précision haute) ?
                 │
                 ├── OUI → Claude Opus / GPT-4o / o1
                 │         (selon budget et besoin)
@@ -560,7 +564,7 @@ Votre tache ─── Est-ce critique (prod, precision haute) ?
                 └── NON → Budget contraint ?
                           │
                           ├── OUI → Claude Haiku / GPT-4o mini
-                          │         ou modele open-source
+                          │         ou modèle open-source
                           │
                           └── NON → Claude Sonnet / GPT-4o
                                     (meilleur rapport qualite/prix)
@@ -587,7 +591,7 @@ import Anthropic from '@anthropic-ai/sdk'
 import 'dotenv/config'
 
 async function checkEnvironment() {
-  // 1. Verifier la cle API
+  // 1. Vérifier la clé API
   if (!process.env.ANTHROPIC_API_KEY) {
     console.error('ANTHROPIC_API_KEY non definie dans .env')
     process.exit(1)
@@ -605,7 +609,7 @@ async function checkEnvironment() {
   })
 
   // 3. Afficher les informations
-  console.log('Modele:', message.model)
+  console.log('Modèle:', message.model)
   console.log('Tokens input:', message.usage.input_tokens)
   console.log('Tokens output:', message.usage.output_tokens)
   console.log('Reponse:', message.content[0].type === 'text' ? message.content[0].text : '')
@@ -643,7 +647,7 @@ async function main() {
 
   for (const temp of temperatures) {
     console.log(`\n=== Temperature: ${temp} ===`)
-    // Generer 3 reponses pour voir la variabilite
+    // Générer 3 réponses pour voir la variabilite
     for (let i = 0; i < 3; i++) {
       const result = await generateWithTemperature(temp)
       console.log(`  Essai ${i + 1}: ${result.trim()}`)
@@ -691,3 +695,13 @@ Sans regarder le cours, definissez en une phrase chacun de ces termes :
 - [Attention Is All You Need (paper original)](https://arxiv.org/abs/1706.03762)
 - [Ollama](https://ollama.com/) — Executer des LLMs open-source en local
 - [Tokenizer de OpenAI](https://platform.openai.com/tokenizer) — Visualiser la tokenisation
+
+---
+
+<!-- parcours-recommande -->
+
+::: tip Parcours recommandé
+1. **Screencast** : [screencast 00 prerequis paysage ia](../screencasts/screencast-00-prerequis-paysage-ia.md)
+2. **Lab** : [lab-00-paysage-ia](../labs/lab-00-paysage-ia/README)
+3. **Quiz** : [quiz 00 prerequis paysage ia](../quizzes/quiz-00-prerequis-paysage-ia.html)
+:::

@@ -4,7 +4,7 @@
 - **Duree estimee** : 20-25 min
 - **Module** : `modules/06-agents-orchestration.md`
 - **Lab associe** : `labs/lab-06-agents/`
-- **Prerequis** : Screencast 04, 05
+- **Prérequis** : Screencast 04, 05
 
 ## Setup
 - [ ] Cle API Anthropic dans `.env`
@@ -16,7 +16,7 @@
 ## Script
 
 ### [00:00-03:30] Qu'est-ce qu'un agent IA ?
-> Un chatbot classique repond aux questions. Un agent IA va plus loin : il decide quelle action executer, observe le resultat, et itere jusqu'a atteindre un objectif. Un chatbot, c'est un employe qui repond au comptoir. Un agent, c'est un employe qui peut se lever, aller chercher des dossiers, passer des coups de fil, et revenir avec une reponse complete.
+> Un chatbot classique repond aux questions. Un agent IA va plus loin : il decide quelle action exécuter, observe le résultat, et itere jusqu'a atteindre un objectif. Un chatbot, c'est un employe qui repond au comptoir. Un agent, c'est un employe qui peut se lever, aller chercher des dossiers, passer des coups de fil, et revenir avec une réponse complete.
 **Action** : Afficher le schema de la boucle agent
 ```
           ┌─────────────┐
@@ -35,10 +35,10 @@
      └────│  Observer    │ (analyser le resultat)
           └─────────────┘
 ```
-> La difference cle avec le tool use simple du module 04 : l'agent est autonome. Il ne fait pas qu'un seul appel d'outil — il enchaine les actions, prend des decisions, et s'adapte selon les resultats.
+> La différence clé avec le tool use simple du module 04 : l'agent est autonome. Il ne fait pas qu'un seul appel d'outil — il enchaine les actions, prend des decisions, et s'adapte selon les résultats.
 
 ### [03:30-08:00] Le pattern ReAct en pratique
-> ReAct, c'est Thought, Action, Observation en boucle. On l'a vu en theorie au module 02. Maintenant, on l'implemente pour de vrai avec la boucle d'agent complete.
+> ReAct, c'est Thought, Action, Observation en boucle. On l'a vu en théorie au module 02. Maintenant, on l'implemente pour de vrai avec la boucle d'agent complete.
 **Action** : Montrer l'implementation TypeScript pas a pas
 ```typescript
 interface AgentStep {
@@ -85,7 +85,7 @@ async function runAgent(
   return 'Nombre maximum d\'iterations atteint.';
 }
 ```
-**Action** : Executer l'agent avec un objectif concret
+**Action** : Exécuter l'agent avec un objectif concret
 ```
 Objectif : "Quelles sont les ventes du mois dernier ?"
 
@@ -134,7 +134,7 @@ async function executeWithConfirmation(action: AgentAction): Promise<string> {
   return executeAction(action);
 }
 ```
-> La regle d'or des agents : un agent qui fait une erreur coute plus qu'un agent qui demande confirmation. Privilegiez toujours la securite a l'autonomie.
+> La regle d'or des agents : un agent qui fait une erreur coute plus qu'un agent qui demandé confirmation. Privilegiez toujours la sécurité a l'autonomie.
 
 ### [11:30-15:00] Orchestration multi-agent
 > Pour les taches complexes, un seul agent ne suffit pas. On peut specialiser plusieurs agents et les orchestrer avec un routeur.
@@ -165,11 +165,11 @@ async function orchestrate(task: string) {
   }
 }
 ```
-**Action** : Executer le routeur avec differentes taches
+**Action** : Exécuter le routeur avec différentes taches
 > "Review le fichier auth.ts" → agent codeReview. "Y a-t-il des failles dans ce code ?" → agent security. "Genere les tests manquants pour utils.ts" → agent testing. Chaque agent est specialise et efficace dans son domaine.
 
-### [15:00-18:00] Memoire d'agent
-> Un agent sans memoire oublie tout entre chaque tour. Pour les sessions longues, il faut gerer la memoire — stocker les echanges, compresser les anciens, et retrouver l'information pertinente.
+### [15:00-18:00] Mémoire d'agent
+> Un agent sans mémoire oublie tout entre chaque tour. Pour les sessions longues, il faut gérer la mémoire — stocker les echanges, compresser les anciens, et retrouver l'information pertinente.
 **Action** : Montrer la classe AgentMemory
 ```typescript
 class AgentMemory {
@@ -203,10 +203,10 @@ class AgentMemory {
   }
 }
 ```
-> La compression de memoire est cruciale. Sans elle, le contexte explose et les couts avec. On garde les 10 derniers messages en detail et on resume le reste.
+> La compression de mémoire est cruciale. Sans elle, le contexte explose et les couts avec. On garde les 10 derniers messages en detail et on résumé le reste.
 
 ### [18:00-21:00] Pieges courants et bonnes pratiques
-> Les agents sont puissants mais fragiles. Voici les pieges les plus courants et comment les eviter.
+> Les agents sont puissants mais fragiles. Voici les pieges les plus courants et comment les éviter.
 **Action** : Afficher le tableau des pieges
 ```
 | Piege              | Solution                              |
@@ -232,11 +232,11 @@ const agent = new Agent({
 const result = await agent.run('Review le fichier src/auth/auth.service.ts');
 console.log(result.output);
 ```
-> Le SDK simplifie tout : gestion de la boucle, des tools, du contexte. Mais comprendre les mecanismes sous-jacents est essentiel pour debugger quand ca ne marche pas.
+> Le SDK simplifie tout : gestion de la boucle, des tools, du contexte. Mais comprendre les mécanismes sous-jacents est essentiel pour debugger quand ça ne marche pas.
 
 ### [21:00-23:00] Demo complete — agent de code review
-> Pour conclure, une demo complete : un agent qui review un fichier, identifie les problemes, propose des corrections, et verifie que les tests passent.
-**Action** : Executer l'agent de bout en bout
+> Pour conclure, une demo complete : un agent qui review un fichier, identifie les problèmes, propose des corrections, et vérifié que les tests passent.
+**Action** : Exécuter l'agent de bout en bout
 ```
 Objectif: "Review src/utils/parser.ts et corrige les problemes trouves"
 
@@ -252,9 +252,9 @@ Iteration 5: run_tests("src/utils/parser.test.ts")
 Answer: "J'ai corrige 3 problemes et ajoute 5 tests. Voici le resume..."
 ```
 
-### [23:00-25:00] Recapitulatif
-> On a vu comment construire un agent IA de A a Z : la boucle ReAct, les guardrails, l'orchestration multi-agent, la memoire, et les bonnes pratiques. Les agents sont l'avenir de l'IA appliquee — mais n'oubliez jamais que la securite prime sur l'autonomie.
-**Action** : Afficher le resume
+### [23:00-25:00] Récapitulatif
+> On a vu comment construire un agent IA de A a Z : la boucle ReAct, les guardrails, l'orchestration multi-agent, la mémoire, et les bonnes pratiques. Les agents sont l'avenir de l'IA appliquee — mais n'oubliez jamais que la sécurité prime sur l'autonomie.
+**Action** : Afficher le résumé
 ```
 Agent = LLM + Outils + Boucle + Memoire + Guardrails
 
@@ -266,7 +266,7 @@ Agent = LLM + Outils + Boucle + Memoire + Guardrails
 ```
 
 ## Points d'attention pour l'enregistrement
-- Montrer les iterations de l'agent en temps reel (pas de pre-enregistrement)
+- Montrer les iterations de l'agent en temps réel (pas de pre-enregistrement)
 - Insister sur les guardrails — c'est le message le plus important
 - La demo multi-agent peut etre simulee si les appels API sont trop lents
 - Montrer le cout total de la session agent (nombre d'appels, tokens consommes)

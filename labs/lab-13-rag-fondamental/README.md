@@ -21,11 +21,11 @@ Decoupe un texte en chunks en regroupant des phrases (separees par `. `) sans de
 
 ### 3. `buildAugmentedPrompt(systemPrompt: string, chunks: string[], question: string): string`
 
-Construit un prompt augmente : system prompt, puis les chunks de contexte numerotes, puis la question de l'utilisateur.
+Construit un prompt augmente : system prompt, puis les chunks de contexte numérotés, puis la question de l'utilisateur.
 
 ### 4. `searchDocuments(query: number[], docs: { text: string; vector: number[] }[], topK: number): string[]`
 
-Recherche les `topK` documents les plus proches du vecteur requete et retourne leurs textes.
+Recherche les `topK` documents les plus proches du vecteur requête et retourne leurs textes.
 
 ### 5. `calculateChunkStats(chunks: string[]): { count: number; avgLength: number; minLength: number; maxLength: number }`
 

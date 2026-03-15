@@ -4,19 +4,19 @@
 - **Duree estimee** : 20-25 min
 - **Module** : `modules/14-rag-avance.md`
 - **Lab associe** : `labs/lab-14-rag-avance/`
-- **Prerequis** : Module 13 complete, pipeline RAG fondamental fonctionnel
+- **Prérequis** : Module 13 complete, pipeline RAG fondamental fonctionnel
 
 ## Setup
 - [ ] Pipeline RAG du module 13 fonctionnel
 - [ ] Ollama avec `nomic-embed-text` et `llama3.1:8b`
 - [ ] pgvector demarre avec les documents indexes
 - [ ] Terminal et VS Code ouverts sur le dossier du lab
-- [ ] `pnpm install` deja execute
+- [ ] `pnpm install` déjà exécuté
 
 ## Script
 
 ### [00:00-02:30] Les limites du RAG basique
-> Dans le module precedent, on a construit un RAG qui fonctionne. Mais si vous l'avez teste avec des questions complexes, vous avez remarque des problemes : des chunks non pertinents dans les resultats, des mots-cles exacts rates, et parfois pas assez de contexte dans un chunk. On va resoudre tout ca.
+> Dans le module précédent, on a construit un RAG qui fonctionne. Mais si vous l'avez teste avec des questions complexes, vous avez remarque des problèmes : des chunks non pertinents dans les résultats, des mots-clés exacts rates, et parfois pas assez de contexte dans un chunk. On va résoudre tout ça.
 **Action** : Montrer un exemple de RAG basique avec du bruit
 ```
 Question : "Quelles sont les bonnes pratiques de securite pour NestJS ?"
@@ -32,7 +32,7 @@ Probleme : 2 chunks sur 5 ne sont pas pertinents
 ```
 
 ### [02:30-06:30] Hybrid Search : vectoriel + BM25
-> La recherche vectorielle comprend le sens mais peut rater des mots-cles exacts. La recherche BM25 trouve les mots exacts mais ne comprend pas les synonymes. On va combiner les deux.
+> La recherche vectorielle comprend le sens mais peut rater des mots-clés exacts. La recherche BM25 trouve les mots exacts mais ne comprend pas les synonymes. On va combiner les deux.
 **Action** : Implementer BM25 en TypeScript
 ```typescript
 // bm25.ts (extrait)
@@ -76,10 +76,10 @@ const bm25Weight = 0.3;
 ```bash
 npx tsx hybrid-search.ts
 ```
-**Action** : Comparer les resultats hybride vs vectoriel seul
+**Action** : Comparer les résultats hybride vs vectoriel seul
 
 ### [06:30-09:30] HyDE : Hypothetical Document Embeddings
-> HyDE est une technique astucieuse : au lieu d'embedder la question directement, on demande au LLM de generer une reponse hypothetique, et on embede CETTE reponse. L'intuition : une reponse ressemble plus aux chunks pertinents qu'une question.
+> HyDE est une technique astucieuse : au lieu d'embedder la question directement, on demandé au LLM de générer une réponse hypothetique, et on embede CETTE réponse. L'intuition : une réponse ressemble plus aux chunks pertinents qu'une question.
 **Action** : Montrer HyDE en pratique
 ```typescript
 async function hydeSearch(question: string, store: VectorStore): Promise<SearchResult[]> {
@@ -102,7 +102,7 @@ npx tsx hyde-demo.ts
 > HyDE ameliore surtout les questions vagues ou complexes. Pour les questions simples et directes, le gain est marginal.
 
 ### [09:30-12:30] Multi-query : reformuler pour mieux chercher
-> Une seule formulation de la question peut manquer des angles. Multi-query genere 3-4 reformulations et combine les resultats.
+> Une seule formulation de la question peut manquer des angles. Multi-query généré 3-4 reformulations et combine les résultats.
 **Action** : Montrer l'approche multi-query
 ```typescript
 async function multiQuerySearch(question: string): Promise<SearchResult[]> {
@@ -126,10 +126,10 @@ async function multiQuerySearch(question: string): Promise<SearchResult[]> {
 ```bash
 npx tsx multi-query-demo.ts
 ```
-**Action** : Montrer que "Comment deployer NestJS" genere "mise en production Nest", "deploiement Node.js", "configuration Docker NestJS"
+**Action** : Montrer que "Comment déployer NestJS" généré "mise en production Nest", "déploiement Node.js", "configuration Docker NestJS"
 
 ### [12:30-15:30] Reranking : filtrer le bruit
-> Le reranking est un deuxieme filtre. Apres avoir recupere les top-20 chunks, on utilise un modele plus precis (cross-encoder) pour re-scorer et ne garder que les top-5 vraiment pertinents.
+> Le reranking est un deuxieme filtre. Après avoir récupéré les top-20 chunks, on utilise un modèle plus précis (cross-encoder) pour re-scorer et ne garder que les top-5 vraiment pertinents.
 **Action** : Montrer le reranking avec LLM-as-reranker
 ```typescript
 async function rerank(question: string, chunks: SearchResult[]): Promise<SearchResult[]> {
@@ -149,7 +149,7 @@ ${chunks.map((c, i) => `[${i}] ${c.content.slice(0, 200)}`).join('\n\n')}`;
 > Le reranking elimine le bruit mais ajoute un appel LLM supplementaire. C'est un compromis qualite/latence.
 
 ### [15:30-18:00] Parent-child chunking
-> Quand un chunk est trop petit pour avoir du contexte, on utilise le parent-child chunking : on stocke des petits chunks pour la recherche precise, mais on retourne le chunk parent (plus grand) au LLM.
+> Quand un chunk est trop petit pour avoir du contexte, on utilise le parent-child chunking : on stocke des petits chunks pour la recherche précisé, mais on retourne le chunk parent (plus grand) au LLM.
 **Action** : Expliquer le concept
 ```
 Document original (2000 tokens)
@@ -168,10 +168,10 @@ Document original (2000 tokens)
 Recherche : on trouve child 1c (tres precis)
 Retour LLM : on envoie parent 1 (contexte complet)
 ```
-> Le child assure la precision de la recherche, le parent assure la richesse du contexte. C'est le meilleur des deux mondes.
+> Le child assure la précision de la recherche, le parent assure la richesse du contexte. C'est le meilleur des deux mondes.
 
 ### [18:00-20:30] RAG vs Fine-tuning : quand utiliser quoi ?
-> Question frequente : pourquoi ne pas fine-tuner le modele sur vos donnees plutot que de faire du RAG ?
+> Question frequente : pourquoi ne pas fine-tuner le modèle sur vos donnees plutot que de faire du RAG ?
 **Action** : Afficher le comparatif
 ```
 | Critere           | RAG                      | Fine-tuning              |
@@ -186,8 +186,8 @@ Retour LLM : on envoie parent 1 (contexte complet)
 Regle : RAG pour les CONNAISSANCES, fine-tuning pour le COMPORTEMENT.
 ```
 
-### [20:30-23:00] RAGAS : evaluer votre RAG
-> RAGAS est le framework standard pour evaluer un pipeline RAG avec 4 metriques : faithfulness, answer relevancy, context precision et context recall.
+### [20:30-23:00] RAGAS : évaluer votre RAG
+> RAGAS est le framework standard pour évaluer un pipeline RAG avec 4 metriques : faithfulness, answer relevancy, context précision et context recall.
 **Action** : Montrer les 4 metriques
 ```
 Faithfulness    : La reponse est-elle fidele au contexte ? (pas d'invention)
@@ -202,9 +202,9 @@ npx tsx ragas-eval.ts
 # Faithfulness: 0.85, Relevancy: 0.82, Precision: 0.78, Recall: 0.91
 ```
 
-### [23:00-25:00] Recapitulatif et transition
-> On a vu cinq techniques pour passer du RAG basique au RAG avance : hybrid search pour combiner vectoriel et BM25, HyDE pour les questions complexes, multi-query pour couvrir plusieurs angles, reranking pour eliminer le bruit, et parent-child chunking pour le contexte. Le prochain screencast met tout ca en pratique dans un chatbot RAG full-stack avec NestJS.
-**Action** : Afficher le recapitulatif
+### [23:00-25:00] Récapitulatif et transition
+> On a vu cinq techniques pour passer du RAG basique au RAG avance : hybrid search pour combiner vectoriel et BM25, HyDE pour les questions complexes, multi-query pour couvrir plusieurs angles, reranking pour eliminer le bruit, et parent-child chunking pour le contexte. Le prochain screencast met tout ça en pratique dans un chatbot RAG full-stack avec NestJS.
+**Action** : Afficher le récapitulatif
 ```
 Resume :
 - Hybrid search : vectoriel (0.7) + BM25 (0.3) via RRF
@@ -217,7 +217,7 @@ Resume :
 
 ## Points d'attention pour l'enregistrement
 - Les demos de hybrid search et HyDE necessitent un jeu de donnees suffisant (20+ chunks)
-- Montrer les scores avant/apres chaque technique pour quantifier l'amelioration
+- Montrer les scores avant/après chaque technique pour quantifier l'amelioration
 - Le reranking ajoute de la latence — mentionner le compromis
 - La partie RAGAS peut etre raccourcie si le temps est serre
 - Insister sur la regle "RAG pour les connaissances, fine-tuning pour le comportement"

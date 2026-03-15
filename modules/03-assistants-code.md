@@ -1,11 +1,11 @@
 # Module 03 — Copilot & Assistants Code
 
-> **Objectif** : Maitriser les assistants IA de programmation pour maximiser la productivite. Comprendre forces et limites de chaque outil, developper des workflows efficaces.
-> **Difficulte** : ⭐⭐ (intermediaire)
-> **Prerequis** : Module 01 (Prompting Fondamental)
+> **Objectif** : Maîtriser les assistants IA de programmation pour maximiser la productivite. Comprendre forces et limites de chaque outil, développer des workflows efficaces.
+> **Difficulte** : ⭐⭐ (intermédiaire)
+> **Prérequis** : Module 01 (Prompting Fondamental)
 > **Duree estimee** : 3 heures
 
-> **Ce module est 100% pratique** — pas de theorie IA ici. Vous apprenez a utiliser Copilot, Claude Code et Cursor comme un pro. C'est le dernier module "outil" avant de plonger dans les APIs (Module 04).
+> **Ce module est 100% pratique** — pas de théorie IA ici. Vous apprenez à utiliser Copilot, Claude Code et Cursor comme un pro. C'est le dernier module "outil" avant de plonger dans les APIs (Module 04).
 
 ---
 
@@ -13,7 +13,7 @@
 
 ### 1.1 Les outils majeurs en 2025-2026
 
-| Outil | Editeur | Modele | Points forts |
+| Outil | Editeur | Modèle | Points forts |
 |-------|---------|--------|-------------|
 | **GitHub Copilot** | VS Code, JetBrains | GPT-4o / Claude | Tab completion, Copilot Chat, Edits |
 | **Claude Code** | Terminal (CLI) | Claude Opus/Sonnet | Autonomie, MCP, skills, hooks, Plan mode |
@@ -21,11 +21,11 @@
 | **Cody** | VS Code, JetBrains | Claude / StarCoder | Open-source, contexte de repo large |
 | **Continue.dev** | VS Code, JetBrains | Ollama / Claude / GPT | Open-source, local, configurable |
 
-### 1.2 Deux paradigmes differents
+### 1.2 Deux paradigmes différents
 
 **Completion inline (Copilot, Cursor tab)** : l'IA suggere du code pendant que tu tapes. C'est du pair-programming passif — l'IA anticipe tes intentions.
 
-**Agent conversationnel (Claude Code, Copilot Chat)** : tu decris ce que tu veux en langage naturel, l'IA genere du code, lit des fichiers, execute des commandes. C'est de la delegation active.
+**Agent conversationnel (Claude Code, Copilot Chat)** : tu decris ce que tu veux en langage naturel, l'IA généré du code, lit des fichiers, exécuté des commandes. C'est de la delegation active.
 
 > **Analogie** : la completion inline, c'est un copilote qui finit tes phrases. L'agent conversationnel, c'est un collegue a qui tu donnes un brief et qui revient avec le code.
 
@@ -52,7 +52,7 @@ function levenshteinDistance(a: string, b: string): number {
 
 ### 2.2 Copilot Chat
 
-Le chat integre dans VS Code :
+Le chat intégré dans VS Code :
 
 ```
 > /explain — Explique le code selectionne
@@ -78,7 +78,7 @@ Prompt: "Ajoute de la validation Zod a tous les DTOs du dossier src/dto/"
 
 ### 3.1 L'approche agent
 
-Claude Code est un CLI qui fonctionne en mode agent : il peut lire des fichiers, ecrire du code, executer des commandes, et iterer de maniere autonome.
+Claude Code est un CLI qui fonctionne en mode agent : il peut lire des fichiers, écrire du code, exécuter des commandes, et iterer de manière autonome.
 
 ```bash
 # Lancer Claude Code
@@ -91,7 +91,7 @@ claude
 
 ### 3.2 CLAUDE.md — Le fichier de configuration
 
-Le fichier `CLAUDE.md` a la racine du projet donne du contexte permanent a Claude Code :
+Le fichier `CLAUDE.md` à la racine du projet donne du contexte permanent a Claude Code :
 
 ```markdown
 # CLAUDE.md
@@ -120,15 +120,15 @@ Application e-commerce NestJS + React.
 
 **Skills** : des commandes personnalisees invocables avec `/skill-name`.
 
-**Hooks** : des scripts shell executes automatiquement apres certaines actions (ex: lancer les tests apres chaque modification de fichier).
+**Hooks** : des scripts shell executes automatiquement après certaines actions (ex: lancer les tests après chaque modification de fichier).
 
 ### 3.4 MCP — Model Context Protocol
 
-Claude Code peut se connecter a des MCP servers pour acceder a des sources de donnees externes (bases de donnees, APIs, systemes de fichiers). Voir Module 05 pour les details.
+Claude Code peut se connecter a des MCP servers pour acceder a des sources de donnees externes (bases de donnees, APIs, systèmes de fichiers). Voir Module 05 pour les details.
 
 ### 3.5 Plan mode
 
-Mode de planification : Claude Code analyse la tache, propose un plan d'action detaille, et attend ta validation avant d'executer.
+Mode de planification : Claude Code analyse la tache, propose un plan d'action détaillé, et attend ta validation avant d'exécuter.
 
 ```
 > /plan Migrer de Express a NestJS tout le module auth
@@ -160,7 +160,7 @@ Prompt: "Ajoute une reduction de 10% si le montant depasse 100€"
 ### 4.2 @codebase et Rules
 
 - **@codebase** : Cursor indexe tout le projet et peut repondre a des questions sur l'architecture
-- **.cursorrules** : equivalent du CLAUDE.md, donne du contexte permanent
+- **.cursorrules** : équivalent du CLAUDE.md, donne du contexte permanent
 
 ```
 // .cursorrules
@@ -183,7 +183,7 @@ Write tests with Vitest.
 3. Refactorise toi-meme ou demande a l'IA (REFACTOR)
 ```
 
-Le TDD est le meilleur workflow avec l'IA car le test sert de specification verifiable.
+Le TDD est le meilleur workflow avec l'IA car le test sert de spécification verifiable.
 
 ### 5.2 Code review avec IA
 
@@ -223,13 +223,13 @@ import { useOptimistic } from 'react'; // N'existe que depuis React 19
 await prisma.user.softDelete(id);      // N'existe pas dans Prisma
 ```
 
-**Defense** : toujours verifier les imports, toujours lancer les tests.
+**Defense** : toujours vérifier les imports, toujours lancer les tests.
 
 ### 6.2 Dependances fantomes
 
 L'IA peut importer des packages qui n'existent pas ou qui sont deprecies.
 
-**Defense** : verifier package.json apres chaque session.
+**Defense** : vérifier package.json après chaque session.
 
 ### 6.3 Code non-idiomatique
 
@@ -239,11 +239,11 @@ L'IA melange parfois les paradigmes (ex: callbacks dans un codebase async/await)
 
 ### 6.4 La regle d'or
 
-> **L'IA est un copilote, pas un pilote.** Tu dois comprendre chaque ligne de code qu'elle genere. Si tu ne comprends pas pourquoi le code fonctionne, tu ne peux pas debugger quand il casse.
+> **L'IA est un copilote, pas un pilote.** Tu dois comprendre chaque ligne de code qu'elle généré. Si tu ne comprends pas pourquoi le code fonctionne, tu ne peux pas debugger quand il casse.
 
 ---
 
-## 7. Ecrire de bons fichiers de configuration
+## 7. Écrire de bons fichiers de configuration
 
 ### 7.1 CLAUDE.md efficace
 
@@ -264,10 +264,10 @@ L'IA melange parfois les paradigmes (ex: callbacks dans un codebase async/await)
 
 Les memes principes du Module 01 s'appliquent :
 
-1. **Sois specifique** : "Refactorise" est vague. "Extrais la logique de validation dans un middleware NestJS Pipe" est precis.
+1. **Sois spécifique** : "Refactorise" est vague. "Extrais la logique de validation dans un middleware NestJS Pipe" est précis.
 2. **Donne du contexte** : "Cette fonction est appelee 1000 fois/seconde, optimise pour la performance."
 3. **Definis le format** : "Utilise des arrow functions, pas de classes."
-4. **Reference des fichiers** : "Base-toi sur le pattern de src/users/users.service.ts."
+4. **Référence des fichiers** : "Base-toi sur le pattern de src/users/users.service.ts."
 
 ---
 
@@ -291,11 +291,21 @@ Les memes principes du Module 01 s'appliquent :
 
 Dans le Lab 03, vous allez :
 1. Parser un fichier CLAUDE.md en sections structurees
-2. Generer un CLAUDE.md a partir d'un objet de configuration
+2. Générer un CLAUDE.md à partir d'un objet de configuration
 3. Construire un fichier .cursorrules
-4. Analyser un diff pour generer un prompt de code review
+4. Analyser un diff pour générer un prompt de code review
 5. Calculer les metriques de productivite
 
 ```bash
 npm run lab:03
 ```
+
+---
+
+<!-- parcours-recommande -->
+
+::: tip Parcours recommandé
+1. **Screencast** : [screencast 03 assistants code](../screencasts/screencast-03-assistants-code.md)
+2. **Lab** : [lab-03-assistants-code](../labs/lab-03-assistants-code/README)
+3. **Quiz** : [quiz 03 assistants code](../quizzes/quiz-03-assistants-code.html)
+:::

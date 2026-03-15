@@ -4,19 +4,19 @@
 - **Duree estimee** : 20-25 min
 - **Module** : `modules/13-rag-fondamental.md`
 - **Lab associe** : `labs/lab-13-rag-fondamental/`
-- **Prerequis** : Module 12 complete, Ollama avec `nomic-embed-text` et `mistral`, Docker pour pgvector
+- **Prérequis** : Module 12 complete, Ollama avec `nomic-embed-text` et `mistral`, Docker pour pgvector
 
 ## Setup
-- [ ] Ollama en cours d'execution avec `nomic-embed-text` et `mistral`
+- [ ] Ollama en cours d'exécution avec `nomic-embed-text` et `mistral`
 - [ ] pgvector demarre en Docker
 - [ ] Dossier `./docs/` avec 3-5 fichiers Markdown de documentation technique
 - [ ] Terminal et VS Code ouverts sur le dossier du lab
-- [ ] `pnpm install` deja execute
+- [ ] `pnpm install` déjà exécuté
 
 ## Script
 
-### [00:00-03:00] Le probleme fondamental : les LLMs ne connaissent pas vos donnees
-> Un LLM, meme brillant, ne connait que ce sur quoi il a ete entraine. Il ne connait pas vos documents internes, votre base de connaissances, votre code source. Que fait-on ? On pourrait tout mettre dans le prompt, mais avec 10 000 pages de documentation, le context window explose. Le RAG resout ce probleme.
+### [00:00-03:00] Le problème fondamental : les LLMs ne connaissent pas vos donnees
+> Un LLM, même brillant, ne connait que ce sur quoi il a ete entraine. Il ne connait pas vos documents internes, votre base de connaissances, votre code source. Que fait-on ? On pourrait tout mettre dans le prompt, mais avec 10 000 pages de documentation, le context window explose. Le RAG resout ce problème.
 **Action** : Afficher le schema RAG
 ```
 RAG = Retrieval-Augmented Generation
@@ -31,8 +31,8 @@ Approches possibles :
 Le RAG selecte uniquement les passages pertinents pour chaque question.
 ```
 
-### [03:00-05:00] Architecture RAG en 7 etapes
-> Le RAG a deux phases. D'abord l'ingestion : on decoupe les documents, on les transforme en vecteurs, on les stocke. Ensuite la requete : on transforme la question en vecteur, on trouve les passages similaires, et on les injecte dans le prompt du LLM.
+### [03:00-05:00] Architecture RAG en 7 étapes
+> Le RAG a deux phases. D'abord l'ingestion : on découpé les documents, on les transforme en vecteurs, on les stocke. Ensuite la requête : on transforme la question en vecteur, on trouve les passages similaires, et on les injecte dans le prompt du LLM.
 **Action** : Afficher le pipeline complet
 ```
 PHASE D'INGESTION :
@@ -45,9 +45,9 @@ Question --> Embedding --> Similarity Search --> Top-K chunks
     +----------> Prompt augmente (question + chunks) --> LLM --> Reponse
 ```
 
-### [05:00-09:00] Chunking : decouper intelligemment les documents
-> Le chunking est LA decision la plus impactante dans un RAG. Trop petit, pas assez de contexte. Trop grand, trop de bruit. On va comparer trois strategies.
-**Action** : Montrer les strategies de chunking
+### [05:00-09:00] Chunking : découper intelligemment les documents
+> Le chunking est LA decision la plus impactante dans un RAG. Trop petit, pas assez de contexte. Trop grand, trop de bruit. On va comparer trois stratégies.
+**Action** : Montrer les stratégies de chunking
 ```
 Taille fixe (500 caracteres) :
 + Simple et previsible
@@ -61,7 +61,7 @@ Recursif (recommande) :
 + Preserve la structure (paragraphes > phrases > mots)
 - Plus complexe
 ```
-**Action** : Executer le chunking recursif sur un fichier
+**Action** : Exécuter le chunking récursif sur un fichier
 ```typescript
 // chunking-demo.ts
 function chunkText(text: string, source: string, maxSize = 500, overlap = 50): Chunk[] {
@@ -96,7 +96,7 @@ npx tsx chunking-demo.ts
 **Action** : Montrer le nombre de chunks generes et la taille moyenne
 > Le sweet spot se situe entre 300 et 800 tokens par chunk, avec un overlap de 10 a 20%. L'overlap evite de perdre des informations aux frontieres.
 
-### [09:00-12:30] Vector Store en memoire : le prototype rapide
+### [09:00-12:30] Vector Store en mémoire : le prototype rapide
 > Pour prototyper, on n'a pas besoin de pgvector. Un simple tableau TypeScript avec une recherche brute suffit. On va le construire en direct.
 **Action** : Implementer le InMemoryVectorStore
 ```typescript
@@ -118,7 +118,7 @@ class VectorStore {
   }
 }
 ```
-> C'est O(n) — ca marche bien jusqu'a 10 000 chunks. Au-dela, on passe a pgvector avec l'index HNSW.
+> C'est O(n) — ça marche bien jusqu'a 10 000 chunks. Au-dela, on passe a pgvector avec l'index HNSW.
 
 ### [12:30-16:00] Le prompt augmente : injecter le contexte
 > Maintenant le coeur du RAG : on construit un prompt augmente. On prend la question de l'utilisateur, on ajoute les chunks recuperes, et on donne des instructions strictes au LLM.
@@ -147,8 +147,8 @@ Cite tes sources avec [Source N].`,
 > Quatre regles d'or : instruction stricte de se baser sur le contexte, sources numerotees, separateurs visuels entre les chunks, et la question en dernier.
 
 ### [16:00-20:00] Pipeline RAG complet de A a Z
-> On assemble tout : chargement des fichiers Markdown, chunking, embedding, stockage, et requete.
-**Action** : Executer le pipeline complet
+> On assemble tout : chargement des fichiers Markdown, chunking, embedding, stockage, et requête.
+**Action** : Exécuter le pipeline complet
 ```bash
 # Prerequis : fichiers Markdown dans ./docs/
 npx tsx rag-pipeline.ts
@@ -176,9 +176,9 @@ Les modules organisent le code en domaines fonctionnels [Source 2].
 ```
 **Action** : Poser 2-3 questions supplementaires pour montrer la pertinence
 
-### [20:00-22:30] Metriques de base : precision et recall
-> Comment savoir si notre RAG fonctionne bien ? On mesure la precision du contexte (les chunks recuperes sont-ils pertinents ?) et le recall (a-t-on trouve tous les chunks necessaires ?).
-**Action** : Montrer l'evaluation
+### [20:00-22:30] Metriques de base : précision et recall
+> Comment savoir si notre RAG fonctionne bien ? On mesure la précision du contexte (les chunks recuperes sont-ils pertinents ?) et le recall (a-t-on trouve tous les chunks nécessaires ?).
+**Action** : Montrer l'évaluation
 ```typescript
 const testCases: EvalCase[] = [
   {
@@ -191,11 +191,11 @@ const testCases: EvalCase[] = [
 // Precision = chunks pertinents / total chunks recuperes
 // Recall = chunks pertinents trouves / total chunks pertinents existants
 ```
-> Visez une precision au-dessus de 60% et un recall au-dessus de 80% comme point de depart. On verra comment ameliorer ces scores dans le module suivant.
+> Visez une précision au-dessus de 60% et un recall au-dessus de 80% comme point de depart. On verra comment ameliorer ces scores dans le module suivant.
 
 ### [22:30-25:00] Limites et transition vers le RAG avance
-> Le RAG fondamental a des limites : la recherche par similarite seule peut rater des mots-cles exacts, les chunks manquent parfois de contexte, et il y a du bruit dans les resultats. Le module suivant adresse tout ca avec le hybrid search, le reranking, et le parent-child chunking.
-**Action** : Afficher le recapitulatif
+> Le RAG fondamental a des limites : la recherche par similarite seule peut rater des mots-clés exacts, les chunks manquent parfois de contexte, et il y a du bruit dans les résultats. Le module suivant adresse tout ça avec le hybrid search, le reranking, et le parent-child chunking.
+**Action** : Afficher le récapitulatif
 ```
 Resume :
 - RAG = Retrieval + Augmentation + Generation
@@ -209,7 +209,7 @@ Resume :
 
 ## Points d'attention pour l'enregistrement
 - Avoir les fichiers Markdown de demo pre-crees dans ./docs/
-- Verifier que les embeddings sont bien generes (Ollama doit tourner)
-- Montrer la reponse du LLM en entier pour que l'audience voie les citations [Source N]
+- Vérifier que les embeddings sont bien generes (Ollama doit tourner)
+- Montrer la réponse du LLM en entier pour que l'audience voie les citations [Source N]
 - Insister sur le fait que le LLM n'invente pas — il cite les sources
 - La partie chunking peut etre acceleree si le temps presse

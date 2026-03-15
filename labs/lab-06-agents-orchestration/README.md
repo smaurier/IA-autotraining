@@ -2,12 +2,12 @@
 
 ## Objectifs
 
-- Parser des etapes ReAct (Thought / Action / Observation)
-- Gerer la boucle d'un agent avec condition d'arret
+- Parser des étapes ReAct (Thought / Action / Observation)
+- Gérer la boucle d'un agent avec condition d'arret
 - Valider les actions d'un agent
-- Implementer une memoire simple pour agent
+- Implementer une mémoire simple pour agent
 - Router des taches vers le bon agent
-- Construire des guardrails de securite
+- Construire des guardrails de sécurité
 
 ## Exercices
 
@@ -24,8 +24,8 @@ Seul `Thought` est obligatoire. `Action` et `Observation` sont optionnels.
 ### 2. `shouldContinue(steps: { thought: string, action?: string }[], maxIter: number): boolean`
 
 Retourne `true` si l'agent doit continuer :
-- Le nombre d'etapes est inferieur a `maxIter`
-- La derniere etape contient une `action` (l'agent veut encore agir)
+- Le nombre d'étapes est inferieur a `maxIter`
+- La dernière étape contient une `action` (l'agent veut encore agir)
 
 ### 3. `validateAgentAction(action: string, allowedActions: string[]): boolean`
 
@@ -33,9 +33,9 @@ Retourne `true` si l'action est dans la liste des actions autorisees.
 
 ### 4. `createAgentMemory(): { append, getRecent, search }`
 
-Cree un objet memoire avec :
+Cree un objet mémoire avec :
 - `append(role: string, content: string)` — ajoute une entree
-- `getRecent(n: number)` — retourne les n dernieres entrees `{ role, content }`
+- `getRecent(n: number)` — retourne les n dernières entrees `{ role, content }`
 - `search(q: string)` — retourne les entrees dont le `content` contient `q` (case-insensitive)
 
 ### 5. `routeToAgent(task: string, agentCapabilities: { name: string, keywords: string[] }[]): string`

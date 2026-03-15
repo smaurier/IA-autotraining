@@ -1,4 +1,4 @@
-# Lab 17 — Securite et ethique
+# Lab 17 — Sécurité et ethique
 
 ## Objectifs
 
@@ -25,11 +25,11 @@ Assainit l'entree : trim, limite a `maxLength` caracteres, supprime les caracter
 
 ### 4. `classifyRiskLevel(content: string): 'high' | 'medium' | 'low'`
 
-Classifie le risque d'un contenu : `high` si contient des mots-cles dangereux (password, credit card, ssn), `medium` si contient des donnees personnelles (email, phone, address), `low` sinon.
+Classifie le risque d'un contenu : `high` si contient des mots-clés dangereux (password, credit card, ssn), `medium` si contient des donnees personnelles (email, phone, address), `low` sinon.
 
 ### 5. `scrubPII(text: string): string`
 
-Remplace les emails et numeros de telephone par `[REDACTED]`.
+Remplace les emails et numéros de telephone par `[REDACTED]`.
 
 ### 6. `checkEuAiActTier(system: { usesPersonalData: boolean; autonomous: boolean; sector: string }): 'unacceptable' | 'high' | 'limited' | 'minimal'`
 

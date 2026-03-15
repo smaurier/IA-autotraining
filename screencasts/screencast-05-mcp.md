@@ -4,7 +4,7 @@
 - **Duree estimee** : 20-25 min
 - **Module** : `modules/05-mcp-model-context-protocol.md`
 - **Lab associe** : `labs/lab-05-mcp-server/`
-- **Prerequis** : Screencast 04
+- **Prérequis** : Screencast 04
 
 ## Setup
 - [ ] `pnpm add @modelcontextprotocol/sdk zod`
@@ -16,7 +16,7 @@
 ## Script
 
 ### [00:00-03:30] Qu'est-ce que MCP et pourquoi c'est important
-> Les LLMs sont puissants mais isoles. Ils ne peuvent pas lire vos fichiers, interroger votre base de donnees, ou appeler vos APIs internes. Le tool use du module 04 resout partiellement ce probleme, mais chaque integration est custom. MCP — Model Context Protocol — standardise tout ca. C'est le USB de l'IA : un protocole ouvert cree par Anthropic qui connecte n'importe quel LLM a n'importe quelle source de donnees.
+> Les LLMs sont puissants mais isoles. Ils ne peuvent pas lire vos fichiers, interroger votre base de donnees, ou appeler vos APIs internes. Le tool use du module 04 resout partiellement ce problème, mais chaque intégration est custom. MCP — Model Context Protocol — standardise tout ça. C'est le USB de l'IA : un protocole ouvert créé par Anthropic qui connecte n'importe quel LLM a n'importe quelle source de donnees.
 **Action** : Afficher le schema d'architecture MCP
 ```
 ┌─────────────┐     ┌─────────────┐     ┌─────────────┐
@@ -34,7 +34,7 @@
 ```
 
 ### [03:30-06:30] Les 3 primitives MCP
-> MCP expose trois types de choses aux LLMs : les Resources pour donner du contexte, les Tools pour executer des actions, et les Prompts pour des templates reutilisables.
+> MCP expose trois types de choses aux LLMs : les Resources pour donner du contexte, les Tools pour exécuter des actions, et les Prompts pour des templates réutilisables.
 **Action** : Expliquer chaque primitive avec un exemple
 ```typescript
 // RESOURCE — donnees que le LLM peut lire
@@ -54,7 +54,7 @@
 
 ### [06:30-12:00] Construire un MCP Server en Node.js
 > On va construire un serveur MCP complet qui expose une API de gestion de produits. C'est le pont entre Claude et votre API REST.
-**Action** : Creer le serveur pas a pas
+**Action** : Créer le serveur pas a pas
 ```typescript
 import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
 import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js';
@@ -143,10 +143,10 @@ app.post('/messages', (req, res) => {
 });
 app.listen(3001);
 ```
-> En general, utilisez stdio pour les outils locaux (Claude Desktop, Claude Code) et SSE pour les deployements serveur.
+> En général, utilisez stdio pour les outils locaux (Claude Desktop, Claude Code) et SSE pour les deployements serveur.
 
 ### [15:00-18:30] Configuration dans Claude Desktop et Claude Code
-> Notre serveur est pret. Il faut maintenant le brancher a un client MCP.
+> Notre serveur est pret. Il faut maintenant le brancher à un client MCP.
 **Action** : Configurer Claude Desktop
 ```json
 // ~/Library/Application Support/Claude/claude_desktop_config.json (Mac)
@@ -185,8 +185,8 @@ Dans Claude Desktop :
    → Claude appelle create_product
 ```
 
-### [18:30-22:00] Securite et bonnes pratiques
-> La securite MCP est critique. Le LLM peut envoyer n'importe quoi comme input. Il faut valider et limiter.
+### [18:30-22:00] Sécurité et bonnes pratiques
+> La sécurité MCP est critique. Le LLM peut envoyer n'importe quoi comme input. Il faut valider et limiter.
 **Action** : Montrer la validation des inputs
 ```typescript
 server.tool(
@@ -209,7 +209,7 @@ server.tool(
   },
 );
 ```
-**Action** : Afficher la checklist de securite
+**Action** : Afficher la checklist de sécurité
 ```
 Principes de securite MCP :
 1. Valider TOUS les inputs (le LLM peut envoyer n'importe quoi)

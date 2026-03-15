@@ -1,10 +1,10 @@
-# Screencast 09 — Le Transformer et le mecanisme d'attention
+# Screencast 09 — Le Transformer et le mécanisme d'attention
 
 ## Informations
 - **Duree estimee** : 20-25 min
 - **Module** : `modules/09-transformer-attention.md`
 - **Lab associe** : `labs/lab-09-transformer-attention/`
-- **Prerequis** : Screencast 07, 08
+- **Prérequis** : Screencast 07, 08
 
 ## Setup
 - [ ] Fichier `attention.ts` du lab pret
@@ -15,7 +15,7 @@
 ## Script
 
 ### [00:00-03:30] Le Transformer : revolution de 2017
-> En 2017, Google publie "Attention Is All You Need" et invente le Transformer. C'est l'architecture derriere GPT, Claude, Llama et tous les LLM modernes. Aujourd'hui on va implementer le coeur de cette architecture : le mecanisme de self-attention.
+> En 2017, Google publie "Attention Is All You Need" et invente le Transformer. C'est l'architecture derriere GPT, Claude, Llama et tous les LLM modernes. Aujourd'hui on va implementer le coeur de cette architecture : le mécanisme de self-attention.
 **Action** : Afficher le schema simplifie du Transformer
 ```
 Architecture Transformer (simplifiee) :
@@ -44,8 +44,8 @@ Architecture Transformer (simplifiee) :
 ```
 
 ### [03:30-08:00] Self-attention pas a pas
-> L'attention, c'est le mecanisme qui permet a chaque mot de "regarder" tous les autres mots de la phrase pour comprendre le contexte. Le mot "il" dans "Le chat mange car il a faim" doit savoir que "il" fait reference a "chat". C'est l'attention qui resout ca.
-**Action** : Implementer la self-attention etape par etape
+> L'attention, c'est le mécanisme qui permet à chaque mot de "regarder" tous les autres mots de la phrase pour comprendre le contexte. Le mot "il" dans "Le chat mange car il a faim" doit savoir que "il" fait référence a "chat". C'est l'attention qui resout ça.
+**Action** : Implementer la self-attention étape par étape
 ```typescript
 // attention.ts
 
@@ -113,7 +113,7 @@ function selfAttention(
 
 ### [08:00-11:30] Demo : attention sur une phrase
 > Lancons notre attention sur une phrase concrete et observons quels mots "font attention" a quels autres mots.
-**Action** : Executer la self-attention sur des embeddings simules
+**Action** : Exécuter la self-attention sur des embeddings simules
 ```typescript
 // demo-attention.ts
 const tokens = ["Le", "chat", "mange", "car", "il", "a", "faim"];
@@ -156,7 +156,7 @@ console.log(`\nAttention de "il" : ${tokens.map((t, i) => `${t}(${(weights[4][i]
 ```
 
 ### [11:30-14:30] Multi-Head Attention
-> Dans les vrais Transformers, on n'utilise pas une seule attention mais plusieurs en parallele — chaque "tete" capture un aspect different (syntaxe, semantique, coreference, etc.).
+> Dans les vrais Transformers, on n'utilise pas une seule attention mais plusieurs en parallele — chaque "tete" capture un aspect différent (syntaxe, semantique, coreference, etc.).
 **Action** : Implementer le multi-head attention
 ```typescript
 // multi-head.ts
@@ -205,7 +205,7 @@ const result = multiHeadAttention(embeddings, 2, d_model, d_k);
 ```
 
 ### [14:30-18:00] Du Transformer au LLM
-> On a implemente le mecanisme central. Mais un vrai Transformer a aussi des couches feed-forward, de la normalisation, des connexions residuelles et un masquage causal pour la generation.
+> On a implemente le mécanisme central. Mais un vrai Transformer a aussi des couches feed-forward, de la normalisation, des connexions residuelles et un masquage causal pour la génération.
 **Action** : Montrer le schema complet et recapituler
 ```
 Un bloc Transformer complet :
@@ -248,4 +248,4 @@ Ce qu'on a implemente :          Ce qui reste (en production) :
 - Prendre le temps de bien expliquer Q, K, V avec l'analogie de la recherche (query = question, key = index, value = contenu)
 - La carte d'attention est le moment visuel le plus important — bien la montrer
 - Ne pas s'attarder sur les details mathematiques des matrices aleatoires
-- Faire le pont avec le screencast 08 (meme principes, architecture differente)
+- Faire le pont avec le screencast 08 (même principes, architecture différente)

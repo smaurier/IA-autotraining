@@ -1,15 +1,15 @@
 # Module 06 — Agents & Orchestration
 
-> **Objectif** : Comprendre et implementer des agents IA autonomes. Maitriser le pattern ReAct, l'orchestration multi-agent, les guardrails et la gestion de la memoire.
+> **Objectif** : Comprendre et implementer des agents IA autonomes. Maîtriser le pattern ReAct, l'orchestration multi-agent, les guardrails et la gestion de la mémoire.
 > **Difficulte** : ⭐⭐⭐ (avance)
-> **Prerequis** : Module 04 (API Claude), Module 05 (MCP)
+> **Prérequis** : Module 04 (API Claude), Module 05 (MCP)
 > **Duree estimee** : 4 heures
 
 ---
 
 ## 1. Qu'est-ce qu'un agent IA ?
 
-Un agent IA est un programme qui utilise un LLM pour **decider** quelle action executer, **observe** le resultat, et **itere** jusqu'a atteindre un objectif.
+Un agent IA est un programme qui utilise un LLM pour **decider** quelle action exécuter, **observe** le résultat, et **itere** jusqu'a atteindre un objectif.
 
 ```
           ┌─────────────┐
@@ -29,7 +29,7 @@ Un agent IA est un programme qui utilise un LLM pour **decider** quelle action e
           └─────────────┘
 ```
 
-> **Analogie** : un chatbot classique est comme un employe qui repond aux questions au comptoir. Un agent est comme un employe qui peut se lever, aller chercher des dossiers, passer des coups de fil et revenir avec une reponse complete.
+> **Analogie** : un chatbot classique est comme un employe qui repond aux questions au comptoir. Un agent est comme un employe qui peut se lever, aller chercher des dossiers, passer des coups de fil et revenir avec une réponse complete.
 
 ---
 
@@ -124,13 +124,13 @@ async function runAgent(
 }
 ```
 
-> **Point cle** : chaque appel a `client.messages.create()` recoit l'historique complet (`messages`). Quand Claude renvoie un `tool_use`, on execute l'outil et on ajoute un message `user` contenant un bloc `tool_result` avec le `tool_use_id` correspondant. Claude peut alors continuer son raisonnement.
+> **Point clé** : chaque appel a `client.messages.create()` recoit l'historique complet (`messages`). Quand Claude renvoie un `tool_use`, on exécuté l'outil et on ajoute un message `user` contenant un bloc `tool_result` avec le `tool_use_id` correspondant. Claude peut alors continuer son raisonnement.
 
 ---
 
 ## 3. Claude Agent SDK
 
-### 3.1 Creer un agent avec le SDK natif
+### 3.1 Créer un agent avec le SDK natif
 
 ```typescript
 import Anthropic from '@anthropic-ai/sdk';
@@ -295,9 +295,9 @@ async function executeWithConfirmation(action: AgentAction): Promise<string> {
 
 ---
 
-## 6. Memoire d'agent
+## 6. Mémoire d'agent
 
-### 6.1 Memoire de conversation (avec persistance)
+### 6.1 Mémoire de conversation (avec persistance)
 
 ```typescript
 import { readFileSync, writeFileSync, existsSync } from 'node:fs';
@@ -388,13 +388,13 @@ const response = await client.messages.create({
 |-------|----------|
 | Boucle infinie | maxIterations + timeout |
 | Cout explosif | Budget de tokens par session |
-| Hallucination d'action | Valider les outputs avant execution |
-| Lenteur | Streaming + cache des resultats |
-| Perte de contexte | Compression de memoire |
+| Hallucination d'action | Valider les outputs avant exécution |
+| Lenteur | Streaming + cache des résultats |
+| Perte de contexte | Compression de mémoire |
 
 ### La regle d'or des agents
 
-> Un agent qui fait une erreur **coute** plus qu'un agent qui demande confirmation. Privilegiez toujours la securite a l'autonomie.
+> Un agent qui fait une erreur **coute** plus qu'un agent qui demandé confirmation. Privilegiez toujours la sécurité a l'autonomie.
 
 ---
 
@@ -402,10 +402,10 @@ const response = await client.messages.create({
 
 Dans le Lab 06, vous allez :
 1. Implementer une boucle ReAct (parse Thought/Action/Observation)
-2. Executer un pas d'agent (decide: tool call ou reponse finale)
+2. Exécuter un pas d'agent (decide: tool call ou réponse finale)
 3. Implementer la logique d'arret (max iterations, objectif atteint)
 4. Construire un guardrail (valider les actions)
-5. Creer une memoire d'agent (append/retrieve)
+5. Créer une mémoire d'agent (append/retrieve)
 6. Orchestrer plusieurs agents (routage par categorie)
 
 ```bash
@@ -416,10 +416,20 @@ npm run lab:06
 
 ## Et ensuite ?
 
-Felicitations — vous avez termine la **Partie 1 : Utiliser l'IA**. Vous savez prompter, utiliser les assistants code, appeler les APIs, creer des serveurs MCP, et orchestrer des agents.
+Felicitations — vous avez termine la **Partie 1 : Utiliser l'IA**. Vous savez prompter, utiliser les assistants code, appeler les APIs, créer des serveurs MCP, et orchestrer des agents.
 
 La **Partie 2 : Comprendre l'IA** commence avec le Module 07 (Maths Essentielles). Ne vous inquietez pas du mot "maths" — il s'agit uniquement de 5 concepts concrets (vecteurs, matrices, fonctions d'activation, gradient, loss) qui eclairent tout ce que vous avez utilise dans la Partie 1.
 
-> Par exemple, quand vous avez utilise la `temperature` dans vos prompts, vous avez manipule le parametre d'une fonction **softmax**. Quand le RAG "cherche" des documents similaires, il calcule une **similarite cosinus** entre des vecteurs. Le Module 07 vous donnera l'intuition derriere ces mecanismes.
+> Par exemple, quand vous avez utilise la `temperature` dans vos prompts, vous avez manipule le paramètre d'une fonction **softmax**. Quand le RAG "cherche" des documents similaires, il calcule une **similarite cosinus** entre des vecteurs. Le Module 07 vous donnera l'intuition derriere ces mécanismes.
 
-Si vous preferez rester sur le cote pratique, vous pouvez sauter directement aux Modules 13-15 (RAG) — les maths ne sont pas un prerequis strict pour construire un RAG fonctionnel.
+Si vous preferez rester sur le cote pratique, vous pouvez sauter directement aux Modules 13-15 (RAG) — les maths ne sont pas un prérequis strict pour construire un RAG fonctionnel.
+
+---
+
+<!-- parcours-recommande -->
+
+::: tip Parcours recommandé
+1. **Screencast** : [screencast 06 agents](../screencasts/screencast-06-agents.md)
+2. **Lab** : [lab-06-agents-orchestration](../labs/lab-06-agents-orchestration/README)
+3. **Quiz** : [quiz 06 agents](../quizzes/quiz-06-agents.html)
+:::

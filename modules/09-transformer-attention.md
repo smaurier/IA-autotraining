@@ -2,7 +2,7 @@
 
 ## Objectif du module
 
-Comprendre l'architecture Transformer — le modele derriere GPT, Claude, BERT, Llama, et pratiquement tous les LLMs modernes. On va demystifier chaque composant, de la tokenization a l'attention multi-tete, avec des implementations simplifiees en TypeScript.
+Comprendre l'architecture Transformer — le modèle derriere GPT, Claude, BERT, Llama, et pratiquement tous les LLMs modernes. On va demystifier chaque composant, de la tokenization a l'attention multi-tete, avec des implementations simplifiees en TypeScript.
 
 > Le papier "Attention Is All You Need" (Vaswani et al., 2017) a change le domaine entier. Ce module explique pourquoi.
 
@@ -14,10 +14,10 @@ Comprendre l'architecture Transformer — le modele derriere GPT, Claude, BERT, 
 |---------|---------|-----------|
 | 1 | Tokenization | Comment le texte devient des nombres |
 | 2 | Embeddings | Chaque token = un vecteur dense |
-| 3 | Positional Encoding | Comment le modele connait l'ordre |
-| 4 | Self-Attention | Le mecanisme cle des transformers |
+| 3 | Positional Encoding | Comment le modèle connait l'ordre |
+| 4 | Self-Attention | Le mécanisme clé des transformers |
 | 5 | Multi-Head Attention | Plusieurs perspectives en parallele |
-| 6 | Feed-Forward Network | La couche dense apres l'attention |
+| 6 | Feed-Forward Network | La couche dense après l'attention |
 | 7 | Layer Norm + Residuals | Stabiliser l'entrainement |
 | 8 | Encoder vs Decoder | BERT vs GPT |
 | 9 | Pourquoi les Transformers gagnent | vs RNN/LSTM |
@@ -26,9 +26,9 @@ Comprendre l'architecture Transformer — le modele derriere GPT, Claude, BERT, 
 
 ## 1. Tokenization — Du texte aux nombres
 
-### Le probleme
+### Le problème
 
-Les reseaux de neurones ne comprennent que les nombres. Il faut convertir du texte en sequence de nombres.
+Les réseaux de neurones ne comprennent que les nombres. Il faut convertir du texte en sequence de nombres.
 
 ```
 "Le chat dort" → [42, 1847, 9103]
@@ -208,7 +208,7 @@ Chaque ID est ensuite converti en un vecteur de 4096+ dimensions.
 
 ### L'idee
 
-Un embedding est une **representation vectorielle dense** d'un token. Au lieu d'un simple numero (42), chaque token devient un vecteur de centaines ou milliers de dimensions.
+Un embedding est une **representation vectorielle dense** d'un token. Au lieu d'un simple numéro (42), chaque token devient un vecteur de centaines ou milliers de dimensions.
 
 ```
 Token "chat" (ID: 1847)
@@ -283,9 +283,9 @@ Dans l'espace des embeddings :
 
 ## 3. Positional Encoding — L'ordre des mots
 
-### Le probleme
+### Le problème
 
-L'attention traite tous les tokens en parallele — elle n'a aucune notion d'ordre. "Le chat mange la souris" et "La souris mange le chat" produiraient le meme resultat sans positional encoding.
+L'attention traite tous les tokens en parallele — elle n'a aucune notion d'ordre. "Le chat mange la souris" et "La souris mange le chat" produiraient le même résultat sans positional encoding.
 
 ### La solution : ajouter la position
 
@@ -345,7 +345,7 @@ Encodage sinusoidal — visualisation (4 dimensions) :
 
 ---
 
-## 4. Self-Attention — Le mecanisme cle
+## 4. Self-Attention — Le mécanisme clé
 
 ### L'intuition
 
@@ -499,7 +499,7 @@ Avec masque :   chaque token ne voit que le passe (GPT — decoder)
 
 ### Pourquoi plusieurs tetes ?
 
-Une seule tete d'attention peut se concentrer sur un seul type de relation. Avec plusieurs tetes, le modele capture **differents aspects** en parallele.
+Une seule tete d'attention peut se concentrer sur un seul type de relation. Avec plusieurs tetes, le modèle capture **différents aspects** en parallele.
 
 ```
 Tete 1 : relations syntaxiques    ("dort" regarde "chat" — sujet-verbe)
@@ -611,9 +611,9 @@ Multi-Head Attention — schema :
 
 ## 6. Feed-Forward Network
 
-### La couche dense apres l'attention
+### La couche dense après l'attention
 
-Apres l'attention, chaque position passe a travers un reseau feed-forward identique (mais avec des poids differents par couche).
+Après l'attention, chaque position passe a travers un réseau feed-forward identique (mais avec des poids différents par couche).
 
 ```typescript
 class FeedForward {
@@ -727,7 +727,7 @@ Sans residual :              Avec residual :
   y = Attention(x)            y = x + Attention(x)
 ```
 
-> Analogie : les residual connections, c'est comme ajouter un escalier a cote de l'ascenseur. Si l'ascenseur (la couche) tombe en panne (gradient trop faible), le signal peut toujours passer par l'escalier. Ca permet d'entrainer des reseaux beaucoup plus profonds.
+> Analogie : les residual connections, c'est comme ajouter un escalier a cote de l'ascenseur. Si l'ascenseur (la couche) tombe en panne (gradient trop faible), le signal peut toujours passer par l'escalier. Ça permet d'entrainer des réseaux beaucoup plus profonds.
 
 ---
 
@@ -828,19 +828,19 @@ Tache : transformation
 "The cat sleeps" → Encoder → Decoder → "Le chat dort"
 ```
 
-| Modele | Architecture | Taille | Utilisation |
+| Modèle | Architecture | Taille | Utilisation |
 |--------|-------------|--------|------------|
 | BERT | Encoder | 110M-340M | Classification, NER, recherche |
-| GPT-4 | Decoder | ~1.7T (estime) | Generation de texte, chat |
-| Claude | Decoder | non divulgue | Generation, analyse, code |
-| T5 | Encoder-Decoder | 60M-11B | Traduction, resume |
-| Llama 3.1 | Decoder | 8B-405B | Generation open source |
+| GPT-4 | Decoder | ~1.7T (estime) | Génération de texte, chat |
+| Claude | Decoder | non divulgue | Génération, analyse, code |
+| T5 | Encoder-Decoder | 60M-11B | Traduction, résumé |
+| Llama 3.1 | Decoder | 8B-405B | Génération open source |
 
 ---
 
 ## 10. Pourquoi les Transformers ecrasent les RNN/LSTM
 
-### Le probleme des RNN
+### Le problème des RNN
 
 ```
 RNN — traitement sequentiel :
@@ -883,12 +883,12 @@ Transformer — traitement parallele :
 | Distance maximale | ~100-500 tokens | 128K+ tokens |
 | Entrainement | Lent (backprop through time) | Rapide (GPU-friendly) |
 | Complexite | O(n) par token | O(n²) total, mais parallelise |
-| Etat cache | Taille fixe (h) | Lineaire (KV cache) |
+| État cache | Taille fixe (h) | Lineaire (KV cache) |
 | Performances | Corrects | SOTA sur tout |
 
 ---
 
-## Recapitulatif
+## Récapitulatif
 
 ### Le pipeline complet d'un LLM
 
@@ -944,11 +944,21 @@ Transformer — traitement parallele :
 ### Exercices
 
 1. **Implementer l'attention** : coder `selfAttention` et tester avec une matrice 3×4 (3 tokens, 4 dimensions).
-2. **Masque causal** : verifier que le premier token ne voit que lui-meme, le deuxieme voit les deux premiers, etc.
+2. **Masque causal** : vérifier que le premier token ne voit que lui-même, le deuxieme voit les deux premiers, etc.
 3. **Comparer sans/avec normalisation** : observer l'effet de `/ √d_k` sur la distribution softmax.
-4. **Temperature** : ajouter un parametre de temperature au softmax de l'attention. Que se passe-t-il avec T=0.1 vs T=10 ?
+4. **Temperature** : ajouter un paramètre de temperature au softmax de l'attention. Que se passe-t-il avec T=0.1 vs T=10 ?
 5. **Visualiser l'attention** : pour une phrase donnee, afficher la matrice d'attention sous forme de heatmap ASCII.
 
 ---
 
 *Prochain module : [10 — Entrainement & Fine-tuning](./10-entrainement-fine-tuning.md)*
+
+---
+
+<!-- parcours-recommande -->
+
+::: tip Parcours recommandé
+1. **Screencast** : [screencast 09 transformer attention](../screencasts/screencast-09-transformer-attention.md)
+2. **Lab** : [lab-09-transformer-attention](../labs/lab-09-transformer-attention/README)
+3. **Quiz** : [quiz 09 transformers](../quizzes/quiz-09-transformers.html)
+:::
