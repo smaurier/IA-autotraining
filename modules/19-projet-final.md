@@ -198,8 +198,6 @@ docker exec ollama ollama pull nomic-embed-text
 ### Docker Compose
 
 ```yaml
-version: '3.8'
-
 services:
   postgres:
     image: pgvector/pgvector:pg16

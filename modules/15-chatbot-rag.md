@@ -135,8 +135,6 @@ pnpm add -D @types/multer @types/pg
 
 ```yaml
 # docker-compose.yml
-version: '3.8'
-
 services:
   postgres:
     image: pgvector/pgvector:pg16
@@ -1502,8 +1500,6 @@ describe('ChatService', () => {
 
 ```yaml
 # docker-compose.yml (version production)
-version: '3.8'
-
 services:
   api:
     build:

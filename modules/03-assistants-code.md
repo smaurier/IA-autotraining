@@ -11,7 +11,7 @@
 
 ## 1. Le paysage des assistants code
 
-### 1.1 Les outils majeurs en 2024-2025
+### 1.1 Les outils majeurs en 2025-2026
 
 | Outil | Editeur | Modele | Points forts |
 |-------|---------|--------|-------------|

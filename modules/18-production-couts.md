@@ -902,8 +902,6 @@ const results = await batch.processAll((done, total) => {
 
 ```yaml
 # docker-compose.yml pour vLLM en production
-version: '3.8'
-
 services:
   vllm:
     image: vllm/vllm-openai:latest
