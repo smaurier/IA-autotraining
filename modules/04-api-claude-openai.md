@@ -26,16 +26,26 @@ const client = new Anthropic({
 ### 1.2 Messages API — Appel de base
 
 ```typescript
-const message = await client.messages.create({
-  model: 'claude-sonnet-4-20250514',
-  max_tokens: 1024,
-  system: 'Tu es un assistant technique expert en TypeScript.',
-  messages: [
-    { role: 'user', content: 'Explique le pattern Strategy en TypeScript avec un exemple.' }
-  ],
-});
+try {
+  const message = await client.messages.create({
+    model: 'claude-sonnet-4-6',
+    max_tokens: 1024,
+    system: 'Tu es un assistant technique expert en TypeScript.',
+    messages: [
+      { role: 'user', content: 'Explique le pattern Strategy en TypeScript avec un exemple.' }
+    ],
+  });
 
-console.log(message.content[0].text);
+  console.log(message.content[0].text);
+} catch (error) {
+  if (error instanceof Anthropic.AuthenticationError) {
+    console.error('Cle API invalide. Verifiez ANTHROPIC_API_KEY.');
+  } else if (error instanceof Anthropic.RateLimitError) {
+    console.error('Rate limit atteint. Reessayez dans quelques secondes.');
+  } else {
+    throw error;
+  }
+}
 ```
 
 ### 1.3 Conversation multi-turn
@@ -47,7 +57,7 @@ async function chat(userMessage: string) {
   messages.push({ role: 'user', content: userMessage });
 
   const response = await client.messages.create({
-    model: 'claude-sonnet-4-20250514',
+    model: 'claude-sonnet-4-6',
     max_tokens: 1024,
     system: 'Tu es un assistant de programmation.',
     messages,
@@ -67,7 +77,7 @@ await chat('Maintenant optimise-la avec de la memoization');
 
 ```typescript
 const stream = client.messages.stream({
-  model: 'claude-sonnet-4-20250514',
+  model: 'claude-sonnet-4-6',
   max_tokens: 1024,
   messages: [{ role: 'user', content: 'Ecris un poeme sur TypeScript' }],
 });
@@ -138,7 +148,7 @@ async function runWithTools(userMessage: string) {
 
   while (true) {
     const response = await client.messages.create({
-      model: 'claude-sonnet-4-20250514',
+      model: 'claude-sonnet-4-6',
       max_tokens: 1024,
       tools,
       messages,
@@ -182,26 +192,137 @@ import OpenAI from 'openai';
 
 const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
-const completion = await openai.chat.completions.create({
+try {
+  const completion = await openai.chat.completions.create({
+    model: 'gpt-4o',
+    messages: [
+      { role: 'system', content: 'Tu es un assistant technique.' },
+      { role: 'user', content: 'Explique les generics TypeScript.' },
+    ],
+  });
+
+  console.log(completion.choices[0].message.content);
+} catch (error) {
+  if (error instanceof OpenAI.AuthenticationError) {
+    console.error('Cle API invalide. Verifiez OPENAI_API_KEY.');
+  } else if (error instanceof OpenAI.RateLimitError) {
+    console.error('Rate limit atteint. Reessayez dans quelques secondes.');
+  } else {
+    throw error;
+  }
+}
+```
+
+### 3.2 Streaming OpenAI
+
+```typescript
+// OpenAI utilise le parametre `stream: true` — les events sont differents de Claude
+const stream = await openai.chat.completions.create({
   model: 'gpt-4o',
   messages: [
     { role: 'system', content: 'Tu es un assistant technique.' },
-    { role: 'user', content: 'Explique les generics TypeScript.' },
+    { role: 'user', content: 'Ecris un poeme sur TypeScript.' },
   ],
+  stream: true,
 });
 
-console.log(completion.choices[0].message.content);
+for await (const chunk of stream) {
+  // OpenAI : chaque chunk contient choices[].delta.content (pas content_block_delta)
+  const text = chunk.choices[0]?.delta?.content;
+  if (text) {
+    process.stdout.write(text);
+  }
+}
 ```
 
-### 3.2 Differences Claude vs OpenAI
+> **Attention** : ne confondez pas les event types. Claude utilise `content_block_delta` avec `delta.text`, tandis qu'OpenAI utilise `choices[].delta.content`. Ce sont deux formats incompatibles.
+
+### 3.3 Tool Use / Function Calling (OpenAI)
+
+```typescript
+import OpenAI from 'openai';
+
+// OpenAI exige un wrapper `type: 'function'` + `function: {...}` autour de chaque outil
+const tools: OpenAI.ChatCompletionTool[] = [
+  {
+    type: 'function',
+    function: {
+      name: 'get_weather',
+      description: 'Obtient la meteo actuelle pour une ville donnee',
+      parameters: {
+        type: 'object',
+        properties: {
+          city: { type: 'string', description: 'Nom de la ville' },
+          unit: { type: 'string', enum: ['celsius', 'fahrenheit'], description: 'Unite de temperature' },
+        },
+        required: ['city'],
+      },
+    },
+  },
+];
+
+async function runWithToolsOpenAI(userMessage: string) {
+  const messages: OpenAI.ChatCompletionMessageParam[] = [
+    { role: 'system', content: 'Tu es un assistant meteo.' },
+    { role: 'user', content: userMessage },
+  ];
+
+  while (true) {
+    try {
+      const response = await openai.chat.completions.create({
+        model: 'gpt-4o',
+        tools,
+        messages,
+      });
+
+      const choice = response.choices[0];
+
+      // OpenAI utilise `finish_reason: 'tool_calls'` (pas 'tool_use' comme Claude)
+      if (choice.finish_reason === 'tool_calls' && choice.message.tool_calls) {
+        messages.push(choice.message); // Le message assistant avec les tool_calls
+
+        for (const toolCall of choice.message.tool_calls) {
+          const args = JSON.parse(toolCall.function.arguments);
+          const result = await executeToolCall(toolCall.function.name, args);
+
+          // OpenAI attend un message role: 'tool' avec le tool_call_id
+          messages.push({
+            role: 'tool',
+            tool_call_id: toolCall.id,
+            content: JSON.stringify(result),
+          });
+        }
+        continue;
+      }
+
+      return choice.message.content;
+    } catch (error) {
+      if (error instanceof OpenAI.RateLimitError) {
+        console.error('Rate limit OpenAI atteint. Reessayez plus tard.');
+      } else if (error instanceof OpenAI.AuthenticationError) {
+        console.error('Cle API OpenAI invalide. Verifiez OPENAI_API_KEY.');
+      }
+      throw error;
+    }
+  }
+}
+```
+
+> **Piege frequent** : avec Claude, les outils utilisent `input_schema` et la reponse contient `stop_reason: 'tool_use'`. Avec OpenAI, les outils utilisent `parameters` (dans un wrapper `function`) et la reponse contient `finish_reason: 'tool_calls'`. Adapter du code d'un SDK a l'autre necessite plus qu'un simple renommage.
+
+### 3.4 Differences Claude vs OpenAI
 
 | Aspect | Claude (Anthropic) | GPT (OpenAI) |
 |--------|-------------------|--------------|
 | System prompt | Parametre `system` separe | Message `role: 'system'` |
 | Reponse | `message.content[0].text` | `choices[0].message.content` |
-| Streaming | `client.messages.stream()` | `stream: true` dans les params |
-| Tool use | `tools` + `stop_reason: 'tool_use'` | `tools` + `finish_reason: 'tool_calls'` |
+| Streaming events | `content_block_delta` → `delta.text` | `choices[].delta.content` |
+| Streaming API | `client.messages.stream()` | `stream: true` dans les params |
+| Tool schema | `input_schema: { properties }` | `function: { parameters: { properties } }` |
+| Tool response | `stop_reason: 'tool_use'` | `finish_reason: 'tool_calls'` |
+| Tool result msg | `role: 'user'` + `type: 'tool_result'` | `role: 'tool'` + `tool_call_id` |
 | Vision | `type: 'image'` dans content | `type: 'image_url'` dans content |
+| Erreurs SDK | `Anthropic.RateLimitError` | `OpenAI.RateLimitError` |
 
 ---
 
@@ -210,7 +331,7 @@ console.log(completion.choices[0].message.content);
 ```typescript
 // Claude — analyser une image
 const response = await client.messages.create({
-  model: 'claude-sonnet-4-20250514',
+  model: 'claude-sonnet-4-6',
   max_tokens: 1024,
   messages: [{
     role: 'user',
@@ -272,18 +393,24 @@ const cost = calculateCost(1000, 500, 3.0, 15.0);
 
 ## 6. Gestion des erreurs
 
+### 6.1 Retry robuste — Claude
+
 ```typescript
 import Anthropic from '@anthropic-ai/sdk';
 
-async function robustCall(prompt: string, maxRetries = 3) {
+async function robustCallClaude(prompt: string, maxRetries = 3) {
   for (let attempt = 1; attempt <= maxRetries; attempt++) {
     try {
       return await client.messages.create({
-        model: 'claude-sonnet-4-20250514',
+        model: 'claude-sonnet-4-6',
         max_tokens: 1024,
         messages: [{ role: 'user', content: prompt }],
       });
     } catch (error) {
+      if (error instanceof Anthropic.AuthenticationError) {
+        // Cle invalide — ne pas retenter
+        throw new Error('Cle API Anthropic invalide. Verifiez ANTHROPIC_API_KEY.');
+      }
       if (error instanceof Anthropic.RateLimitError) {
         const waitMs = Math.pow(2, attempt) * 1000; // Exponential backoff
         console.log(`Rate limited. Retry in ${waitMs}ms...`);
@@ -291,7 +418,8 @@ async function robustCall(prompt: string, maxRetries = 3) {
         continue;
       }
       if (error instanceof Anthropic.APIError && error.status >= 500) {
-        console.log(`Server error. Retry ${attempt}/${maxRetries}...`);
+        console.log(`Server error (${error.status}). Retry ${attempt}/${maxRetries}...`);
+        await new Promise(r => setTimeout(r, 1000 * attempt));
         continue;
       }
       throw error; // Erreur non-retryable
@@ -300,6 +428,45 @@ async function robustCall(prompt: string, maxRetries = 3) {
   throw new Error('Max retries exceeded');
 }
 ```
+
+### 6.2 Retry robuste — OpenAI
+
+```typescript
+import OpenAI from 'openai';
+
+async function robustCallOpenAI(prompt: string, maxRetries = 3) {
+  for (let attempt = 1; attempt <= maxRetries; attempt++) {
+    try {
+      return await openai.chat.completions.create({
+        model: 'gpt-4o',
+        messages: [
+          { role: 'system', content: 'Tu es un assistant technique.' },
+          { role: 'user', content: prompt },
+        ],
+      });
+    } catch (error) {
+      if (error instanceof OpenAI.AuthenticationError) {
+        throw new Error('Cle API OpenAI invalide. Verifiez OPENAI_API_KEY.');
+      }
+      if (error instanceof OpenAI.RateLimitError) {
+        const waitMs = Math.pow(2, attempt) * 1000;
+        console.log(`Rate limited. Retry in ${waitMs}ms...`);
+        await new Promise(r => setTimeout(r, waitMs));
+        continue;
+      }
+      if (error instanceof OpenAI.APIError && error.status >= 500) {
+        console.log(`Server error (${error.status}). Retry ${attempt}/${maxRetries}...`);
+        await new Promise(r => setTimeout(r, 1000 * attempt));
+        continue;
+      }
+      throw error;
+    }
+  }
+  throw new Error('Max retries exceeded');
+}
+```
+
+> **Bonne pratique** : les erreurs `AuthenticationError` (cle invalide) et `BadRequestError` (prompt mal forme) ne doivent jamais etre retentees — elles echoueront toujours. Seules les erreurs `RateLimitError` et les erreurs serveur (5xx) meritent un retry avec backoff exponentiel.
 
 ---
 

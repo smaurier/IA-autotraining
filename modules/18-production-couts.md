@@ -673,7 +673,7 @@ const fallbackClient = new FallbackLLMClient([
   {
     name: 'Claude Sonnet',
     provider: 'anthropic',
-    model: 'claude-sonnet-4-20250514',
+    model: 'claude-sonnet-4-6',
     timeoutMs: 30000,
     maxRetries: 1,
     priority: 1,

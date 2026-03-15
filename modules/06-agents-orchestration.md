@@ -49,50 +49,82 @@ Answer: Les ventes du mois dernier s'elevent a 45 230€.
 ### 2.2 Implementation en TypeScript
 
 ```typescript
-interface AgentStep {
-  thought: string;
-  action?: { tool: string; input: Record<string, any> };
-  observation?: string;
+import Anthropic from '@anthropic-ai/sdk';
+
+const client = new Anthropic();
+
+// Definition d'un outil (format attendu par l'API Claude)
+interface ToolDef {
+  name: string;
+  description: string;
+  input_schema: Record<string, unknown>;
 }
+
+// Map nom → fonction d'execution
+type ToolExecutor = (input: Record<string, unknown>) => Promise<unknown>;
 
 async function runAgent(
   objective: string,
-  tools: Tool[],
+  toolDefs: ToolDef[],
+  toolExecutors: Map<string, ToolExecutor>,
   maxIterations = 10,
 ): Promise<string> {
-  const steps: AgentStep[] = [];
+  // On accumule les messages pour conserver le contexte complet
+  const messages: Anthropic.MessageParam[] = [
+    { role: 'user', content: objective },
+  ];
 
   for (let i = 0; i < maxIterations; i++) {
-    const prompt = buildAgentPrompt(objective, tools, steps);
-
     const response = await client.messages.create({
-      model: 'claude-sonnet-4-20250514',
-      max_tokens: 1024,
-      tools: tools.map(t => t.definition),
-      messages: [{ role: 'user', content: prompt }],
+      model: 'claude-sonnet-4-6',
+      max_tokens: 4096,
+      tools: toolDefs,
+      messages,
     });
 
-    // Si le modele veut utiliser un outil
-    if (response.stop_reason === 'tool_use') {
-      const toolCall = response.content.find(c => c.type === 'tool_use');
-      const tool = tools.find(t => t.definition.name === toolCall.name);
-      const result = await tool.execute(toolCall.input);
+    // Ajouter la reponse de l'assistant au contexte
+    messages.push({ role: 'assistant', content: response.content });
 
-      steps.push({
-        thought: `Je dois utiliser ${toolCall.name}`,
-        action: { tool: toolCall.name, input: toolCall.input },
-        observation: JSON.stringify(result),
-      });
+    // Si le modele veut utiliser un outil (stop_reason === 'tool_use')
+    if (response.stop_reason === 'tool_use') {
+      const toolResults: Anthropic.ToolResultBlockParam[] = [];
+
+      for (const block of response.content) {
+        if (block.type === 'tool_use') {
+          const executor = toolExecutors.get(block.name);
+          try {
+            const result = await executor!(block.input as Record<string, unknown>);
+            toolResults.push({
+              type: 'tool_result',
+              tool_use_id: block.id,
+              content: JSON.stringify(result),
+            });
+          } catch (err) {
+            toolResults.push({
+              type: 'tool_result',
+              tool_use_id: block.id,
+              content: `Erreur: ${(err as Error).message}`,
+              is_error: true,
+            });
+          }
+        }
+      }
+
+      // Renvoyer les resultats d'outils dans un message user
+      messages.push({ role: 'user', content: toolResults });
       continue;
     }
 
-    // Reponse finale
-    return response.content[0].text;
+    // stop_reason === 'end_turn' → reponse finale
+    const textBlock = response.content.find(b => b.type === 'text');
+    return textBlock ? textBlock.text : '';
   }
 
   return 'Nombre maximum d\'iterations atteint.';
 }
 ```
+
+> **Point cle** : chaque appel a `client.messages.create()` recoit l'historique complet (`messages`). Quand Claude renvoie un `tool_use`, on execute l'outil et on ajoute un message `user` contenant un bloc `tool_result` avec le `tool_use_id` correspondant. Claude peut alors continuer son raisonnement.
 
 ---
 
@@ -101,18 +133,21 @@ async function runAgent(
 ### 3.1 Creer un agent avec le SDK natif
 
 ```typescript
-import { Agent } from 'claude_agent_sdk';
+import Anthropic from '@anthropic-ai/sdk';
 
-const agent = new Agent({
-  model: 'claude-sonnet-4-20250514',
-  tools: [readFileTool, searchTool, runTestsTool],
-  systemPrompt: `Tu es un agent de code review.
+const client = new Anthropic();
+
+const result = await client.messages.create({
+  model: 'claude-sonnet-4-6',
+  max_tokens: 4096,
+  system: `Tu es un agent de code review.
     Analyse le code, identifie les problemes, et propose des corrections.`,
-  maxTurns: 15,
+  messages: [
+    { role: 'user', content: 'Review le fichier src/auth/auth.service.ts' },
+  ],
 });
 
-const result = await agent.run('Review le fichier src/auth/auth.service.ts');
-console.log(result.output);
+console.log(result.content[0].type === 'text' ? result.content[0].text : result);
 ```
 
 ---
@@ -122,31 +157,95 @@ console.log(result.output);
 ### 4.1 Orchestration par specialite
 
 ```typescript
-const agents = {
-  codeReview: new Agent({
+import Anthropic from '@anthropic-ai/sdk';
+
+const client = new Anthropic();
+
+// Un "agent" est simplement un system prompt + des outils + la boucle ReAct
+interface AgentConfig {
+  systemPrompt: string;
+  tools: Anthropic.Tool[];
+  toolExecutors: Map<string, ToolExecutor>;
+}
+
+async function runSpecializedAgent(
+  config: AgentConfig,
+  task: string,
+  maxIterations = 10,
+): Promise<string> {
+  const messages: Anthropic.MessageParam[] = [
+    { role: 'user', content: task },
+  ];
+
+  for (let i = 0; i < maxIterations; i++) {
+    const response = await client.messages.create({
+      model: 'claude-sonnet-4-6',
+      max_tokens: 4096,
+      system: config.systemPrompt,
+      tools: config.tools,
+      messages,
+    });
+
+    messages.push({ role: 'assistant', content: response.content });
+
+    if (response.stop_reason === 'tool_use') {
+      const toolResults: Anthropic.ToolResultBlockParam[] = [];
+      for (const block of response.content) {
+        if (block.type === 'tool_use') {
+          const executor = config.toolExecutors.get(block.name);
+          const result = await executor!(block.input as Record<string, unknown>);
+          toolResults.push({
+            type: 'tool_result',
+            tool_use_id: block.id,
+            content: JSON.stringify(result),
+          });
+        }
+      }
+      messages.push({ role: 'user', content: toolResults });
+      continue;
+    }
+
+    const textBlock = response.content.find(b => b.type === 'text');
+    return textBlock ? textBlock.text : '';
+  }
+  return 'Max iterations atteint.';
+}
+
+// Configuration des agents specialises
+const agents: Record<string, AgentConfig> = {
+  review: {
     systemPrompt: 'Tu es expert en review de code TypeScript.',
-    tools: [readFile, searchCode],
-  }),
-  security: new Agent({
+    tools: [readFileTool, searchCodeTool],
+    toolExecutors: new Map([['read_file', readFileExec], ['search_code', searchCodeExec]]),
+  },
+  security: {
     systemPrompt: 'Tu es expert en securite applicative. Cherche les vulnerabilites.',
-    tools: [readFile, scanDependencies],
-  }),
-  testing: new Agent({
+    tools: [readFileTool, scanDependenciesTool],
+    toolExecutors: new Map([['read_file', readFileExec], ['scan_deps', scanDepsExec]]),
+  },
+  testing: {
     systemPrompt: 'Tu es expert en testing. Genere des tests manquants.',
-    tools: [readFile, writeFile, runTests],
-  }),
+    tools: [readFileTool, writeFileTool, runTestsTool],
+    toolExecutors: new Map([['read_file', readFileExec], ['write_file', writeFileExec], ['run_tests', runTestsExec]]),
+  },
 };
 
-async function orchestrate(task: string) {
-  // Le routeur decide quel agent utiliser
-  const category = await classifyTask(task);
+// Le routeur utilise Claude pour classifier la tache
+async function classifyTask(task: string): Promise<string> {
+  const response = await client.messages.create({
+    model: 'claude-sonnet-4-6',
+    max_tokens: 50,
+    messages: [{ role: 'user', content:
+      `Classifie cette tache en une seule categorie parmi: review, security, testing.\nTache: ${task}` }],
+  });
+  const text = response.content[0].type === 'text' ? response.content[0].text : 'review';
+  return text.trim().toLowerCase();
+}
 
-  switch (category) {
-    case 'review': return agents.codeReview.run(task);
-    case 'security': return agents.security.run(task);
-    case 'testing': return agents.testing.run(task);
-    default: return agents.codeReview.run(task);
-  }
+async function orchestrate(task: string): Promise<string> {
+  const category = await classifyTask(task);
+  const config = agents[category] ?? agents.review;
+  return runSpecializedAgent(config, task);
 }
 ```
 
@@ -198,39 +297,87 @@ async function executeWithConfirmation(action: AgentAction): Promise<string> {
 
 ## 6. Memoire d'agent
 
-### 6.1 Memoire de conversation
+### 6.1 Memoire de conversation (avec persistance)
 
 ```typescript
-class AgentMemory {
-  private entries: { role: string; content: string; timestamp: Date }[] = [];
+import { readFileSync, writeFileSync, existsSync } from 'node:fs';
 
-  append(role: string, content: string) {
-    this.entries.push({ role, content, timestamp: new Date() });
+interface MemoryEntry {
+  role: string;
+  content: string;
+  timestamp: string; // ISO string pour la serialisation JSON
+}
+
+class AgentMemory {
+  private entries: MemoryEntry[] = [];
+  private filePath: string | null;
+
+  constructor(filePath?: string) {
+    this.filePath = filePath ?? null;
+    if (this.filePath && existsSync(this.filePath)) {
+      this.entries = JSON.parse(readFileSync(this.filePath, 'utf-8'));
+    }
   }
 
-  getRecent(n: number) {
+  private persist() {
+    if (this.filePath) {
+      writeFileSync(this.filePath, JSON.stringify(this.entries, null, 2));
+    }
+  }
+
+  append(role: string, content: string) {
+    this.entries.push({ role, content, timestamp: new Date().toISOString() });
+    this.persist();
+  }
+
+  getRecent(n: number): MemoryEntry[] {
     return this.entries.slice(-n);
   }
 
-  search(query: string) {
+  search(query: string): MemoryEntry[] {
     return this.entries.filter(e =>
-      e.content.toLowerCase().includes(query.toLowerCase())
+      e.content.toLowerCase().includes(query.toLowerCase()),
     );
   }
 
+  /** Convertit les entrees en format messages pour l'API Claude */
+  toMessages(): Anthropic.MessageParam[] {
+    return this.entries
+      .filter(e => e.role === 'user' || e.role === 'assistant')
+      .map(e => ({ role: e.role as 'user' | 'assistant', content: e.content }));
+  }
+
+  /** Compresse les vieux messages pour economiser du contexte */
   summarize(): string {
-    // Compresser les vieux messages pour economiser du contexte
     if (this.entries.length > 20) {
       const old = this.entries.slice(0, -10);
       const summary = `Resume des ${old.length} premiers echanges: ...`;
       this.entries = [
-        { role: 'system', content: summary, timestamp: new Date() },
+        { role: 'system', content: summary, timestamp: new Date().toISOString() },
         ...this.entries.slice(-10),
       ];
+      this.persist();
     }
     return this.entries.map(e => `${e.role}: ${e.content}`).join('\n');
   }
+
+  clear() {
+    this.entries = [];
+    this.persist();
+  }
 }
+
+// Utilisation
+const memory = new AgentMemory('./agent-memory.json');
+memory.append('user', 'Quels sont les tests en echec ?');
+memory.append('assistant', 'Il y a 3 tests en echec dans auth.spec.ts.');
+
+// Injecter la memoire dans un appel Claude
+const response = await client.messages.create({
+  model: 'claude-sonnet-4-6',
+  max_tokens: 4096,
+  messages: memory.toMessages(),
+});
 ```
 
 ---

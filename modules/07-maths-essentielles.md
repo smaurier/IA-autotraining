@@ -7,6 +7,8 @@
 
 ---
 
+> **⚠️ Changement de registre.** Apres 6 modules pratiques (prompting, API, agents), tu passes aux fondamentaux mathematiques. C'est normal que le rythme change. Tu n'as PAS besoin de tout maitriser pour continuer — comprendre l'intuition suffit. Les formules sont la pour ceux qui veulent aller plus loin. Si les maths te bloquent, lis le module en diagonal, fais le lab, et passe au module 08.
+
 ## Pourquoi ce module maintenant ?
 
 Dans les modules 01-06, vous avez **utilise** l'IA comme un outil : prompting, API, MCP, agents. Vous savez piloter la voiture.

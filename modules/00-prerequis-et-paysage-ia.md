@@ -105,7 +105,7 @@ const client = new Anthropic()
 
 async function main() {
   const message = await client.messages.create({
-    model: 'claude-sonnet-4-20250514',
+    model: 'claude-sonnet-4-6',
     max_tokens: 256,
     messages: [
       { role: 'user', content: 'Dis "Bonjour" en 5 langues.' },
@@ -316,7 +316,7 @@ const client = new Anthropic({
 })
 
 const response = await client.messages.create({
-  model: 'claude-sonnet-4-20250514',
+  model: 'claude-sonnet-4-6',
   max_tokens: 1024,
   messages: [
     { role: 'user', content: 'Explique le pattern Observer en TypeScript.' },
@@ -420,7 +420,7 @@ Temperature = 2.0 (chaotique)
 ```typescript
 // Temperature basse (0.0-0.3) : generation de code, extraction de donnees, classification
 const codeResponse = await client.messages.create({
-  model: 'claude-sonnet-4-20250514',
+  model: 'claude-sonnet-4-6',
   max_tokens: 1024,
   temperature: 0,  // Deterministe : meme input → meme output
   messages: [
@@ -430,7 +430,7 @@ const codeResponse = await client.messages.create({
 
 // Temperature haute (0.7-1.0) : ecriture creative, brainstorming
 const creativeResponse = await client.messages.create({
-  model: 'claude-sonnet-4-20250514',
+  model: 'claude-sonnet-4-6',
   max_tokens: 1024,
   temperature: 0.9,  // Plus de variete et de creativite
   messages: [
@@ -478,14 +478,14 @@ Le nombre maximum de tokens que le modele peut generer dans sa reponse.
 ```typescript
 // Reponse courte
 const short = await client.messages.create({
-  model: 'claude-sonnet-4-20250514',
+  model: 'claude-sonnet-4-6',
   max_tokens: 100,  // ~75 mots en francais
   messages: [{ role: 'user', content: 'Resume le pattern Singleton.' }],
 })
 
 // Reponse longue
 const long = await client.messages.create({
-  model: 'claude-sonnet-4-20250514',
+  model: 'claude-sonnet-4-6',
   max_tokens: 4096,  // ~3000 mots
   messages: [{ role: 'user', content: 'Ecris un tutoriel complet sur les design patterns.' }],
 })
@@ -499,7 +499,7 @@ Des chaines de caracteres qui, si le modele les genere, arretent la generation.
 
 ```typescript
 const response = await client.messages.create({
-  model: 'claude-sonnet-4-20250514',
+  model: 'claude-sonnet-4-6',
   max_tokens: 1024,
   stop_sequences: ['```', '---', 'FIN'],
   messages: [
@@ -597,7 +597,7 @@ async function checkEnvironment() {
   // 2. Envoyer un message test
   const client = new Anthropic()
   const message = await client.messages.create({
-    model: 'claude-sonnet-4-20250514',
+    model: 'claude-sonnet-4-6',
     max_tokens: 100,
     messages: [
       { role: 'user', content: 'Reponds uniquement "OK" si tu fonctionnes.' },
@@ -629,7 +629,7 @@ const prompt = 'Invente un nom pour une variable qui stocke une liste d\'utilisa
 
 async function generateWithTemperature(temp: number): Promise<string> {
   const message = await client.messages.create({
-    model: 'claude-sonnet-4-20250514',
+    model: 'claude-sonnet-4-6',
     max_tokens: 50,
     temperature: temp,
     messages: [{ role: 'user', content: prompt }],

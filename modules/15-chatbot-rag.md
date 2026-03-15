@@ -244,7 +244,7 @@ export default () => ({
   },
   claude: {
     apiKey: process.env.ANTHROPIC_API_KEY || '',
-    model: process.env.CLAUDE_MODEL || 'claude-sonnet-4-20250514',
+    model: process.env.CLAUDE_MODEL || 'claude-sonnet-4-6',
   },
   llmProvider: (process.env.LLM_PROVIDER || 'ollama') as 'ollama' | 'claude',
   chunking: {
@@ -820,7 +820,7 @@ export class LLMService {
     this.ollamaUrl = this.config.get('ollama.baseUrl', 'http://localhost:11434');
     this.ollamaModel = this.config.get('ollama.chatModel', 'llama3.1:8b');
     this.claudeApiKey = this.config.get('claude.apiKey', '');
-    this.claudeModel = this.config.get('claude.model', 'claude-sonnet-4-20250514');
+    this.claudeModel = this.config.get('claude.model', 'claude-sonnet-4-6');
 
     this.logger.log(`LLM Provider: ${this.provider}`);
   }

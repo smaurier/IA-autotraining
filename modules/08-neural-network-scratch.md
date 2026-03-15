@@ -7,6 +7,8 @@
 
 ---
 
+> **⚠️ Ce module est le plus difficile de la Partie 2.** Construire un reseau de neurones from scratch demande de la patience. Si tu galeres, c'est normal — meme des devs seniors trouvent ca difficile la premiere fois. L'objectif n'est pas de memoriser les formules mais de comprendre l'intuition : forward pass, loss, backpropagation, gradient descent. Le lab est guide pas a pas.
+
 ## Avant de commencer
 
 Ce module est **le plus ambitieux** du cours. Vous allez coder un reseau de neurones from scratch, sans aucun framework (pas de TensorFlow, pas de PyTorch, pas de brain.js).

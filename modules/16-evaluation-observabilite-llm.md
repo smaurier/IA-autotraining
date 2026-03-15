@@ -978,8 +978,8 @@ class LLMLogger {
 
     // Prix par million de tokens (estimation 2025)
     const pricing: Record<string, { input: number; output: number }> = {
-      'claude-sonnet-4-20250514': { input: 3, output: 15 },
-      'claude-opus-4-20250514': { input: 15, output: 75 },
+      'claude-sonnet-4-6': { input: 3, output: 15 },
+      'claude-opus-4-6': { input: 15, output: 75 },
       'gpt-4o': { input: 2.5, output: 10 },
       'llama3.1:8b': { input: 0, output: 0 }, // Local = gratuit
     };

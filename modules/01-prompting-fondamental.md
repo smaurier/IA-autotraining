@@ -29,7 +29,7 @@ import Anthropic from '@anthropic-ai/sdk'
 const client = new Anthropic()
 
 const response = await client.messages.create({
-  model: 'claude-sonnet-4-20250514',
+  model: 'claude-sonnet-4-6',
   max_tokens: 1024,
   system: 'Tu es un expert TypeScript senior.', // System prompt
   messages: [
@@ -73,7 +73,7 @@ En zero-shot, vous donnez simplement l'instruction sans aucun exemple. Le modele
 ```typescript
 // Zero-shot : classement de sentiment
 const zeroShot = await client.messages.create({
-  model: 'claude-sonnet-4-20250514',
+  model: 'claude-sonnet-4-6',
   max_tokens: 50,
   messages: [{
     role: 'user',
@@ -92,7 +92,7 @@ En few-shot, vous fournissez quelques exemples (generalement 2 a 5) du comportem
 ```typescript
 // Few-shot : extraction de donnees structurees
 const fewShot = await client.messages.create({
-  model: 'claude-sonnet-4-20250514',
+  model: 'claude-sonnet-4-6',
   max_tokens: 200,
   messages: [
     {
@@ -164,7 +164,7 @@ Les LLMs generent token par token, de gauche a droite. Sans incitation a reflech
 ```typescript
 // Sans CoT — le modele peut se tromper
 const sansCoT = await client.messages.create({
-  model: 'claude-sonnet-4-20250514',
+  model: 'claude-sonnet-4-6',
   max_tokens: 100,
   messages: [{
     role: 'user',
@@ -179,7 +179,7 @@ const sansCoT = await client.messages.create({
 ```typescript
 // Avec CoT — le modele raisonne avant de repondre
 const avecCoT = await client.messages.create({
-  model: 'claude-sonnet-4-20250514',
+  model: 'claude-sonnet-4-6',
   max_tokens: 500,
   messages: [{
     role: 'user',
@@ -230,7 +230,7 @@ Quand on te pose une question technique :
 
 ```typescript
 const codeReview = await client.messages.create({
-  model: 'claude-sonnet-4-20250514',
+  model: 'claude-sonnet-4-6',
   max_tokens: 2048,
   system: `Tu es un reviewer de code TypeScript senior.
 
@@ -304,7 +304,7 @@ async function generateTestCases(
 
   for (let i = 0; i < count; i++) {
     const response = await client.messages.create({
-      model: 'claude-sonnet-4-20250514',
+      model: 'claude-sonnet-4-6',
       max_tokens: 500,
       temperature: 0.7,  // Variete dans les cas de test
       messages: [{
@@ -338,7 +338,7 @@ Par defaut, un LLM genere du texte libre. Mais en tant que developpeur, vous ave
 ```typescript
 // Demander du JSON dans le prompt
 const jsonResponse = await client.messages.create({
-  model: 'claude-sonnet-4-20250514',
+  model: 'claude-sonnet-4-6',
   max_tokens: 500,
   messages: [{
     role: 'user',
@@ -367,7 +367,7 @@ Avec l'API Claude, vous pouvez "pre-remplir" le debut de la reponse de l'assista
 ```typescript
 // Prefill : forcer le modele a commencer par "{"
 const prefillResponse = await client.messages.create({
-  model: 'claude-sonnet-4-20250514',
+  model: 'claude-sonnet-4-6',
   max_tokens: 500,
   messages: [
     {
@@ -391,7 +391,7 @@ const metrics = JSON.parse(fullJson)
 
 ```typescript
 const structuredAnalysis = await client.messages.create({
-  model: 'claude-sonnet-4-20250514',
+  model: 'claude-sonnet-4-6',
   max_tokens: 1024,
   system: `Tu es un analyseur de code. Tu reponds TOUJOURS au format JSON suivant, sans texte supplementaire :
 
@@ -711,7 +711,7 @@ async function chat(userMessage: string): Promise<string> {
   conversationHistory.push({ role: 'user', content: userMessage })
 
   const response = await client.messages.create({
-    model: 'claude-sonnet-4-20250514',
+    model: 'claude-sonnet-4-6',
     max_tokens: 1024,
     system: systemPrompt,
     messages: conversationHistory,
@@ -771,7 +771,7 @@ const client = new Anthropic()
 
 async function generateTests(sourceCode: string, framework: 'vitest' | 'jest' = 'vitest'): Promise<string> {
   const response = await client.messages.create({
-    model: 'claude-sonnet-4-20250514',
+    model: 'claude-sonnet-4-6',
     max_tokens: 2048,
     temperature: 0.2,
     system: `Tu es un expert en tests unitaires TypeScript.
@@ -829,7 +829,7 @@ interface ExtractedContact {
 
 async function extractContact(text: string): Promise<ExtractedContact> {
   const response = await client.messages.create({
-    model: 'claude-sonnet-4-20250514',
+    model: 'claude-sonnet-4-6',
     max_tokens: 300,
     temperature: 0,
     system: `Extrais les informations de contact du texte fourni.
