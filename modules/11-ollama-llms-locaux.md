@@ -1061,6 +1061,206 @@ console.log(answer);
 
 ---
 
+## 12. Quantization avancée : GGUF, llama.cpp et choix du niveau
+
+### GGUF et llama.cpp : l'ecosystème de la quantization
+
+**llama.cpp** est le projet open source qui a rendu possible l'exécution de LLMs sur du matériel grand public. Écrit en C/C++ pur (pas de PyTorch, pas de CUDA obligatoire), il peut faire tourner des modèles sur CPU, GPU NVIDIA, GPU AMD, et même les puces Apple Silicon.
+
+**GGUF** (GPT-Generated Unified Format) est le format de fichier créé par llama.cpp. C'est le format natif d'Ollama :
+
+```
+Ecosysteme de la quantization :
+
+Modèle original (Hugging Face)
+  → safetensors / pytorch (FP16/FP32, ~14-28 Go pour 7B)
+     ↓
+llama.cpp / convert.py
+  → Conversion en GGUF
+     ↓
+llama-quantize (outil llama.cpp)
+  → Quantization (FP16 → Q4_K_M, Q5_K_M, Q8_0, etc.)
+     ↓
+Fichier .gguf final (~4-8 Go pour 7B)
+  → Utilisable par : Ollama, llama.cpp, LM Studio, GPT4All, kobold.cpp
+```
+
+```bash
+# Exemple : quantizer un modèle soi-même avec llama.cpp
+git clone https://github.com/ggerganov/llama.cpp
+cd llama.cpp && make -j
+
+# 1. Convertir depuis Hugging Face vers GGUF (FP16)
+python convert_hf_to_gguf.py ./models/mon-modele/ --outtype f16
+
+# 2. Quantizer le GGUF
+./llama-quantize ./models/mon-modele-f16.gguf ./models/mon-modele-q4km.gguf Q4_K_M
+
+# 3. Tester
+./llama-cli -m ./models/mon-modele-q4km.gguf -p "Bonjour, je suis" -n 128
+```
+
+### Les niveaux de quantization en détail
+
+Tous les niveaux de quantization ne se valent pas. Voici un guide détaillé pour choisir :
+
+```
+PRECISION MAXIMALE (pour le fine-tuning ou l'évaluation)
+=========================================================
+F32  : 32 bits/poids — Modèle original, aucune perte
+       Taille 7B : ~28 Go | VRAM : ~30 Go
+       Usage : entraînement uniquement, jamais en inférence
+
+F16  : 16 bits/poids — Quasi-identique a F32
+       Taille 7B : ~14 Go | VRAM : ~16 Go
+       Usage : inférence haute qualité, serveur avec beaucoup de VRAM
+
+
+HAUTE QUALITE (différence imperceptible)
+==========================================
+Q8_0 : 8 bits/poids — Quasi lossless
+       Taille 7B : ~7.5 Go | VRAM : ~8.5 Go
+       Perte qualité : < 1% vs F16
+       Usage : quand on a la VRAM, meilleure option pour l'inférence
+
+Q6_K : 6 bits/poids — Très bonne qualité
+       Taille 7B : ~5.9 Go | VRAM : ~6.5 Go
+       Perte qualité : ~1% vs F16
+       Usage : bon compromis quand Q8 ne rentre pas en VRAM
+
+
+SWEET SPOT (recommandé pour la plupart des usages)
+====================================================
+Q5_K_M : 5 bits/poids — Excellent compromis
+         Taille 7B : ~5.3 Go | VRAM : ~5.8 Go
+         Perte qualité : ~1.5% vs F16
+         Usage : quand on veut un peu mieux que Q4
+
+Q4_K_M : 4 bits/poids — LE choix par défaut ✓
+         Taille 7B : ~4.4 Go | VRAM : ~5 Go
+         Perte qualité : ~2-3% vs F16
+         Usage : la plupart des cas, Ollama utilise Q4_K_M par défaut
+
+Q4_K_S : 4 bits/poids — Version plus petite de Q4_K
+         Taille 7B : ~4.1 Go | VRAM : ~4.6 Go
+         Perte qualité : ~3-4% vs F16
+         Usage : quand chaque Mo de VRAM compte
+
+
+COMPRESSION MAXIMALE (qualité degradée)
+=========================================
+Q3_K_M : 3 bits/poids — Qualité notable degradée
+         Taille 7B : ~3.5 Go | VRAM : ~4 Go
+         Perte qualité : ~5-8% vs F16
+         Usage : quand le modèle ne rentre pas autrement
+
+Q2_K   : 2 bits/poids — Forte degradation
+         Taille 7B : ~2.7 Go | VRAM : ~3 Go
+         Perte qualité : ~15-20% vs F16
+         Usage : déconseillé, sauf expérimentation
+```
+
+### La méthode K-quant : pourquoi c'est mieux
+
+Les anciennes méthodes (Q4_0, Q4_1) appliquaient la même quantization a tous les tenseurs. La méthode **K-quant** (les variantes avec `_K_`) est plus intelligente :
+
+```
+Q4_0 (ancienne méthode) :
+  TOUS les tenseurs → 4 bits
+  Précision uniforme, perte de qualité élevée
+
+Q4_K_M (K-quant) :
+  Tenseurs "importants" (attention, output) → 6 bits
+  Tenseurs "moins importants" (feed-forward) → 4 bits
+  Résultat : même taille moyenne (~4.5 bits) mais MEILLEURE qualité
+
+  M = Medium → bon équilibre
+  S = Small → plus de tenseurs a 4 bits (plus petit, moins bon)
+  L = Large → plus de tenseurs a 6 bits (plus gros, meilleur)
+```
+
+### Guide de choix par cas d'usage
+
+| Cas d'usage | Quantization recommandée | Pourquoi |
+|-------------|-------------------------|----------|
+| Conversation générale | Q4_K_M | Bon compromis qualité/vitesse |
+| Génération de code | Q5_K_M ou Q8_0 | Le code nécessite plus de précision |
+| Résumé de texte | Q4_K_M | Tâche tolérante, Q4 suffit |
+| Raisonnement complexe | Q8_0 ou F16 | Le raisonnement souffre plus de la quantization |
+| Extraction de données | Q4_K_M | Tâche structurée, Q4 suffit |
+| Traduction | Q5_K_M | La qualité linguistique baisse vite en Q4 |
+| Embeddings | Q8_0 | La qualité vectorielle est sensible a la précision |
+| Tests / prototypage | Q4_K_S ou Q3_K_M | Vitesse maximale, qualité secondaire |
+
+### Vérifier la quantization d'un modèle Ollama
+
+```bash
+# Voir les détails d'un modèle installé
+ollama show llama3.1:8b --modelfile
+# FROM affiche le fichier GGUF source
+# Chercher "quantization" dans les métadonnées
+
+# Comparer deux quantizations du même modèle
+ollama pull llama3.1:8b          # Q4_K_M par défaut
+ollama pull llama3.1:8b-q8_0     # Q8_0 (plus gros, meilleur)
+
+# Vérifier la taille
+ollama list
+# NAME                 SIZE
+# llama3.1:8b          4.7 GB    ← Q4_K_M
+# llama3.1:8b-q8_0     8.5 GB    ← Q8_0
+```
+
+### Performance vs qualité : mesurer soi-même
+
+```typescript
+// Script de benchmark pour comparer les quantizations
+async function benchmarkQuantization(
+  models: string[],
+  prompts: string[],
+): Promise<void> {
+  console.log('Modèle          | tok/s | Qualité (subjective 1-5) | Taille');
+  console.log('─'.repeat(65));
+
+  for (const model of models) {
+    let totalTokS = 0;
+
+    for (const prompt of prompts) {
+      const res = await fetch('http://localhost:11434/api/generate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          model,
+          prompt,
+          stream: false,
+          options: { num_predict: 256, temperature: 0.7, seed: 42 },
+        }),
+      });
+
+      const data = await res.json();
+      totalTokS += data.eval_count / (data.eval_duration / 1e9);
+    }
+
+    const avgTokS = Math.round(totalTokS / prompts.length);
+    console.log(`${model.padEnd(17)}| ${String(avgTokS).padEnd(6)}| [à évaluer manuellement]`);
+  }
+}
+
+// Utilisation
+await benchmarkQuantization(
+  ['llama3.1:8b', 'llama3.1:8b-q5_k_m', 'llama3.1:8b-q8_0'],
+  [
+    'Explique les closures JavaScript en 3 phrases.',
+    'Écris une fonction TypeScript qui trie un tableau.',
+    'Traduis en anglais : "Le chat est sur le toit."',
+  ],
+);
+```
+
+> **Règle d'or** : commencez toujours par Q4_K_M. Si la qualité ne vous convient pas sur votre cas d'usage spécifique, montez a Q5_K_M ou Q8_0. Ne descendez a Q3 que si la VRAM est vraiment insuffisante.
+
+---
+
 ## Exercices pratiques
 
 1. **Installation** : Installez Ollama, téléchargez 3 modèles de tailles différentes, comparez les temps de réponse

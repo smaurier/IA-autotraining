@@ -5,6 +5,20 @@
 > **Prérequis** : Module 12 (Embeddings), Module 11 (Ollama)
 > **Duree estimee** : 4 heures
 
+<details>
+<summary>Rappel du module précédent</summary>
+
+1. **Qu'est-ce qu'un token et pourquoi les LLMs utilisent-ils des tokens plutot que des mots ?**
+   Un token est un fragment de texte (mot, sous-mot, caractere). Les mots entiers poseraient un probleme de vocabulaire gigantesque (>500K) et de mots inconnus. L'algorithme BPE (Byte Pair Encoding) offre un compromis optimal avec un vocabulaire de 32K-128K tokens qui gere tous les mots.
+
+2. **Qu'est-ce qu'un embedding et a quoi sert-il ?**
+   Un embedding est une representation vectorielle (liste de nombres) qui capture le sens d'un texte. Les textes semantiquement proches ont des vecteurs proches dans l'espace vectoriel, ce qui permet la recherche semantique.
+
+3. **Comment fonctionne la similarite cosinus et pourquoi est-elle utilisee pour comparer des embeddings ?**
+   La similarite cosinus mesure l'angle entre deux vecteurs, independamment de leur longueur. Elle vaut 1 pour des vecteurs identiques en direction, 0 pour des vecteurs orthogonaux, et -1 pour des vecteurs opposes. Elle est preferee a la distance euclidienne car elle capture la similarite de sens plutot que de magnitude.
+
+</details>
+
 ---
 
 ## Ou en etes-vous dans le parcours RAG ?

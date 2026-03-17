@@ -5,6 +5,20 @@
 > **Prérequis** : Module 01-02 (Prompting), bases Node.js/TypeScript
 > **Duree estimee** : 4 heures
 
+<details>
+<summary>Rappel du module précédent</summary>
+
+1. **Quels sont les deux paradigmes des assistants code ?**
+   La completion inline (Copilot, Cursor tab) qui suggere du code pendant que vous tapez, et l'agent conversationnel (Claude Code, Copilot Chat) a qui vous decrivez ce que vous voulez en langage naturel.
+
+2. **A quoi sert le fichier CLAUDE.md (ou .cursorrules) ?**
+   Il donne du contexte permanent a l'assistant IA sur le projet : conventions, stack technique, commandes utiles. L'IA le lit a chaque session pour adapter ses reponses au projet.
+
+3. **Pourquoi le TDD est-il le meilleur workflow avec un assistant code ?**
+   Parce que le test sert de specification verifiable. On ecrit le test en premier (RED), on demande a l'IA d'implementer pour le faire passer (GREEN), puis on refactorise (REFACTOR). L'IA a un objectif clair et mesurable.
+
+</details>
+
 ---
 
 ## 1. SDK Anthropic — Claude API
@@ -506,6 +520,189 @@ async function main() {
 
 main();
 ```
+
+---
+
+## 8. Multimodal — Images, documents et audio
+
+### 8.1 Envoyer des images a Claude
+
+Claude peut analyser des images envoyees en **base64** ou via **URL** :
+
+```typescript
+import Anthropic from '@anthropic-ai/sdk';
+import { readFileSync } from 'fs';
+
+// Methode 1 : Image en base64 (depuis un fichier local)
+const imageBuffer = readFileSync('./screenshot.png');
+const base64Data = imageBuffer.toString('base64');
+
+const response = await client.messages.create({
+  model: 'claude-sonnet-4-6',
+  max_tokens: 1024,
+  messages: [{
+    role: 'user',
+    content: [
+      {
+        type: 'image',
+        source: {
+          type: 'base64',
+          media_type: 'image/png',     // image/png, image/jpeg, image/gif, image/webp
+          data: base64Data,
+        },
+      },
+      {
+        type: 'text',
+        text: 'Analyse cette capture d\'ecran. Identifie les problemes d\'accessibilite.',
+      },
+    ],
+  }],
+});
+
+// Methode 2 : Image via URL (Claude telecharge l'image)
+const responseUrl = await client.messages.create({
+  model: 'claude-sonnet-4-6',
+  max_tokens: 1024,
+  messages: [{
+    role: 'user',
+    content: [
+      {
+        type: 'image',
+        source: {
+          type: 'url',
+          url: 'https://example.com/diagram.png',
+        },
+      },
+      {
+        type: 'text',
+        text: 'Explique ce diagramme d\'architecture.',
+      },
+    ],
+  }],
+});
+```
+
+### 8.2 Envoyer des images a OpenAI
+
+```typescript
+// OpenAI utilise un format different : type 'image_url' au lieu de 'image'
+const response = await openai.chat.completions.create({
+  model: 'gpt-4o',
+  messages: [{
+    role: 'user',
+    content: [
+      {
+        type: 'image_url',
+        image_url: {
+          url: `data:image/png;base64,${base64Data}`,
+          detail: 'high', // 'low', 'high', ou 'auto'
+        },
+      },
+      {
+        type: 'text',
+        text: 'Decris cette image en detail.',
+      },
+    ],
+  }],
+});
+
+// OpenAI supporte aussi les URLs directes
+// image_url: { url: 'https://example.com/image.jpg' }
+```
+
+> **Piege frequent** : Claude utilise `type: 'image'` avec `source.type: 'base64'`, tandis qu'OpenAI utilise `type: 'image_url'` avec un data URI `data:image/png;base64,...`. Les formats sont **incompatibles** — pensez a abstraire cette difference dans votre code.
+
+### 8.3 Cas d'usage Vision
+
+| Cas d'usage | Description | Modèle recommandé |
+|-------------|------------|-------------------|
+| **Analyse de documents** | Extraire du texte de factures, contrats, formulaires scannes | Claude Sonnet (excellent en OCR) |
+| **Comprehension de diagrammes** | Expliquer des schemas d'architecture, UML, flowcharts | Claude Sonnet ou GPT-4o |
+| **Revue d'UI** | Identifier les problemes d'accessibilite, de design, d'UX | Claude Sonnet |
+| **Analyse de code (screenshot)** | Lire du code depuis une image (IDE, terminal) | Claude Sonnet ou GPT-4o |
+| **Comparaison visuelle** | Comparer deux versions d'une interface (avant/apres) | GPT-4o (multi-images natif) |
+| **Extraction de donnees** | Lire des tableaux, graphiques, infographies | Claude Sonnet |
+
+```typescript
+// Exemple pratique : analyser un schema d'architecture
+async function analyserDiagramme(imagePath: string): Promise<string> {
+  const image = readFileSync(imagePath);
+  const base64 = image.toString('base64');
+  const mediaType = imagePath.endsWith('.png') ? 'image/png' : 'image/jpeg';
+
+  const response = await client.messages.create({
+    model: 'claude-sonnet-4-6',
+    max_tokens: 2048,
+    system: `Tu es un architecte logiciel senior. Analyse les diagrammes techniques
+et identifie : les composants, les flux de donnees, les points de defaillance
+potentiels et les ameliorations possibles.`,
+    messages: [{
+      role: 'user',
+      content: [
+        {
+          type: 'image',
+          source: { type: 'base64', media_type: mediaType, data: base64 },
+        },
+        { type: 'text', text: 'Analyse ce diagramme d\'architecture.' },
+      ],
+    }],
+  });
+
+  return response.content[0].text;
+}
+```
+
+### 8.4 Audio — Transcription avec OpenAI Whisper
+
+OpenAI propose l'API Whisper pour la transcription audio. Ce n'est pas un LLM mais un modèle specialise de speech-to-text :
+
+```typescript
+import OpenAI from 'openai';
+import { createReadStream } from 'fs';
+
+const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+
+// Transcrire un fichier audio
+const transcription = await openai.audio.transcriptions.create({
+  file: createReadStream('./meeting.mp3'),
+  model: 'whisper-1',
+  language: 'fr',              // Optionnel : forcer la langue
+  response_format: 'verbose_json', // 'text', 'json', 'verbose_json', 'srt', 'vtt'
+});
+
+console.log(transcription.text);
+// "Bonjour, aujourd'hui nous allons discuter de l'architecture du nouveau service..."
+
+// Formats audio supportes : mp3, mp4, mpeg, mpga, m4a, wav, webm
+// Taille max : 25 Mo par fichier
+// Prix : $0.006 / minute
+```
+
+```typescript
+// Pipeline complet : audio → transcription → analyse par LLM
+async function analyserReunion(audioPath: string): Promise<string> {
+  // 1. Transcrire l'audio
+  const transcription = await openai.audio.transcriptions.create({
+    file: createReadStream(audioPath),
+    model: 'whisper-1',
+    language: 'fr',
+  });
+
+  // 2. Analyser avec Claude
+  const analyse = await client.messages.create({
+    model: 'claude-sonnet-4-6',
+    max_tokens: 2048,
+    system: 'Tu analyses des transcriptions de reunions. Extrais : les decisions prises, les actions a suivre (avec responsable), et les points en suspens.',
+    messages: [
+      { role: 'user', content: `Voici la transcription :\n\n${transcription.text}` },
+    ],
+  });
+
+  return analyse.content[0].text;
+}
+```
+
+> **Note** : Claude et GPT-4o supportent aussi les entrees audio directement dans certains modes (Claude avec audio beta, GPT-4o avec audio dans le mode realtime). Ces APIs sont encore en evolution rapide — consultez la documentation officielle pour l'etat actuel.
 
 ---
 

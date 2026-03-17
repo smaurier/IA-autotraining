@@ -53,6 +53,7 @@ features:
 | 17 | [Sécurité & Ethique](/modules/17-securite-ethique) | Avance | [Lab 17](/labs/lab-17-securite-ethique/README) | [Quiz](/quizzes/quiz-17-securite-ethique.html) |
 | 18 | [Production & Couts](/modules/18-production-couts) | Expert | [Lab 18](/labs/lab-18-production-couts/README) | [Quiz](/quizzes/quiz-18-production.html) |
 | 19 | [Projet Final](/modules/19-projet-final) | Expert | [Lab 19](/labs/lab-19-projet-final/README) | [Quiz](/quizzes/quiz-19-projet-final.html) |
+| 20 | [Agentic Frameworks](/modules/20-agentic-frameworks) | Expert | — | — |
 
 ## Annexes
 

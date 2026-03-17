@@ -1123,6 +1123,140 @@ class CostAlertManager {
 
 ---
 
+## 8. Prompt Caching — Réduire les coûts des contextes répétés
+
+### Le concept
+
+Le prompt caching (ou prefix caching) permet de **réutiliser les tokens d'entrée déjà traités** entre plusieurs requêtes. Si votre system prompt fait 5000 tokens et que vous l'envoyez 1000 fois par jour, le cache évite de les re-traiter à chaque appel.
+
+```
+SANS prompt caching :
+  Requête 1 : [System: 5000 tokens] + [User: 200 tokens] → facturé 5200 tokens input
+  Requête 2 : [System: 5000 tokens] + [User: 150 tokens] → facturé 5150 tokens input
+  Requête 3 : [System: 5000 tokens] + [User: 300 tokens] → facturé 5300 tokens input
+  Total input : 15 650 tokens
+
+AVEC prompt caching :
+  Requête 1 : [System: 5000 tokens] + [User: 200 tokens] → 5200 tokens (cache WRITE)
+  Requête 2 : [CACHE: 5000 tokens]  + [User: 150 tokens] → 150 tokens + 5000 cache read
+  Requête 3 : [CACHE: 5000 tokens]  + [User: 300 tokens] → 300 tokens + 5000 cache read
+  Total input facturé au prix plein : 5650 tokens
+  Total cache reads : 10 000 tokens (facturés ~90% moins cher)
+```
+
+### Anthropic — Prefix caching
+
+Chez Anthropic, le caching est basé sur le **préfixe** du prompt. Tant que le début du message est identique, les tokens sont servis depuis le cache :
+
+```typescript
+import Anthropic from '@anthropic-ai/sdk';
+
+// Le system prompt et les premiers messages sont mis en cache
+// en utilisant cache_control sur les blocs de contenu
+
+const response = await client.messages.create({
+  model: 'claude-sonnet-4-6',
+  max_tokens: 1024,
+  system: [
+    {
+      type: 'text',
+      text: `Tu es un assistant juridique expert en droit français.
+Voici le Code du travail complet (extraits pertinents) :
+[... 5000 tokens de contexte juridique ...]`,
+      cache_control: { type: 'ephemeral' }, // ← Active le caching
+    },
+  ],
+  messages: [
+    {
+      role: 'user',
+      content: 'Quelles sont les règles pour le télétravail ?',
+    },
+  ],
+});
+
+// La réponse contient les infos de cache
+console.log(response.usage);
+// {
+//   input_tokens: 200,         // Tokens user (non cachés)
+//   cache_creation_input_tokens: 5000,  // Première requête : écriture cache
+//   cache_read_input_tokens: 0,         // Pas de lecture cache (1ère fois)
+//   output_tokens: 500,
+// }
+
+// Deuxième requête avec le MEME system prompt :
+// {
+//   input_tokens: 180,
+//   cache_creation_input_tokens: 0,     // Pas d'écriture (déjà en cache)
+//   cache_read_input_tokens: 5000,      // Lecture depuis le cache !
+//   output_tokens: 450,
+// }
+```
+
+**Tarification Anthropic (prompt caching) :**
+
+| Action | Prix vs prix normal |
+|--------|-------------------|
+| Cache write | 1.25× le prix normal (25% de surcoût) |
+| Cache read | 0.10× le prix normal (90% d'économie) |
+| Tokens non cachés | 1× le prix normal |
+
+**Calcul d'économie :**
+
+```typescript
+// System prompt de 5000 tokens, 1000 requêtes/jour avec Claude Sonnet ($3/M input)
+// Sans cache : 5000 × 1000 = 5M tokens × $3/M = $15/jour
+// Avec cache :
+//   1ère requête : 5000 tokens × $3.75/M (write) = $0.019
+//   999 requêtes : 5000 × 999 tokens × $0.30/M (read) = $1.50
+//   Total : $1.52/jour → économie de ~90%
+```
+
+### OpenAI — Automatic caching
+
+OpenAI implémente le prompt caching de manière **automatique** depuis fin 2024. Aucune configuration n'est nécessaire — le cache s'active quand le préfixe du prompt est identique entre les requêtes :
+
+```typescript
+// Chez OpenAI, le caching est transparent
+// Pas de paramètre spécial à ajouter
+const response = await openai.chat.completions.create({
+  model: 'gpt-4o',
+  messages: [
+    {
+      role: 'system',
+      content: 'Long system prompt identique entre les requêtes...',
+    },
+    { role: 'user', content: 'Question de l\'utilisateur' },
+  ],
+});
+
+// Les tokens cachés sont visibles dans la réponse
+console.log(response.usage);
+// {
+//   prompt_tokens: 5200,
+//   completion_tokens: 400,
+//   prompt_tokens_details: {
+//     cached_tokens: 5000,  // ← Tokens servis depuis le cache
+//   },
+// }
+```
+
+**Tarification OpenAI** : les tokens cachés sont facturés à **50% du prix** (au lieu de 10% chez Anthropic, mais sans surcoût d'écriture).
+
+### Quand utiliser le prompt caching ?
+
+| Situation | Utiliser le caching ? | Pourquoi |
+|-----------|----------------------|----------|
+| Long system prompt (> 1000 tokens) | Oui | Économies massives sur les appels répétés |
+| RAG avec contexte fixe | Oui | Le contexte documentaire est souvent le même |
+| Chatbot avec instructions longues | Oui | Le system prompt est envoyé à chaque message |
+| Requêtes uniques variées | Non | Pas de préfixe commun, le cache ne sera jamais lu |
+| Prompts très courts (< 200 tokens) | Non | L'économie est négligeable |
+| Prototypage / développement | Non | Les prompts changent trop souvent |
+
+> **Règle empirique** : si votre system prompt dépasse 1000 tokens et que vous faites plus de 10 requêtes/heure avec le même préfixe, le prompt caching est rentable dès le premier jour.
+
+---
+
 ## Résumé du module
 
 | Concept | Points clés |

@@ -55,6 +55,7 @@ export default defineConfig({
             { text: '17 - Securite & Ethique', link: '/modules/17-securite-ethique' },
             { text: '18 - Production & Couts', link: '/modules/18-production-couts' },
             { text: '19 - Projet Final', link: '/modules/19-projet-final' },
+            { text: '20 - Agentic Frameworks', link: '/modules/20-agentic-frameworks' },
           ],
         },
       ],

@@ -5,6 +5,20 @@
 > **Prérequis** : Module 01-06 (Utiliser l'IA) — aucune base math spécifique
 > **Duree estimee** : 3 heures
 
+<details>
+<summary>Rappel du module précédent</summary>
+
+1. **Qu'est-ce qu'un agent IA et en quoi differe-t-il d'un chatbot classique ?**
+   Un agent IA utilise un LLM pour decider quelle action executer, observer le resultat, et iterer jusqu'a atteindre un objectif. Contrairement a un chatbot qui repond au comptoir, un agent peut se lever, appeler des outils, et revenir avec une reponse complete.
+
+2. **Quel est le pattern central de l'orchestration d'agents (ReAct) ?**
+   Le cycle Thought (le LLM analyse la situation) → Action (appeler un outil) → Observation (analyser le resultat), repete jusqu'a obtenir une reponse finale. Chaque tour envoie l'historique complet au LLM.
+
+3. **A quoi servent les guardrails dans un systeme multi-agent ?**
+   Ils limitent les actions autorisees (outils bloques, timeout, nombre max d'iterations), demandent une confirmation humaine pour les actions sensibles (ecriture, deploiement), et empechent un agent de depasser son perimetre.
+
+</details>
+
 ---
 
 > **⚠️ Changement de registre.** Après 6 modules pratiques (prompting, API, agents), tu passes aux fondamentaux mathematiques. C'est normal que le rythme change. Tu n'as PAS besoin de tout maîtriser pour continuer — comprendre l'intuition suffit. Les formules sont la pour ceux qui veulent aller plus loin. Si les maths te bloquent, lis le module en diagonal, fais le lab, et passe au module 08.

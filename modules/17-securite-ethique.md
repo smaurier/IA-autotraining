@@ -11,6 +11,20 @@
 - Appliquer une checklist de sécurité pour la production
 - Implémenter un middleware de détection d'injection en TypeScript
 
+<details>
+<summary>Rappel du module précédent</summary>
+
+1. **Pourquoi est-il difficile d'evaluer un systeme LLM par rapport au code classique ?**
+   Les sorties d'un LLM sont non-deterministes et subjectives. Contrairement a un test unitaire (pass/fail), il faut mesurer plusieurs dimensions : exactitude, fidelite, pertinence, completude, coherence, et detecter les hallucinations.
+
+2. **Qu'est-ce que l'approche LLM-as-Judge et quand l'utiliser ?**
+   On utilise un LLM pour evaluer les sorties d'un autre LLM, en lui donnant des criteres de notation precis. C'est utile quand les metriques automatiques (BLEU, ROUGE) ne suffisent pas a capturer la qualite d'une reponse ouverte.
+
+3. **Quels sont les 3 niveaux d'evaluation d'un systeme LLM ?**
+   Niveau 1 — Offline (benchmarks et metriques avant deploiement), Niveau 2 — Online (A/B testing et feedback utilisateurs en production), Niveau 3 — Observabilite (logs, traces, couts, latence, taux d'hallucination en continu).
+
+</details>
+
 ---
 
 ## 1. Prompt Injection : la menace principale

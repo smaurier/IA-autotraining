@@ -11,6 +11,20 @@
 - Utiliser les API d'embeddings (Ollama, OpenAI, Claude)
 - Implémenter une recherche sémantique complète en TypeScript
 
+<details>
+<summary>Rappel du module précédent</summary>
+
+1. **Qu'est-ce qu'un perceptron et quelle est sa formule ?**
+   Le perceptron est le neurone artificiel le plus simple. Il prend des entrees, les multiplie par des poids, ajoute un biais, et passe le resultat dans une fonction d'activation : z = W.X + b, y = f(z).
+
+2. **Qu'est-ce que la backpropagation et a quoi sert-elle ?**
+   La backpropagation (retropropagation) est l'algorithme qui calcule les gradients de l'erreur par rapport a chaque poids du reseau en appliquant la chain rule. Ces gradients permettent de mettre a jour les poids via le gradient descent pour que le modele "apprenne".
+
+3. **Pourquoi un reseau a couches cachees peut-il resoudre le probleme XOR alors qu'un perceptron seul ne le peut pas ?**
+   Le XOR n'est pas lineairement separable. Les couches cachees permettent au reseau de creer des representations intermediaires non-lineaires, combinant plusieurs frontieres de decision pour separer les classes.
+
+</details>
+
 ---
 
 ## 1. Tokenization : les briques de base des LLMs
