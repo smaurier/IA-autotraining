@@ -1,8 +1,8 @@
 # Module 00 — Prérequis & Paysage IA
 
 <!-- nav-cours-précédent -->
-> **Cours précédent** : [WebGPU & 3D](../../14-webgpu-3d/modules/29-projet-final-expert.md). Si tu arrives ici sans avoir fait les cours précédents, consulte le [guide de démarrage](../../GUIDE-DEMARRAGE.md).
 
+> **Cours précédent** : [WebGPU & 3D](../../20-webgpu-3d/modules/29-projet-final-expert.md). Si tu arrives ici sans avoir fait les cours précédents, consulte le [guide de démarrage](../../GUIDE-DEMARRAGE.md).
 
 ## Objectifs du module
 
@@ -36,23 +36,23 @@ Vous devez etre a l'aise avec :
 ```typescript
 // Vous devez comprendre ce code sans difficulte
 interface Message {
-  role: 'system' | 'user' | 'assistant'
-  content: string
+  role: "system" | "user" | "assistant";
+  content: string;
 }
 
 async function sendMessages(messages: Message[]): Promise<string> {
-  const response = await fetch('https://api.example.com/chat', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
+  const response = await fetch("https://api.example.com/chat", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ messages }),
-  })
+  });
 
   if (!response.ok) {
-    throw new Error(`HTTP ${response.status}: ${response.statusText}`)
+    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
   }
 
-  const data = await response.json()
-  return data.completion
+  const data = await response.json();
+  return data.completion;
 }
 ```
 
@@ -102,24 +102,22 @@ Creez un fichier `src/hello.ts` pour vérifier que tout fonctionne :
 
 ```typescript
 // src/hello.ts
-import Anthropic from '@anthropic-ai/sdk'
-import 'dotenv/config'
+import Anthropic from "@anthropic-ai/sdk";
+import "dotenv/config";
 
-const client = new Anthropic()
+const client = new Anthropic();
 
 async function main() {
   const message = await client.messages.create({
-    model: 'claude-sonnet-4-6',
+    model: "claude-sonnet-4-6",
     max_tokens: 256,
-    messages: [
-      { role: 'user', content: 'Dis "Bonjour" en 5 langues.' },
-    ],
-  })
+    messages: [{ role: "user", content: 'Dis "Bonjour" en 5 langues.' }],
+  });
 
-  console.log(message.content[0])
+  console.log(message.content[0]);
 }
 
-main()
+main();
 ```
 
 ```bash
@@ -134,13 +132,13 @@ Si vous voyez une réponse du modèle, votre environnement est pret.
 
 ### 2.1 Les grands concepts
 
-| Terme | Definition | Analogie |
-|-------|-----------|----------|
-| **IA** (Intelligence Artificielle) | Domaine de l'informatique visant a créer des systèmes capables de realiser des taches qui necessitent normalement l'intelligence humaine | Un parapluie qui englobe tout le reste |
-| **ML** (Machine Learning) | Sous-domaine de l'IA ou les machines apprennent à partir de donnees sans etre explicitement programmees | Apprendre a reconnaitre des chats en regardant des milliers de photos de chats |
-| **DL** (Deep Learning) | Sous-domaine du ML utilisant des réseaux de neurones profonds (multiples couches) | Un cerveau artificiel avec des milliards de connexions |
-| **LLM** (Large Language Model) | Modèle de deep learning entraine sur d'enormes quantites de texte, capable de générer et comprendre du langage | Un autocomplete surpuissant qui a lu une grande partie d'Internet |
-| **NLP** (Natural Language Processing) | Domaine de l'IA traitant du langage humain | Apprendre à un ordinateur a lire et écrire |
+| Terme                                 | Definition                                                                                                                               | Analogie                                                                       |
+| ------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------ |
+| **IA** (Intelligence Artificielle)    | Domaine de l'informatique visant a créer des systèmes capables de realiser des taches qui necessitent normalement l'intelligence humaine | Un parapluie qui englobe tout le reste                                         |
+| **ML** (Machine Learning)             | Sous-domaine de l'IA ou les machines apprennent à partir de donnees sans etre explicitement programmees                                  | Apprendre a reconnaitre des chats en regardant des milliers de photos de chats |
+| **DL** (Deep Learning)                | Sous-domaine du ML utilisant des réseaux de neurones profonds (multiples couches)                                                        | Un cerveau artificiel avec des milliards de connexions                         |
+| **LLM** (Large Language Model)        | Modèle de deep learning entraine sur d'enormes quantites de texte, capable de générer et comprendre du langage                           | Un autocomplete surpuissant qui a lu une grande partie d'Internet              |
+| **NLP** (Natural Language Processing) | Domaine de l'IA traitant du langage humain                                                                                               | Apprendre à un ordinateur a lire et écrire                                     |
 
 ### 2.2 Vocabulaire des LLMs
 
@@ -170,9 +168,9 @@ Un embedding est une representation numérique (vecteur) d'un texte dans un espa
 
 ```typescript
 // Conceptuellement, un embedding ressemble a ca :
-const embeddingChat = [0.12, -0.45, 0.78, 0.33, /* ... 1536 dimensions */]
-const embeddingConversation = [0.11, -0.44, 0.77, 0.34, /* ... proches ! */]
-const embeddingVoiture = [0.89, 0.12, -0.56, 0.01, /* ... tres differents */]
+const embeddingChat = [0.12, -0.45, 0.78, 0.33 /* ... 1536 dimensions */];
+const embeddingConversation = [0.11, -0.44, 0.77, 0.34 /* ... proches ! */];
+const embeddingVoiture = [0.89, 0.12, -0.56, 0.01 /* ... tres differents */];
 
 // La distance cosinus entre "chat" et "conversation" sera faible
 // La distance entre "chat" et "voiture" sera grande
@@ -189,7 +187,7 @@ L'inference est le processus par lequel un modèle entraine généré une répon
 
 ```typescript
 // Le prompt
-const prompt = 'Explique les closures en JavaScript en 3 phrases.'
+const prompt = "Explique les closures en JavaScript en 3 phrases.";
 
 // La completion (generee par le LLM)
 // "Une closure est une fonction qui se souvient de son environnement
@@ -240,24 +238,24 @@ Le LLM ne "comprend" pas comme un humain. Il est extraordinairement bon pour pre
 
 ### 3.1 La timeline
 
-| Annee | Modèle / Événement | Impact |
-|-------|-------------------|--------|
-| 2017 | **Attention Is All You Need** (Google) | Invention de l'architecture Transformer |
-| 2018 | **GPT-1** (OpenAI) | 117M paramètres, premier GPT |
-| 2019 | **GPT-2** (OpenAI) | 1.5B paramètres, "trop dangereux pour etre publie" |
-| 2020 | **GPT-3** (OpenAI) | 175B paramètres, few-shot learning emergent |
-| 2021 | **Codex** (OpenAI) | GPT-3 fine-tune sur du code → GitHub Copilot |
-| 2022 | **ChatGPT** (OpenAI) | GPT-3.5 avec RLHF, explosion grand public |
-| 2023 | **GPT-4** (OpenAI) | Multimodal (texte + image), raisonnement ameliore |
-| 2023 | **Claude 2** (Anthropic) | Context window de 100K tokens |
-| 2023 | **Llama 2** (Meta) | Open-source, democratisation |
-| 2023 | **Mistral 7B** (Mistral AI) | Petit modèle open-source très performant |
-| 2024 | **Claude 3** (Anthropic) | Famille Opus/Sonnet/Haiku, leadership sur certains benchmarks |
-| 2024 | **GPT-4o** (OpenAI) | Multimodal natif (texte, image, audio) |
-| 2024 | **Llama 3.1** (Meta) | 405B paramètres, open-source competitif |
-| 2024 | **Mistral Large** (Mistral AI) | Modèle proprietaire competitif |
-| 2025 | **Claude 4** (Anthropic) | Opus, Sonnet — agents, raisonnement etendu |
-| 2025 | **Gemini 2** (Google) | Intégration profonde dans l'ecosysteme Google |
+| Annee | Modèle / Événement                     | Impact                                                        |
+| ----- | -------------------------------------- | ------------------------------------------------------------- |
+| 2017  | **Attention Is All You Need** (Google) | Invention de l'architecture Transformer                       |
+| 2018  | **GPT-1** (OpenAI)                     | 117M paramètres, premier GPT                                  |
+| 2019  | **GPT-2** (OpenAI)                     | 1.5B paramètres, "trop dangereux pour etre publie"            |
+| 2020  | **GPT-3** (OpenAI)                     | 175B paramètres, few-shot learning emergent                   |
+| 2021  | **Codex** (OpenAI)                     | GPT-3 fine-tune sur du code → GitHub Copilot                  |
+| 2022  | **ChatGPT** (OpenAI)                   | GPT-3.5 avec RLHF, explosion grand public                     |
+| 2023  | **GPT-4** (OpenAI)                     | Multimodal (texte + image), raisonnement ameliore             |
+| 2023  | **Claude 2** (Anthropic)               | Context window de 100K tokens                                 |
+| 2023  | **Llama 2** (Meta)                     | Open-source, democratisation                                  |
+| 2023  | **Mistral 7B** (Mistral AI)            | Petit modèle open-source très performant                      |
+| 2024  | **Claude 3** (Anthropic)               | Famille Opus/Sonnet/Haiku, leadership sur certains benchmarks |
+| 2024  | **GPT-4o** (OpenAI)                    | Multimodal natif (texte, image, audio)                        |
+| 2024  | **Llama 3.1** (Meta)                   | 405B paramètres, open-source competitif                       |
+| 2024  | **Mistral Large** (Mistral AI)         | Modèle proprietaire competitif                                |
+| 2025  | **Claude 4** (Anthropic)               | Opus, Sonnet — agents, raisonnement etendu                    |
+| 2025  | **Gemini 2** (Google)                  | Intégration profonde dans l'ecosysteme Google                 |
 
 ### 3.2 L'architecture Transformer
 
@@ -313,19 +311,19 @@ Ces modèles sont accessibles uniquement via API. Vous ne pouvez pas les telecha
 
 ```typescript
 // Utilisation de Claude via l'API
-import Anthropic from '@anthropic-ai/sdk'
+import Anthropic from "@anthropic-ai/sdk";
 
 const client = new Anthropic({
   apiKey: process.env.ANTHROPIC_API_KEY,
-})
+});
 
 const response = await client.messages.create({
-  model: 'claude-sonnet-4-6',
+  model: "claude-sonnet-4-6",
   max_tokens: 1024,
   messages: [
-    { role: 'user', content: 'Explique le pattern Observer en TypeScript.' },
+    { role: "user", content: "Explique le pattern Observer en TypeScript." },
   ],
-})
+});
 ```
 
 - **Opus** : le plus puissant, raisonnement complexe, code de haute qualite
@@ -368,15 +366,15 @@ Ces modèles peuvent etre telecharges, modifies et heberges sur votre propre inf
 
 ### 4.3 Proprietaire vs Open-source : comment choisir ?
 
-| Critere | Proprietaire | Open-source |
-|---------|-------------|-------------|
-| **Performance brute** | Generalement superieure (Opus, GPT-4) | S'ameliore rapidement, Llama 3.1 405B est competitif |
-| **Cout par requête** | Pay-per-use via API | Gratuit une fois heberge (mais cout infra) |
-| **Latence** | Depend du provider, généralement optimise | Depend de votre infra, peut etre plus rapide en local |
-| **Confidentialite** | Donnees envoyees au provider | Donnees restent chez vous |
-| **Personnalisation** | Limitee (system prompt, fine-tuning parfois) | Totale (fine-tuning, modification, etc.) |
-| **Maintenance** | Zero (le provider géré tout) | A votre charge (GPU, mises a jour, etc.) |
-| **Disponibilité** | SLA du provider, risque de downtime | Sous votre controle |
+| Critere               | Proprietaire                                 | Open-source                                           |
+| --------------------- | -------------------------------------------- | ----------------------------------------------------- |
+| **Performance brute** | Generalement superieure (Opus, GPT-4)        | S'ameliore rapidement, Llama 3.1 405B est competitif  |
+| **Cout par requête**  | Pay-per-use via API                          | Gratuit une fois heberge (mais cout infra)            |
+| **Latence**           | Depend du provider, généralement optimise    | Depend de votre infra, peut etre plus rapide en local |
+| **Confidentialite**   | Donnees envoyees au provider                 | Donnees restent chez vous                             |
+| **Personnalisation**  | Limitee (system prompt, fine-tuning parfois) | Totale (fine-tuning, modification, etc.)              |
+| **Maintenance**       | Zero (le provider géré tout)                 | A votre charge (GPU, mises a jour, etc.)              |
+| **Disponibilité**     | SLA du provider, risque de downtime          | Sous votre controle                                   |
 
 > **Conseil pour debuter** : commencez avec les APIs proprietaires (Claude ou GPT). L'infra pour heberger des modèles open-source est un sujet en soi. Une fois que vous maitrisez les concepts, explorez l'open-source avec Ollama pour le développement local.
 
@@ -424,23 +422,29 @@ Temperature = 2.0 (chaotique)
 ```typescript
 // Temperature basse (0.0-0.3) : generation de code, extraction de donnees, classification
 const codeResponse = await client.messages.create({
-  model: 'claude-sonnet-4-6',
+  model: "claude-sonnet-4-6",
   max_tokens: 1024,
-  temperature: 0,  // Deterministe : meme input → meme output
+  temperature: 0, // Deterministe : meme input → meme output
   messages: [
-    { role: 'user', content: 'Ecris une fonction qui trie un tableau par quicksort.' },
+    {
+      role: "user",
+      content: "Ecris une fonction qui trie un tableau par quicksort.",
+    },
   ],
-})
+});
 
 // Temperature haute (0.7-1.0) : ecriture creative, brainstorming
 const creativeResponse = await client.messages.create({
-  model: 'claude-sonnet-4-6',
+  model: "claude-sonnet-4-6",
   max_tokens: 1024,
-  temperature: 0.9,  // Plus de variete et de creativite
+  temperature: 0.9, // Plus de variete et de creativite
   messages: [
-    { role: 'user', content: 'Propose 10 noms originaux pour une startup de dev tools.' },
+    {
+      role: "user",
+      content: "Propose 10 noms originaux pour une startup de dev tools.",
+    },
   ],
-})
+});
 ```
 
 ### 5.2 Top-p (nucleus sampling)
@@ -482,17 +486,22 @@ Le nombre maximum de tokens que le modèle peut générer dans sa réponse.
 ```typescript
 // Reponse courte
 const short = await client.messages.create({
-  model: 'claude-sonnet-4-6',
-  max_tokens: 100,  // ~75 mots en francais
-  messages: [{ role: 'user', content: 'Resume le pattern Singleton.' }],
-})
+  model: "claude-sonnet-4-6",
+  max_tokens: 100, // ~75 mots en francais
+  messages: [{ role: "user", content: "Resume le pattern Singleton." }],
+});
 
 // Reponse longue
 const long = await client.messages.create({
-  model: 'claude-sonnet-4-6',
-  max_tokens: 4096,  // ~3000 mots
-  messages: [{ role: 'user', content: 'Ecris un tutoriel complet sur les design patterns.' }],
-})
+  model: "claude-sonnet-4-6",
+  max_tokens: 4096, // ~3000 mots
+  messages: [
+    {
+      role: "user",
+      content: "Ecris un tutoriel complet sur les design patterns.",
+    },
+  ],
+});
 ```
 
 > **Attention** : `max_tokens` est une limite haute. Si le modèle n'a besoin que de 50 tokens pour repondre, il s'arretera a 50 même si vous avez mis `max_tokens: 4096`. Vous ne payez que les tokens effectivement generes.
@@ -501,26 +510,29 @@ const long = await client.messages.create({
 
 Des chaines de caracteres qui, si le modèle les généré, arretent la génération.
 
-```typescript
+````typescript
 const response = await client.messages.create({
-  model: 'claude-sonnet-4-6',
+  model: "claude-sonnet-4-6",
   max_tokens: 1024,
-  stop_sequences: ['```', '---', 'FIN'],
+  stop_sequences: ["```", "---", "FIN"],
   messages: [
-    { role: 'user', content: 'Ecris une fonction, arrete-toi après le bloc de code.' },
+    {
+      role: "user",
+      content: "Ecris une fonction, arrete-toi après le bloc de code.",
+    },
   ],
-})
-```
+});
+````
 
 ### 5.6 Tableau recapitulatif des parametres
 
-| Parametre | Valeur typique | Quand l'ajuster | Impact |
-|-----------|---------------|-----------------|--------|
-| `temperature` | 0.0 - 1.0 | Code: 0, creatif: 0.7-1.0 | Creativite vs determinisme |
-| `top_p` | 0.9 - 1.0 | Rarement (utiliser temperature plutot) | Diversite du vocabulaire |
-| `top_k` | 40 - 100 | Rarement | Nombre de candidats consideres |
-| `max_tokens` | 256 - 8192 | Selon la longueur attendue | Limite de la reponse |
-| `stop_sequences` | `[]` | Quand vous voulez un format precis | Arret conditionnel |
+| Parametre        | Valeur typique | Quand l'ajuster                        | Impact                         |
+| ---------------- | -------------- | -------------------------------------- | ------------------------------ |
+| `temperature`    | 0.0 - 1.0      | Code: 0, creatif: 0.7-1.0              | Creativite vs determinisme     |
+| `top_p`          | 0.9 - 1.0      | Rarement (utiliser temperature plutot) | Diversite du vocabulaire       |
+| `top_k`          | 40 - 100       | Rarement                               | Nombre de candidats consideres |
+| `max_tokens`     | 256 - 8192     | Selon la longueur attendue             | Limite de la reponse           |
+| `stop_sequences` | `[]`           | Quand vous voulez un format precis     | Arret conditionnel             |
 
 ---
 
@@ -528,30 +540,30 @@ const response = await client.messages.create({
 
 ### 6.1 Modeles Claude (Anthropic)
 
-| Modele | Context Window | Forces | Faiblesses | Prix input/output (par 1M tokens) |
-|--------|---------------|--------|------------|-----------------------------------|
-| **Claude Opus 4** | 200K | Raisonnement complexe, code expert, agents | Lent, cher | ~$15 / $75 |
-| **Claude Sonnet 4** | 200K | Excellent equilibre, code solide, rapide | Moins bon que Opus sur les cas limites | ~$3 / $15 |
-| **Claude Haiku 3.5** | 200K | Ultra-rapide, tres economique | Moins precis sur les taches complexes | ~$0.25 / $1.25 |
+| Modele               | Context Window | Forces                                     | Faiblesses                             | Prix input/output (par 1M tokens) |
+| -------------------- | -------------- | ------------------------------------------ | -------------------------------------- | --------------------------------- |
+| **Claude Opus 4**    | 200K           | Raisonnement complexe, code expert, agents | Lent, cher                             | ~$15 / $75                        |
+| **Claude Sonnet 4**  | 200K           | Excellent equilibre, code solide, rapide   | Moins bon que Opus sur les cas limites | ~$3 / $15                         |
+| **Claude Haiku 3.5** | 200K           | Ultra-rapide, tres economique              | Moins precis sur les taches complexes  | ~$0.25 / $1.25                    |
 
 ### 6.2 Modeles GPT (OpenAI)
 
-| Modele | Context Window | Forces | Faiblesses | Prix input/output (par 1M tokens) |
-|--------|---------------|--------|------------|-----------------------------------|
-| **GPT-4o** | 128K | Multimodal, rapide, polyvalent | Moins bon que Opus sur le raisonnement | ~$2.50 / $10 |
-| **GPT-4o mini** | 128K | Tres economique, rapide | Performance limitee sur les taches complexes | ~$0.15 / $0.60 |
-| **o1** | 200K | Raisonnement (thinking model) | Lent, cher, pas de streaming | ~$15 / $60 |
+| Modele          | Context Window | Forces                         | Faiblesses                                   | Prix input/output (par 1M tokens) |
+| --------------- | -------------- | ------------------------------ | -------------------------------------------- | --------------------------------- |
+| **GPT-4o**      | 128K           | Multimodal, rapide, polyvalent | Moins bon que Opus sur le raisonnement       | ~$2.50 / $10                      |
+| **GPT-4o mini** | 128K           | Tres economique, rapide        | Performance limitee sur les taches complexes | ~$0.15 / $0.60                    |
+| **o1**          | 200K           | Raisonnement (thinking model)  | Lent, cher, pas de streaming                 | ~$15 / $60                        |
 
 ### 6.3 Modeles open-source
 
-| Modele | Parametres | Context Window | Forces | Utilisation |
-|--------|-----------|---------------|--------|-------------|
-| **Llama 3.1 405B** | 405B | 128K | Proche de GPT-4, open-source | Necesssite un cluster de GPU |
-| **Llama 3.1 70B** | 70B | 128K | Bon rapport taille/perf | 1-2 GPU haut de gamme |
-| **Llama 3.1 8B** | 8B | 128K | Petit, rapide, fine-tunable | 1 GPU ou CPU (quantifie) |
-| **Mistral 7B** | 7B | 32K | Tres efficace pour sa taille | 1 GPU ou CPU (quantifie) |
-| **Mixtral 8x22B** | 176B (MoE) | 64K | Architecture MoE innovante | 2-4 GPU |
-| **Phi-3 mini** | 3.8B | 128K | Minuscule mais performant | CPU, edge, mobile |
+| Modele             | Parametres | Context Window | Forces                       | Utilisation                  |
+| ------------------ | ---------- | -------------- | ---------------------------- | ---------------------------- |
+| **Llama 3.1 405B** | 405B       | 128K           | Proche de GPT-4, open-source | Necesssite un cluster de GPU |
+| **Llama 3.1 70B**  | 70B        | 128K           | Bon rapport taille/perf      | 1-2 GPU haut de gamme        |
+| **Llama 3.1 8B**   | 8B         | 128K           | Petit, rapide, fine-tunable  | 1 GPU ou CPU (quantifie)     |
+| **Mistral 7B**     | 7B         | 32K            | Tres efficace pour sa taille | 1 GPU ou CPU (quantifie)     |
+| **Mixtral 8x22B**  | 176B (MoE) | 64K            | Architecture MoE innovante   | 2-4 GPU                      |
+| **Phi-3 mini**     | 3.8B       | 128K           | Minuscule mais performant    | CPU, edge, mobile            |
 
 ### 6.4 Comment choisir ?
 
@@ -587,36 +599,39 @@ Creez un script `src/check-env.ts` qui :
 
 ```typescript
 // src/check-env.ts
-import Anthropic from '@anthropic-ai/sdk'
-import 'dotenv/config'
+import Anthropic from "@anthropic-ai/sdk";
+import "dotenv/config";
 
 async function checkEnvironment() {
   // 1. Vérifier la clé API
   if (!process.env.ANTHROPIC_API_KEY) {
-    console.error('ANTHROPIC_API_KEY non definie dans .env')
-    process.exit(1)
+    console.error("ANTHROPIC_API_KEY non definie dans .env");
+    process.exit(1);
   }
-  console.log('Cle API Anthropic: OK')
+  console.log("Cle API Anthropic: OK");
 
   // 2. Envoyer un message test
-  const client = new Anthropic()
+  const client = new Anthropic();
   const message = await client.messages.create({
-    model: 'claude-sonnet-4-6',
+    model: "claude-sonnet-4-6",
     max_tokens: 100,
     messages: [
-      { role: 'user', content: 'Reponds uniquement "OK" si tu fonctionnes.' },
+      { role: "user", content: 'Reponds uniquement "OK" si tu fonctionnes.' },
     ],
-  })
+  });
 
   // 3. Afficher les informations
-  console.log('Modèle:', message.model)
-  console.log('Tokens input:', message.usage.input_tokens)
-  console.log('Tokens output:', message.usage.output_tokens)
-  console.log('Reponse:', message.content[0].type === 'text' ? message.content[0].text : '')
-  console.log('\nEnvironnement pret !')
+  console.log("Modèle:", message.model);
+  console.log("Tokens input:", message.usage.input_tokens);
+  console.log("Tokens output:", message.usage.output_tokens);
+  console.log(
+    "Reponse:",
+    message.content[0].type === "text" ? message.content[0].text : "",
+  );
+  console.log("\nEnvironnement pret !");
 }
 
-checkEnvironment().catch(console.error)
+checkEnvironment().catch(console.error);
 ```
 
 ### Exercice 2 — Comparaison de temperatures
@@ -625,37 +640,38 @@ Creez un script qui envoie le meme prompt avec differentes temperatures (0, 0.5,
 
 ```typescript
 // src/temperature-compare.ts
-import Anthropic from '@anthropic-ai/sdk'
-import 'dotenv/config'
+import Anthropic from "@anthropic-ai/sdk";
+import "dotenv/config";
 
-const client = new Anthropic()
-const prompt = 'Invente un nom pour une variable qui stocke une liste d\'utilisateurs actifs.'
+const client = new Anthropic();
+const prompt =
+  "Invente un nom pour une variable qui stocke une liste d'utilisateurs actifs.";
 
 async function generateWithTemperature(temp: number): Promise<string> {
   const message = await client.messages.create({
-    model: 'claude-sonnet-4-6',
+    model: "claude-sonnet-4-6",
     max_tokens: 50,
     temperature: temp,
-    messages: [{ role: 'user', content: prompt }],
-  })
+    messages: [{ role: "user", content: prompt }],
+  });
 
-  return message.content[0].type === 'text' ? message.content[0].text : ''
+  return message.content[0].type === "text" ? message.content[0].text : "";
 }
 
 async function main() {
-  const temperatures = [0, 0.5, 1.0]
+  const temperatures = [0, 0.5, 1.0];
 
   for (const temp of temperatures) {
-    console.log(`\n=== Temperature: ${temp} ===`)
+    console.log(`\n=== Temperature: ${temp} ===`);
     // Générer 3 réponses pour voir la variabilite
     for (let i = 0; i < 3; i++) {
-      const result = await generateWithTemperature(temp)
-      console.log(`  Essai ${i + 1}: ${result.trim()}`)
+      const result = await generateWithTemperature(temp);
+      console.log(`  Essai ${i + 1}: ${result.trim()}`);
     }
   }
 }
 
-main().catch(console.error)
+main().catch(console.error);
 ```
 
 ### Exercice 3 — Compteur de tokens
@@ -701,7 +717,8 @@ Sans regarder le cours, definissez en une phrase chacun de ces termes :
 <!-- parcours-recommande -->
 
 ::: tip Parcours recommandé
+
 1. **Screencast** : [screencast 00 prerequis paysage ia](../screencasts/screencast-00-prerequis-paysage-ia.md)
 2. **Lab** : [lab-00-paysage-ia](../labs/lab-00-paysage-ia/README)
 3. **Quiz** : [quiz 00 prerequis paysage ia](../quizzes/quiz-00-prerequis-paysage-ia.html)
-:::
+   :::
